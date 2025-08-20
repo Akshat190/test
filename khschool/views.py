@@ -168,9 +168,6 @@ def activities(request):
 def testimonials(request):
     return render(request,'testimonials.html')
 
-#blog page
-def blog(request):
-    return render(request,'blog.html')
 
 #achievements page
 def achievements(request):

@@ -18,7 +18,6 @@ urlpatterns = [
     path('team/',views.team,name='team'),
     path('activities/',views.activities,name='activities'),
     path('testimonials/',views.testimonials,name='testimonials'),
-    path('blog/',views.blog,name='blog'),
     path('achievements/',views.achievements,name='achievements'),
     path('image-test/',views.image_test,name='image_test'),
 ]
