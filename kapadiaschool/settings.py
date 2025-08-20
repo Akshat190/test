@@ -53,7 +53,8 @@ ALLOWED_HOSTS.extend(['.com'])
 CSRF_TRUSTED_ORIGINS = [
     'https://kapadiahighschool.com',
     'https://www.kapadiahighschool.com',
-    # 'https://*.onrender.com',
+    'https://*.onrender.com',
+    'https://test-p769.onrender.com',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
