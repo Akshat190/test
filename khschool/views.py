@@ -144,9 +144,6 @@ def success_stories(request):
 def facilities(request):
     return render(request,'facilities.html')
 
-#admissions page
-def admissions(request):
-    return render(request,'admissions.html')
 
 #institutional goals page
 def institutional_goals(request):

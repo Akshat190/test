@@ -12,7 +12,6 @@ urlpatterns = [
     path('kadi/',views.kadi,name='kadi'),
     path('success-stories/',views.success_stories,name='success_stories'),
     path('facilities/',views.facilities,name='facilities'),
-    path('admissions/',views.admissions,name='admissions'),
     path('institutional-goals/',views.institutional_goals,name='institutional_goals'),
     path('our-team/',views.our_team,name='our_team'),
     path('team/',views.team,name='team'),
