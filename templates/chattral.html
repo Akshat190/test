@@ -121,7 +121,29 @@
 
 {% block page_js %}
 <script>
-    // JavaScript for modal functionality if needed
+    document.addEventListener('DOMContentLoaded', function() {
+        // Simple function to remove backdrop elements
+        function removeBackdrops() {
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        }
+        
+        // Clean up any existing backdrops
+        removeBackdrops();
+        
+        // Modal event listeners to remove backdrop
+        const modal = document.getElementById('cbseModal');
+        if (modal) {
+            modal.addEventListener('shown.bs.modal', function() {
+                removeBackdrops();
+            });
+            
+            modal.addEventListener('hidden.bs.modal', function() {
+                removeBackdrops();
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+            });
+        }
+    });
 </script>
 {% endblock page_js %}
 {% endblock content %}

@@ -216,6 +216,10 @@
     font-size: 1.8rem;
   }
   
+  .about-home-section {
+    padding: 20px 0; /* Reduced from 40px to 20px */
+  }
+  
   .gallery-img-container {
     height: 200px;
   }

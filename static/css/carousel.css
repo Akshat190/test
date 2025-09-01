@@ -191,6 +191,10 @@
     height: 350px;
   }
   
+  #home-carousel-container {
+    margin-bottom: 20px; /* Reduced from default 40px */
+  }
+  
   .carousel-caption {
     max-width: 90%;
     bottom: 30px;
