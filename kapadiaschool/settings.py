@@ -258,3 +258,6 @@ TEMPLATE_LOADERS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Cron job security
+CRON_SECRET_KEY = os.environ.get('CRON_SECRET_KEY', 'change-this-secret-key-in-production')

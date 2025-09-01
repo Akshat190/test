@@ -1,9 +1,9 @@
-/* Header and Navbar Styling */
+/* Header and Navbar Styling - UPDATED FOR BIGGER LOGO */
 .header-logo {
-  height: 100px; /* Base size for desktop */
-  width: auto; /* Maintain aspect ratio */
-  max-width: 100%; /* Ensure it doesn't overflow container */
-  object-fit: contain; /* Ensure the image fits without stretching */
+  height: 200px !important; /* FORCE bigger size for desktop */
+  width: auto !important; /* Maintain aspect ratio */
+  max-width: 100% !important; /* Ensure it doesn't overflow container */
+  object-fit: contain !important; /* Ensure the image fits without stretching */
   transition: transform 0.3s ease;
   margin-right: 15px;
   user-select: none; /* Prevent text selection */
@@ -33,35 +33,35 @@
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   background-color: #003264;
   padding: 0.5rem 1rem; /* Adjust padding to give more height */
-  min-height: 110px; /* Set minimum height to accommodate the logo */
+  min-height: 220px; /* Much larger minimum height to accommodate the 200px logo */
 }
 
 /* Responsive adjustments for the logo */
 @media (max-width: 991.98px) {
   .header-logo {
-    height: 80px; /* Slightly smaller on tablets */
+    height: 120px !important; /* FORCE bigger on tablets */
   }
   .navbar {
-    min-height: 90px;
+    min-height: 140px !important;
   }
 }
 
 @media (max-width: 767.98px) {
   .header-logo {
-    height: 70px; /* Even smaller on mobile */
+    height: 100px !important; /* FORCE bigger on mobile */
   }
   .navbar {
-    min-height: 80px;
+    min-height: 120px !important;
   }
 }
 
 @media (max-width: 575.98px) {
   .header-logo {
-    height: 60px; /* Smallest on very small devices */
+    height: 80px !important; /* FORCE bigger on very small devices */
     margin-right: 10px;
   }
   .navbar {
-    min-height: 70px;
+    min-height: 100px !important;
     padding: 0.3rem 0.8rem;
   }
 }
