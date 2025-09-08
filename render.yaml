@@ -4,7 +4,7 @@ services:
     name: kapadia-school
     env: python
     buildCommand: "./build.sh"
-    startCommand: "python manage.py runserver 0.0.0.0:$PORT"
+    startCommand: "gunicorn kapadiaschool.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
       - key: DEBUG
         value: false
@@ -15,7 +15,7 @@ services:
           name: kapadia-db
           property: connectionString
       - key: PYTHON_VERSION
-        value: 3.11.0
+        value: 3.11.9
       - key: SUPABASE_URL
         sync: false
         # Add your Supabase URL from the Supabase dashboard
