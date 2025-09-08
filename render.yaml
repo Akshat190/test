@@ -15,7 +15,7 @@ services:
           name: kapadia-db
           property: connectionString
       - key: PYTHON_VERSION
-        value: 3.11.9
+        value: 3.10.12
       - key: SUPABASE_URL
         sync: false
         # Add your Supabase URL from the Supabase dashboard
