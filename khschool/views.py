@@ -240,3 +240,28 @@ def run_cron_job(request):
             'status': 'error',
             'message': str(e)
         }, status=500)
+
+def health_check(request):
+    """
+    Simple health check endpoint for keep-alive pinging
+    Returns basic system status
+    """
+    from django.utils import timezone
+    from django.db import connection
+    
+    try:
+        # Test database connection
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            db_status = "ok"
+    except Exception as e:
+        db_status = f"error: {str(e)}"
+    
+    current_time = timezone.now()
+    
+    return JsonResponse({
+        'status': 'healthy',
+        'timestamp': current_time.isoformat(),
+        'database': db_status,
+        'message': 'Service is running'
+    })

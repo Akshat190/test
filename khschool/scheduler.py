@@ -27,7 +27,7 @@ def sample_job():
 
 def every_15_minutes_task():
     """
-    Your actual 15-minute recurring task
+    Keep-alive task for Render deployment - prevents service from sleeping
     This runs every 15 minutes: at 00, 15, 30, 45 minutes past each hour
     """
     from django.utils import timezone
@@ -36,28 +36,44 @@ def every_15_minutes_task():
     logger = logging.getLogger(__name__)
     current_time = timezone.now()
     
-    print(f"🕐 15-minute task running at {current_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    logger.info(f"15-minute scheduled task executed at {current_time}")
+    print(f"🕐 Keep-alive task running at {current_time.strftime('%Y-%m-%d %H:%M:%S')}")
+    logger.info(f"Keep-alive scheduled task executed at {current_time}")
     
     try:
+        # Keep-alive activity to prevent Render from sleeping
+        import requests
+        from django.conf import settings
+        
+        # Ping your own service to generate activity (optional - only if you have the URL)
+        # Replace with your actual Render URL when deployed
+        # try:
+        #     response = requests.get('https://your-app-name.onrender.com/health/', timeout=10)
+        #     print(f"   🏓 Self-ping successful: {response.status_code}")
+        # except Exception as ping_error:
+        #     print(f"   ⚠️ Self-ping failed: {ping_error}")
+        
         # Example 1: Clean up expired sessions
         from django.contrib.sessions.models import Session
         expired_count = Session.objects.filter(expire_date__lt=current_time).count()
         if expired_count > 0:
             Session.objects.filter(expire_date__lt=current_time).delete()
             print(f"   ✅ Cleaned {expired_count} expired sessions")
+        else:
+            print(f"   ℹ️ No expired sessions to clean")
         
-        # Example 2: Log system status
-        print(f"   📊 System check completed at {current_time.strftime('%H:%M')}")
+        # Example 2: Log system status (generates DB activity)
+        from django.db import connection
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            result = cursor.fetchone()
+        print(f"   📊 Database connection check: {'✅ OK' if result else '❌ Failed'}")
         
-        # Add your specific 15-minute tasks here:
-        # - Check for new data to process
-        # - Send notification emails
-        # - Update cached data
-        # - Sync with external services
-        # - Monitor system health
+        # Log memory usage (generates system activity)
+        import psutil
+        memory_percent = psutil.virtual_memory().percent
+        print(f"   💾 Memory usage: {memory_percent:.1f}%")
         
-        print("   ✅ 15-minute task completed successfully")
+        print(f"   🚀 Keep-alive task completed at {current_time.strftime('%H:%M:%S')}")
         
     except Exception as e:
         logger.error(f"Error in 15-minute task: {str(e)}")
@@ -94,11 +110,11 @@ def start_scheduler():
     if scheduler.state == 0:  # Not started
         # Add your cron jobs here
         
-        # Run every 15 minutes: at 00, 15, 30, 45 minutes past each hour
+        # Run every 15 minutes: at 00, 15, 30, 45 minutes past each hour (keeps Render service awake)
         scheduler.add_job(
             every_15_minutes_task,
             trigger=CronTrigger(minute='*/15'),  # Every 15 minutes
-            id='every_15_minutes',
+            id='every_15_minutes_keepalive',
             max_instances=1,
             replace_existing=True,
         )
