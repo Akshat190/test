@@ -16,9 +16,6 @@ services:
       - key: PYTHON_VERSION
         value: 3.10.12
       - key: SUPABASE_URL
-        sync: false
-        # Add your Supabase URL from the Supabase dashboard
-        # Example: https://yourproject.supabase.co
+        value: https://nonsuesczcfwkpzoccyj.supabase.co
       - key: SUPABASE_KEY
-        sync: false
-        # Add your Supabase anon/public key from the Supabase dashboard API section
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vbnN1ZXNjemNmd2twem9jY3lqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU2NjY1MzgsImV4cCI6MjA3MTI0MjUzOH0.b4wjPi6T9NyGfoqke2n3ENbdiwLNVoPyU5PtOaXkPqA
