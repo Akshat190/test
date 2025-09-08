@@ -64,8 +64,8 @@ python manage.py showmigrations
 echo "Testing Supabase connection..."
 if [ -n "$SUPABASE_URL" ] && [ -n "$SUPABASE_KEY" ]; then
   echo "Supabase credentials found, initializing buckets..."
-  python manage.py initialize_supabase_buckets
-  echo "Supabase buckets initialized."
+  # python manage.py initialize_supabase_buckets  # TODO: Create this management command
+  echo "Supabase buckets initialization skipped (command not implemented yet)."
 else
   echo "WARNING: Supabase credentials not found. Image storage will use local filesystem."
 fi
