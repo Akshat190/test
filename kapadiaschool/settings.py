@@ -111,52 +111,20 @@ WSGI_APPLICATION = 'kapadiaschool.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Database configuration - uses PostgreSQL in production, SQLite in development
-if 'DATABASE_URL' in os.environ:
-    db_url = os.environ.get('DATABASE_URL')
-    # Check if it's PostgreSQL before applying SSL requirements
-    if db_url.startswith('postgres'):
-        # Check if we're running on Render (internal hostname will be accessible)
-        is_on_render = os.environ.get('RENDER', '') == 'true' or 'RENDER_EXTERNAL_HOSTNAME' in os.environ
-        
-        # Log database connection attempt
-        print(f"Connecting to PostgreSQL database: {db_url.split('@')[1].split('/')[0]}")
-        
-        # Only try to connect to PostgreSQL if we're on Render
-        # Otherwise, fall back to SQLite for local development
-        if is_on_render:
-            # Production database (PostgreSQL on Render)
-            DATABASES = {
-                'default': dj_database_url.parse(
-                    config('DATABASE_URL'),
-                    conn_max_age=600,
-                    ssl_require=True
-                )
-            }
-            
-            # Print database settings for debugging
-            print(f"Database engine: {DATABASES['default']['ENGINE']}")
-            print(f"Database name: {DATABASES['default']['NAME']}")
-            print(f"Database host: {DATABASES['default']['HOST']}")
-        else:
-            # We're local but have a DATABASE_URL - use SQLite instead
-            print("Not on Render but DATABASE_URL is set. Using SQLite for local development.")
-            DATABASES = {
-                'default': {
-                    'ENGINE': 'django.db.backends.sqlite3',
-                    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-                }
-            }
-    else:
-        # SQLite or other database with URL format
-        DATABASES = {
-            'default': dj_database_url.config(
-                conn_max_age=600
-            )
-        }
+# Robust database configuration: use DATABASE_URL if valid; otherwise fallback to SQLite
+raw_db_url = os.environ.get('DATABASE_URL', '').strip()
+
+if raw_db_url:
+    is_postgres_url = raw_db_url.startswith(('postgres://', 'postgresql://', 'postgis://', 'pgsql://'))
+    DATABASES = {
+        'default': dj_database_url.parse(
+            raw_db_url,
+            conn_max_age=600,
+            ssl_require=is_postgres_url
+        )
+    }
 else:
-    # Development database (SQLite)
-    print("Using SQLite database for local development")
+    print("DATABASE_URL is not set or empty. Using SQLite for local/development.")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
