@@ -1,0 +1,31 @@
+# VPS-Optimized Requirements (No Cloud Dependencies)
+# Core Django
+Django==4.2.7
+psycopg2-binary==2.9.9
+
+# Production Server
+gunicorn==21.2.0
+
+# Static Files & Performance
+whitenoise==6.6.0
+redis==5.0.0
+
+# Database & Environment
+dj-database-url==2.1.0
+python-dotenv==1.0.0
+python-decouple==3.8
+
+# Image Processing & Optimization
+Pillow==10.0.1
+
+# Utilities
+requests==2.31.0
+python-slugify==8.0.1
+
+# Background Tasks
+APScheduler==3.10.1
+psutil==5.9.6
+
+# Additional VPS Optimization Packages
+# For better image compression
+pillow-simd  # Optional: Faster image processing

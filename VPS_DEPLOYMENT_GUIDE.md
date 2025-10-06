@@ -55,12 +55,14 @@ source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
-pip install gunicorn
+pip install gunicorn redis
 
-# Create media directories for photo storage
+# Create media directories for photo storage (matching Django models)
 sudo mkdir -p /var/www/khs/media/carousel/images
 sudo mkdir -p /var/www/khs/media/festival/gallery
 sudo mkdir -p /var/www/khs/media/festival/images
+sudo mkdir -p /var/www/khs/media/gallery/images
+sudo mkdir -p /var/www/khs/media/gallery/thumbnails
 sudo mkdir -p /var/www/khs/static
 sudo chown -R deploy:www-data /var/www/khs
 sudo chmod -R 755 /var/www/khs
@@ -95,9 +97,16 @@ DATABASES = {
 # Static and Media files
 STATIC_URL = '/static/'
 STATIC_ROOT = '/var/www/khs/static'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
-MEDIA_URL = '/media/'
+# Media files - match current settings
+MEDIA_URL = '/gallery/'
 MEDIA_ROOT = '/var/www/khs/media'
+
+# Enable WhiteNoise for static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Security settings
 SECRET_KEY = 'your-super-secret-key-here'
@@ -118,9 +127,14 @@ CACHES = {
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024   # 10MB
 
-# Photo storage optimization
+# VPS Photo storage settings (no Supabase needed)
+USE_SUPABASE_STORAGE = False
 PHOTO_MAX_SIZE = (1920, 1080)  # Max photo dimensions
 THUMBNAIL_SIZE = (400, 300)    # Thumbnail size
+
+# File upload limits
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024   # 10MB
 EOF
 ```
 
@@ -134,6 +148,8 @@ DEBUG=False
 SECRET_KEY=your-super-secret-key-here-generate-new-one
 DATABASE_URL=postgresql://kapadiaschool_user:your_secure_password_here@localhost/kapadiaschool_db
 ALLOWED_HOSTS=your-domain.com,www.your-domain.com,your-vps-ip
+CRON_SECRET_KEY=your-cron-secret-key-here
+# Note: Using VPS local storage - no Supabase needed
 EOF
 
 # Secure the env file
@@ -146,7 +162,9 @@ chmod 600 .env
 # Activate virtual environment
 source venv/bin/activate
 
-# Set production environment
+# Set production environment (add to ~/.bashrc for persistence)
+echo 'export DJANGO_SETTINGS_MODULE=kapadiaschool.settings_production' >> ~/.bashrc
+source ~/.bashrc
 export DJANGO_SETTINGS_MODULE=kapadiaschool.settings_production
 
 # Run migrations
@@ -235,8 +253,8 @@ server {
         add_header Cache-Control "public, immutable";
     }
 
-    # Media files (photos)
-    location /media/ {
+    # Media files (photos) - match Django MEDIA_URL
+    location /gallery/ {
         alias /var/www/khs/media/;
         expires 7d;
         add_header Cache-Control "public";
@@ -296,44 +314,129 @@ sudo certbot --nginx -d your-domain.com -d www.your-domain.com
 sudo certbot renew --dry-run
 ```
 
-## Step 11: Photo Storage Optimization
+## Step 11: VPS Photo Storage Optimization
 
-Create a custom management command for photo optimization:
+Since we're using VPS storage (no Supabase), let's optimize photo handling:
 
 ```bash
+# Ensure management commands directory exists
 mkdir -p khschool/management/commands
+
+# Create advanced photo optimization command
 cat > khschool/management/commands/optimize_photos.py << 'EOF'
 from django.core.management.base import BaseCommand
-from PIL import Image
+from PIL import Image, ImageOps
 import os
+import time
 
 class Command(BaseCommand):
-    help = 'Optimize uploaded photos'
+    help = 'Optimize uploaded photos for VPS storage'
+    
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--folder',
+            type=str,
+            default='all',
+            help='Specific folder to optimize (carousel, festival, gallery, or all)'
+        )
     
     def handle(self, *args, **options):
         media_root = '/var/www/khs/media'
-        for root, dirs, files in os.walk(media_root):
+        folder = options['folder']
+        
+        if folder == 'all':
+            target_dirs = [media_root]
+        else:
+            target_dirs = [os.path.join(media_root, folder)]
+        
+        total_processed = 0
+        total_saved_bytes = 0
+        
+        for target_dir in target_dirs:
+            if os.path.exists(target_dir):
+                processed, saved = self.process_directory(target_dir)
+                total_processed += processed
+                total_saved_bytes += saved
+        
+        self.stdout.write(
+            self.style.SUCCESS(
+                f'Optimization complete! '
+                f'Processed {total_processed} images, '
+                f'Saved {total_saved_bytes / 1024 / 1024:.2f} MB'
+            )
+        )
+    
+    def process_directory(self, directory):
+        processed = 0
+        saved_bytes = 0
+        
+        for root, dirs, files in os.walk(directory):
             for file in files:
-                if file.lower().endswith(('.jpg', '.jpeg', '.png')):
+                if file.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
                     filepath = os.path.join(root, file)
-                    self.optimize_image(filepath)
+                    original_size = os.path.getsize(filepath)
+                    
+                    if self.optimize_image(filepath):
+                        new_size = os.path.getsize(filepath)
+                        saved_bytes += original_size - new_size
+                        processed += 1
+        
+        return processed, saved_bytes
     
     def optimize_image(self, filepath):
         try:
+            original_size = os.path.getsize(filepath)
+            
             with Image.open(filepath) as img:
+                # Auto-rotate based on EXIF data
+                img = ImageOps.exif_transpose(img)
+                
                 # Convert to RGB if necessary
                 if img.mode in ('RGBA', 'LA', 'P'):
-                    img = img.convert('RGB')
+                    bg = Image.new('RGB', img.size, (255, 255, 255))
+                    if img.mode == 'P':
+                        img = img.convert('RGBA')
+                    bg.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
+                    img = bg
+                
+                # Different optimization based on folder
+                if 'carousel' in filepath:
+                    # Carousel images: 1920x600 max
+                    max_size = (1920, 600)
+                    quality = 90
+                elif 'gallery' in filepath and 'thumbnails' in filepath:
+                    # Thumbnails: 400x300 max
+                    max_size = (400, 300)
+                    quality = 80
+                elif 'gallery' in filepath:
+                    # Gallery images: 1200x800 max
+                    max_size = (1200, 800)
+                    quality = 85
+                else:
+                    # Festival and other images: 1024x768 max
+                    max_size = (1024, 768)
+                    quality = 85
                 
                 # Resize if too large
-                if img.width > 1920 or img.height > 1080:
-                    img.thumbnail((1920, 1080), Image.Resampling.LANCZOS)
+                if img.width > max_size[0] or img.height > max_size[1]:
+                    img.thumbnail(max_size, Image.Resampling.LANCZOS)
                 
                 # Save with optimization
-                img.save(filepath, 'JPEG', quality=85, optimize=True)
-                self.stdout.write(f'Optimized: {filepath}')
+                img.save(filepath, 'JPEG', quality=quality, optimize=True, progressive=True)
+                
+                new_size = os.path.getsize(filepath)
+                saved_mb = (original_size - new_size) / 1024 / 1024
+                
+                if saved_mb > 0:
+                    self.stdout.write(f'✓ {filepath} (saved {saved_mb:.2f}MB)')
+                    return True
+                else:
+                    self.stdout.write(f'• {filepath} (already optimized)')
+                    return False
+                    
         except Exception as e:
-            self.stderr.write(f'Error optimizing {filepath}: {e}')
+            self.stderr.write(f'✗ Error optimizing {filepath}: {e}')
+            return False
 EOF
 ```
 
@@ -483,4 +586,34 @@ sudo systemctl restart nginx
 ./backup.sh
 ```
 
-Your Django application will be accessible at `http://your-vps-ip` or `http://your-domain.com` with full photo storage capabilities!
+## VPS Storage Benefits:
+
+### Why VPS Storage is Perfect for Your School Website:
+
+✅ **Faster Loading**: Images served directly from your VPS (no external API calls)
+✅ **Full Control**: Complete ownership of your photos and data
+✅ **Cost Effective**: No additional cloud storage fees
+✅ **Better SEO**: Faster image loading improves search rankings
+✅ **Privacy**: All photos stay on your server
+✅ **Unlimited Storage**: Only limited by your VPS disk space
+✅ **Backup Control**: Photos included in your regular VPS backups
+
+### Advanced VPS Photo Management:
+
+```bash
+# Optimize specific folder
+python manage.py optimize_photos --folder carousel
+python manage.py optimize_photos --folder gallery
+python manage.py optimize_photos --folder festival
+
+# Optimize all photos
+python manage.py optimize_photos
+
+# Check disk usage for media files
+du -sh /var/www/khs/media/
+
+# Find large images (>1MB)
+find /var/www/khs/media/ -name "*.jpg" -size +1M -exec ls -lh {} \;
+```
+
+Your Django application will be accessible at `http://your-vps-ip` or `http://your-domain.com` with **superior VPS photo storage**!
