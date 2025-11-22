@@ -10,6 +10,7 @@ urlpatterns = [
     path('chattral/',views.chattral,name='chattral'),
     path('iffco/',views.iffco,name='iffco'),
     path('kadi/',views.kadi,name='kadi'),
+    path('shela/',views.shela,name='shela'),
     path('success-stories/',views.success_stories,name='success_stories'),
     path('facilities/',views.facilities,name='facilities'),
     path('institutional-goals/',views.institutional_goals,name='institutional_goals'),
