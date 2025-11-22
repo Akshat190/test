@@ -142,6 +142,9 @@ def iffco(request):
 def kadi(request):
     return render(request,'kadi.html')
 
+def shela(request):
+    return render(request,'shela.html')
+
 #success stories page
 def success_stories(request):
     return render(request,'success_stories.html')

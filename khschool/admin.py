@@ -11,6 +11,9 @@ class CelebrationPhotoInline(admin.TabularInline):
     fields = ('photo', 'photo_url', 'caption', 'order')
     readonly_fields = ('photo_url',)
 
+    def photo_url(self, obj):
+        return obj.get_photo_url()
+
 @admin.register(CarouselImage)
 class CarouselImageAdmin(admin.ModelAdmin):
     form = CarouselImageForm
@@ -19,6 +22,9 @@ class CarouselImageAdmin(admin.ModelAdmin):
     list_filter = ('is_active',)
     search_fields = ('title', 'subtitle')
     readonly_fields = ('image_url',)
+
+    def image_url(self, obj):
+        return obj.get_image_url()
 
 @admin.register(Celebration)
 class CelebrationAdmin(admin.ModelAdmin):
@@ -45,6 +51,9 @@ class CelebrationAdmin(admin.ModelAdmin):
     preview_image.short_description = 'Image Preview'
     photo_count_display.short_description = 'Additional Photos'
 
+    def image_url(self, obj):
+        return obj.get_image_url()
+
 @admin.register(CelebrationPhoto)
 class CelebrationPhotoAdmin(admin.ModelAdmin):
     form = CelebrationPhotoForm
@@ -63,6 +72,9 @@ class CelebrationPhotoAdmin(admin.ModelAdmin):
     preview_photo.allow_tags = True
     preview_photo.short_description = 'Photo Preview'
 
+    def photo_url(self, obj):
+        return obj.get_photo_url()
+
 
 class GalleryImageInline(admin.TabularInline):
     model = GalleryImage
@@ -70,6 +82,9 @@ class GalleryImageInline(admin.TabularInline):
     extra = 3  # Show 3 empty forms for adding images
     fields = ('image', 'image_url', 'title', 'caption', 'order')
     readonly_fields = ('image_url',)
+
+    def image_url(self, obj):
+        return obj.get_image_url()
 
 
 @admin.register(Gallery)
@@ -97,6 +112,9 @@ class GalleryAdmin(admin.ModelAdmin):
     preview_thumbnail.short_description = 'Thumbnail'
     image_count_display.short_description = 'Images'
 
+    def thumbnail_url(self, obj):
+        return obj.get_thumbnail_url()
+
 
 @admin.register(GalleryImage)
 class GalleryImageAdmin(admin.ModelAdmin):
@@ -116,3 +134,6 @@ class GalleryImageAdmin(admin.ModelAdmin):
     
     preview_image.allow_tags = True
     preview_image.short_description = 'Image Preview'
+
+    def image_url(self, obj):
+        return obj.get_image_url()
