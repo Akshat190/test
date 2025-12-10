@@ -12,12 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url
-from dotenv import load_dotenv
-from decouple import config
-
-# Load environment variables from .env file
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,30 +25,20 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-5u@dx-_uxrvvj$%)$@bi!
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Set DEBUG based on environment variable
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-# Configure hosts for Render deployment
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','kapadiahighschool.com']
+# Allowed hosts for VPS deployment (no Render)
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'kapadiahighschool.com',
+    'www.kapadiahighschool.com',
+]
 
-# Configure RENDER_EXTERNAL_HOSTNAME for Render
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-
-# Add Render internal and external domains
-RENDER_EXTERNAL_URL = os.environ.get('RENDER_EXTERNAL_URL')
-if RENDER_EXTERNAL_URL:
-    ALLOWED_HOSTS.extend([RENDER_EXTERNAL_URL, f'*.{RENDER_EXTERNAL_URL}'])
-
-# In production, allow the Render assigned domain
-ALLOWED_HOSTS.extend(['.com'])
-
-# CSRF Trusted Origins for Render
+# CSRF trusted origins for your domains
 CSRF_TRUSTED_ORIGINS = [
     'https://kapadiahighschool.com',
     'https://www.kapadiahighschool.com',
-    'https://*.onrender.com',
-    'https://test-p769.onrender.com',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
@@ -111,20 +95,24 @@ WSGI_APPLICATION = 'kapadiaschool.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Robust database configuration: use DATABASE_URL if valid; otherwise fallback to SQLite
-raw_db_url = os.environ.get('DATABASE_URL', '').strip()
+# Simple database configuration that works for both local development and VPS
+# For local development, it will use SQLite if no environment variables are set
+# For VPS deployment, set the environment variables accordingly
 
-if raw_db_url:
-    is_postgres_url = raw_db_url.startswith(('postgres://', 'postgresql://', 'postgis://', 'pgsql://'))
+if os.environ.get('DB_NAME') and os.environ.get('DB_USER') and os.environ.get('DB_PASSWORD'):
+    # Use PostgreSQL for VPS deployment when environment variables are set
     DATABASES = {
-        'default': dj_database_url.parse(
-            raw_db_url,
-            conn_max_age=600,
-            ssl_require=is_postgres_url
-        )
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME', 'kapadiaschool_db'),
+            'USER': os.environ.get('DB_USER', 'kapadiaschool_user'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'your_secure_password_here'),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
+        }
     }
 else:
-    print("DATABASE_URL is not set or empty. Using SQLite for local/development.")
+    # Use SQLite for local development
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -132,26 +120,18 @@ else:
         }
     }
 
-# Supabase configuration
-SUPABASE_URL = os.environ.get('SUPABASE_URL', '')
-SUPABASE_KEY = os.environ.get('SUPABASE_KEY', '')
-USE_SUPABASE_STORAGE = bool(SUPABASE_URL and SUPABASE_KEY)
+# Media files (uploads) - VPS/local storage only
+if DEBUG:
+    # Local development media settings
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'gallery')
+else:
+    # VPS production media settings
+    MEDIA_ROOT = '/var/www/khs/media'
 
-# Media files (uploads)
-MEDIA_ROOT = os.path.join(BASE_DIR, 'gallery')
 MEDIA_URL = '/gallery/'
 
-# Configure media storage
+# Configure media storage to use local filesystem
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-
-# Log Supabase status
-if USE_SUPABASE_STORAGE:
-    print(f"Supabase URL: {SUPABASE_URL[:10]}...")
-    print(f"Supabase Key: {SUPABASE_KEY[:10]}...")
-    print("Supabase storage is enabled")
-else:
-    print("WARNING: Supabase storage is not configured. Using local file storage only.")
-    print("Set SUPABASE_URL and SUPABASE_KEY environment variables to enable Supabase storage.")
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -193,8 +173,13 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-# Configure static file storage for production
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Configure static file storage
+if DEBUG:
+    # Local development static settings
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+else:
+    # VPS production static settings
+    STATIC_ROOT = '/var/www/khs/static'
 
 # Enable WhiteNoise compression and caching support
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -226,6 +211,3 @@ TEMPLATE_LOADERS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Cron job security
-CRON_SECRET_KEY = os.environ.get('CRON_SECRET_KEY', 'change-this-secret-key-in-production')

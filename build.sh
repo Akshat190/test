@@ -10,11 +10,7 @@ pip install -r requirements.txt
 
 # Verify database connection
 echo "Verifying database connection..."
-if [ -n "$DATABASE_URL" ]; then
-  echo "Database URL is set, will connect to PostgreSQL"
-else
-  echo "Database URL not set, will use SQLite"
-fi
+echo "Using PostgreSQL database"
 echo "Database connection check complete"
 
 # Create media directories
@@ -53,21 +49,5 @@ echo "Database migrations completed."
 
 # Create a superuser if not exists (for admin access)
 echo "from django.contrib.auth.models import User; User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@kapadiaschool.com', 'admin@123')" | python manage.py shell
-
-# Set up allowed hosts for Render
-echo "Make sure ALLOWED_HOSTS in settings.py includes '.onrender.com' for deployment"
-
-# Show migration status for debugging
-python manage.py showmigrations
-
-# Test Supabase connection and initialize buckets if needed
-echo "Testing Supabase connection..."
-if [ -n "$SUPABASE_URL" ] && [ -n "$SUPABASE_KEY" ]; then
-  echo "Supabase credentials found, initializing buckets..."
-  # python manage.py initialize_supabase_buckets  # TODO: Create this management command
-  echo "Supabase buckets initialization skipped (command not implemented yet)."
-else
-  echo "WARNING: Supabase credentials not found. Image storage will use local filesystem."
-fi
 
 echo "Build script completed successfully"

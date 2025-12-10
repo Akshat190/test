@@ -1,56 +1,28 @@
+"""
+Scheduler module for background tasks in the Kapadia High School website.
+Uses APScheduler for running periodic tasks like cleanup, maintenance, and keep-alive.
+"""
+
 import logging
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-from django.conf import settings
 import atexit
 
-# Set up logging
-logging.basicConfig()
-logging.getLogger('apscheduler').setLevel(logging.DEBUG)
-
+# Create a single scheduler instance
 scheduler = BackgroundScheduler()
 
-def sample_job():
-    """
-    Example cron job function
-    Replace this with your actual task
-    """
-    from django.utils import timezone
-    print(f"15-minute cron job executed at {timezone.now()}")
-    # Add your actual job logic here
-    # Examples:
-    # - Send emails
-    # - Clean up old data
-    # - Generate reports
-    # - Sync with external APIs
-    # - Backup data
+# Set up logging
+logger = logging.getLogger(__name__)
 
 def every_15_minutes_task():
     """
-    Keep-alive task for Render deployment - prevents service from sleeping
-    This runs every 15 minutes: at 00, 15, 30, 45 minutes past each hour
+    Example task that runs every 15 minutes.
+    Performs maintenance tasks and generates activity to keep services responsive.
     """
-    from django.utils import timezone
-    import logging
-    
-    logger = logging.getLogger(__name__)
-    current_time = timezone.now()
-    
-    print(f"🕐 Keep-alive task running at {current_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    logger.info(f"Keep-alive scheduled task executed at {current_time}")
-    
     try:
-        # Keep-alive activity to prevent Render from sleeping
-        import requests
-        from django.conf import settings
-        
-        # Ping your own service to generate activity (optional - only if you have the URL)
-        # Replace with your actual Render URL when deployed
-        # try:
-        #     response = requests.get('https://your-app-name.onrender.com/health/', timeout=10)
-        #     print(f"   🏓 Self-ping successful: {response.status_code}")
-        # except Exception as ping_error:
-        #     print(f"   ⚠️ Self-ping failed: {ping_error}")
+        from django.utils import timezone
+        current_time = timezone.now()
+        print(f"🚀 Starting 15-minute maintenance task at {current_time.strftime('%H:%M:%S')}")
         
         # Example 1: Clean up expired sessions
         from django.contrib.sessions.models import Session
@@ -73,7 +45,7 @@ def every_15_minutes_task():
         memory_percent = psutil.virtual_memory().percent
         print(f"   💾 Memory usage: {memory_percent:.1f}%")
         
-        print(f"   🚀 Keep-alive task completed at {current_time.strftime('%H:%M:%S')}")
+        print(f"   🚀 Maintenance task completed at {current_time.strftime('%H:%M:%S')}")
         
     except Exception as e:
         logger.error(f"Error in 15-minute task: {str(e)}")
@@ -110,11 +82,11 @@ def start_scheduler():
     if scheduler.state == 0:  # Not started
         # Add your cron jobs here
         
-        # Run every 15 minutes: at 00, 15, 30, 45 minutes past each hour (keeps Render service awake)
+        # Run every 15 minutes: at 00, 15, 30, 45 minutes past each hour
         scheduler.add_job(
             every_15_minutes_task,
             trigger=CronTrigger(minute='*/15'),  # Every 15 minutes
-            id='every_15_minutes_keepalive',
+            id='every_15_minutes_maintenance',
             max_instances=1,
             replace_existing=True,
         )

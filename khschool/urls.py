@@ -20,7 +20,6 @@ urlpatterns = [
     path('testimonials/',views.testimonials,name='testimonials'),
     path('achievements/',views.achievements,name='achievements'),
     path('image-test/',views.image_test,name='image_test'),
-    path('api/cron/', views.run_cron_job, name='run_cron_job'),
     path('health/', views.health_check, name='health_check'),
 ]
 
