@@ -1,13 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 from .models import Celebration, CarouselImage, CelebrationPhoto, Gallery, GalleryImage
 from django.contrib.auth.decorators import login_required
-from django.core.management import call_command
-from django.conf import settings
-import io
-import sys
 # Create your views here.
 def home(request):
     # Set default empty values
@@ -182,7 +176,7 @@ def achievements(request):
 @login_required
 def image_test(request):
     """
-    View for testing image display from Supabase storage
+    View for testing image display from local storage
     Protected by login to prevent public access
     """
     carousel_images = CarouselImage.objects.filter(is_active=True).order_by('order')
@@ -205,45 +199,7 @@ def image_test(request):
     
     return render(request, 'image_test.html', context)
 
-@csrf_exempt
-@require_POST
-def run_cron_job(request):
-    """
-    Endpoint for external cron services to trigger scheduled tasks
-    Can be called by services like EasyCron, cron-job.org, etc.
-    """
-    # Simple authentication - check for secret key in header or POST data
-    secret_key = request.META.get('HTTP_X_CRON_SECRET') or request.POST.get('secret')
-    expected_secret = getattr(settings, 'CRON_SECRET_KEY', 'your-secret-key-here')
-    
-    if secret_key != expected_secret:
-        return JsonResponse({'error': 'Unauthorized'}, status=401)
-    
-    try:
-        # Capture command output
-        out = io.StringIO()
-        task = request.POST.get('task', '')
-        
-        # Run the management command
-        if task:
-            call_command('run_scheduled_tasks', f'--task={task}', stdout=out)
-        else:
-            call_command('run_scheduled_tasks', stdout=out)
-        
-        output = out.getvalue()
-        
-        return JsonResponse({
-            'status': 'success',
-            'message': 'Cron job executed successfully',
-            'output': output
-        })
-        
-    except Exception as e:
-        return JsonResponse({
-            'status': 'error',
-            'message': str(e)
-        }, status=500)
-
+# Health check endpoint for keep-alive pinging
 def health_check(request):
     """
     Simple health check endpoint for keep-alive pinging
