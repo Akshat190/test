@@ -1,39 +1,39 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}About Our School{% endblock %}
+
 {% block page_css %}
-<link href="{% static 'css/aboutSchool.css' %}" rel='stylesheet' type='text/css'>
+<link href="{% static 'css/aboutSchool.css' %}" rel="stylesheet">
 {% endblock page_css %}
 
 {% block content %}
+
 <!-- Page Header -->
-<div class="about-header">
+<section class="about-header">
   <div class="container">
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <h1 class="page-title"><i class="fa fa-school"></i> About Our School</h1>
-        <div class="title-underline"></div>
-        <p class="lead">Building Character, Creating Futures</p>
-      </div>
-    </div>
+    <h1 class="page-title"><i class="fas fa-school"></i> About Our School</h1>
+    <div class="title-underline"></div>
+    <p class="lead">Discover our rich heritage, mission, and commitment to excellence in education</p>
   </div>
-</div>
+</section>
 
 <!-- About Section -->
 <section class="about-section">
   <div class="container">
     <div class="row align-items-center">
-      <div class="col-lg-6">
-        <div class="about-content">
-          <h2>Our Legacy of Excellence</h2>
-          <div class="section-underline"></div>
-          <p>Founded in 1956, Kapadia High School has been a cornerstone of educational excellence for over six decades. Our institution has consistently maintained high academic standards while nurturing the holistic development of our students.</p>
-          <p>At Kapadia High School, we believe in creating an environment where students can discover their potential, develop their skills, and grow into responsible citizens who contribute positively to society.</p>
-        </div>
+      <div class="col-lg-6 about-content">
+        <h2>About HB Kapadia School</h2>
+        <div class="section-underline"></div>
+        <p>Founded in 1952 by the visionary educationist Mr. Haribhai Kalyandas Kapadia, our school has grown from humble beginnings to become one of Gujarat's premier educational institutions. With over seven decades of excellence, we continue to nurture young minds and shape future leaders.</p>
+        
+        <p>Our institution stands as a testament to Mr. Kapadia's vision of holistic education that combines academic rigor with character development. Today, we serve students across multiple campuses, maintaining the highest standards of education while staying true to our founding principles.</p>
+        
+        <p>We believe in fostering an environment where students can explore their talents, develop critical thinking skills, and grow into responsible citizens. Our dedicated faculty and staff work tirelessly to ensure each student receives personalized attention and guidance.</p>
       </div>
       <div class="col-lg-6">
         <div class="about-image-container">
-          <img src="{% static 'image/about-school.jpg' %}" alt="School Building" class="img-fluid about-image">
+          <img src="{% static 'image/blur.png' %}" alt="HB Kapadia School Building" class="about-image img-fluid">
         </div>
       </div>
     </div>
@@ -44,35 +44,38 @@
 <section class="mission-vision-section">
   <div class="container">
     <div class="row">
-      <div class="col-lg-6">
+      <div class="col-md-6 mb-4 mb-md-0">
         <div class="mission-card">
           <div class="mission-icon">
-            <i class="fa fa-bullseye"></i>
+            <i class="fas fa-bullseye"></i>
           </div>
           <h3>Our Mission</h3>
           <div class="card-underline"></div>
-          <p>To provide quality education that develops intellectual curiosity, critical thinking, and a lifelong love for learning in a nurturing and inclusive environment.</p>
+          <p>To provide quality education that empowers students with knowledge, skills, and values necessary to become responsible global citizens and lifelong learners.</p>
+          
           <ul class="mission-points">
-            <li><i class="fa fa-check-circle"></i> Academic Excellence</li>
-            <li><i class="fa fa-check-circle"></i> Character Development</li>
-            <li><i class="fa fa-check-circle"></i> Community Engagement</li>
-            <li><i class="fa fa-check-circle"></i> Inclusive Education</li>
+            <li><i class="fas fa-check-circle"></i> Foster intellectual curiosity and critical thinking</li>
+            <li><i class="fas fa-check-circle"></i> Promote ethical values and social responsibility</li>
+            <li><i class="fas fa-check-circle"></i> Encourage creativity and innovation</li>
+            <li><i class="fas fa-check-circle"></i> Develop leadership qualities and teamwork skills</li>
           </ul>
         </div>
       </div>
-      <div class="col-lg-6">
+      
+      <div class="col-md-6">
         <div class="vision-card">
           <div class="vision-icon">
-            <i class="fa fa-eye"></i>
+            <i class="fas fa-eye"></i>
           </div>
           <h3>Our Vision</h3>
           <div class="card-underline"></div>
-          <p>To be recognized as a premier educational institution that empowers students to become global citizens who are intellectually competent, morally upright, and socially responsible.</p>
+          <p>To be a beacon of educational excellence that inspires generations of learners to achieve their full potential and contribute meaningfully to society.</p>
+          
           <ul class="vision-points">
-            <li><i class="fa fa-lightbulb"></i> Innovative Learning</li>
-            <li><i class="fa fa-lightbulb"></i> Global Perspective</li>
-            <li><i class="fa fa-lightbulb"></i> Ethical Leadership</li>
-            <li><i class="fa fa-lightbulb"></i> Sustainable Development</li>
+            <li><i class="fas fa-star"></i> Academic excellence through innovative teaching methods</li>
+            <li><i class="fas fa-star"></i> Holistic development of mind, body, and spirit</li>
+            <li><i class="fas fa-star"></i> Inclusive environment that celebrates diversity</li>
+            <li><i class="fas fa-star"></i> Sustainable practices for environmental stewardship</li>
           </ul>
         </div>
       </div>
@@ -81,36 +84,44 @@
 </section>
 
 <!-- Our Approach Section -->
-<section class="about-section bg-section">
+<section class="about-section bg-light">
   <div class="container">
-    <h2 class="section-title text-center">Our Educational Approach</h2>
-    <div class="section-divider mx-auto"></div>
-    <div class="row mt-5">
+    <div class="row">
+      <div class="col-12 text-center mb-5">
+        <h2>Our Educational Approach</h2>
+        <div class="section-underline mx-auto"></div>
+        <p class="lead">We combine traditional values with modern pedagogy to create a unique learning experience</p>
+      </div>
+    </div>
+    
+    <div class="row">
       <div class="col-md-4 mb-4">
         <div class="approach-card">
           <div class="approach-icon">
-            <i class="fa fa-book"></i>
+            <i class="fas fa-book-open"></i>
           </div>
           <h3>Academic Excellence</h3>
-          <p>Our co-educational, English-medium curriculum is meticulously designed to foster critical thinking, creativity, and leadership. Guided by a team of dedicated teachers, students receive a robust academic education.</p>
+          <p>Rigorous curriculum designed to challenge students intellectually while nurturing their individual strengths and interests.</p>
         </div>
       </div>
+      
       <div class="col-md-4 mb-4">
         <div class="approach-card">
           <div class="approach-icon">
-            <i class="fa fa-heart"></i>
+            <i class="fas fa-users"></i>
           </div>
-          <h3>Character Development</h3>
-          <p>We believe in nurturing not just intelligent minds but also compassionate hearts. Our students learn values like integrity, respect, and responsibility that help them become well-rounded individuals.</p>
+          <h3>Character Building</h3>
+          <p>Emphasis on moral values, ethics, and social responsibility to develop well-rounded individuals.</p>
         </div>
       </div>
+      
       <div class="col-md-4 mb-4">
         <div class="approach-card">
           <div class="approach-icon">
-            <i class="fa fa-globe"></i>
+            <i class="fas fa-flask"></i>
           </div>
-          <h3>Global Perspective</h3>
-          <p>The diverse student body represents a multitude of cultures and perspectives, creating a rich tapestry of experiences that enriches the learning journey and prepares students for a global future.</p>
+          <h3>Innovation & Creativity</h3>
+          <p>Encouraging creative thinking, scientific inquiry, and technological literacy for the modern world.</p>
         </div>
       </div>
     </div>
@@ -118,25 +129,93 @@
 </section>
 
 <!-- Legacy Section -->
-<section class="about-section" style="padding-bottom: 0; margin-bottom: 0;">
+<section class="legacy-section">
   <div class="container">
     <div class="row align-items-center">
-      <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
-        <div class="about-image-container">
-          <img src="https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q="
-            alt="Students" class="img-fluid about-image">
+      <div class="col-lg-6 order-lg-2">
+        <div class="about-image-container legacy-image">
+          <img src="{% static 'image/blur.png' %}" alt="Founder Mr. Haribhai Kalyandas Kapadia" class="about-image img-fluid">
         </div>
       </div>
+      
       <div class="col-lg-6 order-lg-1">
-        <div class="about-content">
-          <h2 class="section-title">Our Legacy & Future</h2>
-          <div class="section-divider"></div>
-          <p>With a sprawling campus that houses state-of-the-art facilities, H.B. Kapadia High School offers a dynamic and engaging environment where students are encouraged to explore their talents and pursue their ambitions.</p>
-          <p>Graduates of our school carry its legacy with them, spreading their wings across the globe and contributing positively to society. As we continue to grow and evolve, we remain steadfast in our mission to inspire and empower the next generation of leaders, thinkers, and innovators.</p>
-          <p>H.B. Kapadia High School is not just an institution; it is a nurturing community where every student is valued, every achievement is celebrated, and every dream is given the wings to soar.</p>
-          <a href="#" class="btn btn-cta mt-3">Explore Our Campuses</a>
+        <h2>Our Founder's Legacy</h2>
+        <div class="section-underline"></div>
+        <p>Mr. Haribhai Kalyandas Kapadia established our school with a vision to provide quality education rooted in Indian values while embracing global perspectives. His philosophy continues to guide our educational approach today.</p>
+        
+        <p>The founder believed that education should not merely impart knowledge but also shape character. This principle remains at the heart of our institution, influencing everything from our curriculum design to our extracurricular activities.</p>
+        
+        <p>Under his leadership, the school laid strong foundations that have enabled successive generations to build upon his vision. Today, we honor his legacy by continuing to strive for excellence in all our endeavors.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Campuses Section -->
+<section id="campuses" class="campus-section">
+  <div class="container">
+    <h2 class="section-title text-center">Our Campuses</h2>
+    <div class="section-divider mx-auto"></div>
+    
+    <div class="campus-layout">
+      <!-- First Row with 3 campuses -->
+      <div class="campus-row campus-row-top">
+        <div class="campus-item">
+          <div class="campus-pin">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div class="campus-card">
+            <h3>Chandkheda</h3>
+            <span>Primary Campus</span>
+          </div>
+        </div>
+        
+        <div class="campus-item">
+          <div class="campus-pin">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div class="campus-card">
+            <h3>Chhatral</h3>
+            <span>Secondary Campus</span>
+          </div>
+        </div>
+        
+        <div class="campus-item">
+          <div class="campus-pin">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div class="campus-card">
+            <h3>IFFCO Township</h3>
+            <span>Special Programs</span>
+          </div>
         </div>
       </div>
+      
+      <!-- Second Row with 2 campuses -->
+      <div class="campus-row campus-row-bottom">
+        <div class="campus-item">
+          <div class="campus-pin">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div class="campus-card">
+            <h3>Kadi</h3>
+            <span>Branch Campus</span>
+          </div>
+        </div>
+        
+        <div class="campus-item">
+          <div class="campus-pin">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div class="campus-card">
+            <h3>Shela</h3>
+            <span>New Campus</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Vertical connector between rows -->
+      <div class="campus-connector-vertical"></div>
     </div>
   </div>
 </section>

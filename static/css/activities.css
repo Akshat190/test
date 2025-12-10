@@ -116,24 +116,38 @@
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 }
 
-.activity-image {
-  overflow: hidden;
-  position: relative;
+/* Icon circle instead of image */
+.activity-icon {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 25px auto 10px;
+  font-size: 2.4rem;
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
 }
 
-.activity-image img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  transition: transform 0.5s ease;
+.activity-icon-sport {
+  background: #0ea5e9;
 }
 
-.activity-card:hover .activity-image img {
-  transform: scale(1.05);
+.activity-icon-cultural {
+  background: #ec4899;
+}
+
+.activity-icon-academic {
+  background: #22c55e;
+}
+
+.activity-icon-event {
+  background: #f97316;
 }
 
 .activity-info {
-  padding: 25px 20px;
+  padding: 20px 20px 25px;
   text-align: center;
 }
 
