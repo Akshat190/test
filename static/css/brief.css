@@ -1,0 +1,99 @@
+/* Brief Page Styles */
+
+.brief-content {
+    padding: 20px 0;
+}
+
+.brief-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.brief-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 350px; /* Increased from default to make image larger */
+    min-height: 300px; /* Added minimum height */
+    object-fit: cover; /* Ensures image covers the area properly */
+}
+
+.brief-text-content {
+    padding: 20px;
+}
+
+.brief-text-content h1 {
+    color: #003264;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.brief-text-content .subtitle {
+    color: #003264;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+.brief-text-content p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.management-name {
+    color: #003264;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .brief-image-container {
+        margin-bottom: 30px;
+    }
+    
+    .brief-text-content {
+        padding: 0 20px 20px 20px;
+    }
+    
+    .brief-image {
+        max-width: 280px;
+        min-height: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .brief-text-content h1 {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+    
+    .brief-text-content .subtitle {
+        text-align: center;
+    }
+    
+    .management-name {
+        text-align: center;
+    }
+    
+    .brief-image {
+        max-width: 250px;
+        min-height: 220px;
+    }
+}
+
+@media (max-width: 576px) {
+    .brief-image {
+        max-width: 200px;
+        min-height: 180px;
+    }
+}

@@ -205,6 +205,165 @@
   overflow: hidden;
 }
 
+/* Campus Section Styles */
+.campus-section {
+  padding: 60px 0 80px;
+  background-color: #f9fafb;
+}
+
+/* Ensure campus elements are visible */
+#campuses * {
+  box-sizing: border-box;
+}
+
+/* Force display for campus elements */
+#campuses .campus-layout {
+  display: block !important;
+  visibility: visible !important;
+}
+
+#campuses .campus-row {
+  display: flex !important;
+  visibility: visible !important;
+}
+
+#campuses .campus-item {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.campus-layout {
+  max-width: 1100px;
+  margin: 50px auto 0;
+  position: relative;
+}
+
+.campus-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.campus-row-top {
+  justify-content: space-between;
+  margin-bottom: 90px;
+  position: relative;
+}
+
+/* Add horizontal line behind top row */
+.campus-row-top::before {
+  content: "";
+  position: absolute;
+  top: 37px; /* center of pin */
+  left: 12%;
+  right: 12%;
+  height: 3px;
+  background-color: #003264;
+  border-radius: 999px;
+  z-index: 1;
+}
+
+.campus-row-bottom {
+  justify-content: space-around;
+  position: relative;
+}
+
+/* Add horizontal line behind bottom row */
+.campus-row-bottom::before {
+  content: "";
+  position: absolute;
+  top: 37px; /* center of pin */
+  left: 20%;
+  right: 20%;
+  height: 3px;
+  background-color: #003264;
+  border-radius: 999px;
+  z-index: 1;
+}
+
+.campus-item {
+  flex: 0 0 260px;
+  max-width: 320px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 20px;
+}
+
+.campus-pin {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background-color: #003264 !important;
+  border: 4px solid #ffffff !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto -37px;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.campus-pin i {
+  color: #F4C430 !important;
+  font-size: 1.7rem !important;
+}
+
+/* Fallback if Font Awesome doesn't load */
+.campus-pin::before {
+  content: "📍";
+  font-size: 1.5rem;
+  display: var(--fa-display, none);
+}
+
+.campus-pin:not(:has(i))::before {
+  display: block;
+}
+
+.campus-card {
+  background-color: #ffffff !important;
+  border-radius: 14px !important;
+  padding: 40px 30px 26px !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.10) !important;
+  border: 1px solid #E5E7EB !important;
+  position: relative;
+  z-index: 5;
+  display: block !important;
+}
+
+.campus-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #003264;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.campus-card span {
+  font-size: 0.95rem;
+  color: #6B7280;
+  display: block;
+  text-align: center;
+}
+
+/* Hide individual horizontal lines on desktop - use ::before pseudo elements instead */
+.campus-line-horizontal {
+  display: none;
+}
+
+/* Vertical connector between rows */
+.campus-connector-vertical {
+  position: absolute;
+  top: 74px; /* start from center of middle pin */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 130px; /* reach to center of bottom pins */
+  background-color: #003264;
+  border-radius: 999px;
+  z-index: 1;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 992px) {
   .about-header {
@@ -221,6 +380,23 @@
   
   .mission-card, .vision-card {
     margin-bottom: 30px;
+  }
+
+  .campus-layout {
+    margin-top: 30px;
+  }
+
+  /* Hide connecting lines on smaller screens */
+  .campus-row-top::before,
+  .campus-row-bottom::before,
+  .campus-connector-vertical {
+    display: none;
+  }
+
+  .campus-row-top,
+  .campus-row-bottom {
+    justify-content: center;
+    gap: 40px;
   }
 }
 
@@ -253,6 +429,20 @@
   .about-image-container {
     margin-top: 30px;
   }
+  
+  .campus-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+  }
+  
+  .campus-item {
+    flex: 0 0 260px;
+  }
+
+  .campus-section {
+    padding: 60px 0 70px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -272,7 +462,115 @@
     padding: 40px 0;
   }
   
-  .mission-card, .vision-card {
+  .mission-card, .vision-card, .approach-card {
     padding: 20px;
   }
+  
+  .campus-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .campus-item {
+    width: 100%;
+    max-width: 260px;
+  }
+  
+  .campus-pin {
+    width: 64px;
+    height: 64px;
+    margin-bottom: -32px;
+  }
+  
+  .campus-pin i {
+    font-size: 1.4rem;
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+  }
+}
+
+/* CAMPUS OVERRIDE STYLES - Add at end to ensure they apply */
+section#campuses {
+  padding: 60px 0 80px !important;
+  background-color: #f9fafb !important;
+}
+
+section#campuses .campus-layout {
+  max-width: 1100px !important;
+  margin: 50px auto 0 !important;
+  position: relative !important;
+}
+
+section#campuses .campus-row {
+  display: flex !important;
+  align-items: flex-start !important;
+}
+
+section#campuses .campus-row-top {
+  justify-content: space-between !important;
+  margin-bottom: 90px !important;
+  position: relative !important;
+}
+
+section#campuses .campus-row-bottom {
+  justify-content: space-around !important;
+  position: relative !important;
+}
+
+section#campuses .campus-item {
+  flex: 0 0 260px !important;
+  max-width: 320px !important;
+  text-align: center !important;
+  position: relative !important;
+  z-index: 2 !important;
+  margin-bottom: 20px !important;
+}
+
+section#campuses .campus-pin {
+  width: 74px !important;
+  height: 74px !important;
+  border-radius: 50% !important;
+  background-color: #003264 !important;
+  border: 4px solid #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto -37px !important;
+  position: relative !important;
+  z-index: 10 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+}
+
+section#campuses .campus-pin i {
+  color: #F4C430 !important;
+  font-size: 1.7rem !important;
+}
+
+section#campuses .campus-card {
+  background-color: #ffffff !important;
+  border-radius: 14px !important;
+  padding: 40px 30px 26px !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.10) !important;
+  border: 1px solid #E5E7EB !important;
+  position: relative !important;
+  z-index: 5 !important;
+  display: block !important;
+}
+
+section#campuses .campus-card h3 {
+  font-size: 1.3rem !important;
+  font-weight: 700 !important;
+  color: #003264 !important;
+  margin-bottom: 6px !important;
+  text-align: center !important;
+}
+
+section#campuses .campus-card span {
+  font-size: 0.95rem !important;
+  color: #6B7280 !important;
+  display: block !important;
+  text-align: center !important;
 }
