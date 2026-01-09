@@ -134,45 +134,72 @@
       </div>
     </div>
     <div class="row gallery-grid">
-      <div class="col-lg-4 col-md-6 mb-4">
-        <div class="gallery-card">
-          <div class="gallery-img-container">
-            <img src="https://cdn.prod.website-files.com/65de4c6f8dc17dc010f8ac55/65de4e8fa9dea47849bfe182_654d5b61a2e2c9c8d6cdeae7_5f57c46384cca65e79589acf_students1.jpeg" alt="Gallery Image 1" class="img-fluid">
-            <div class="gallery-overlay">
-              <a href="{% url 'gallery' %}" class="gallery-link"><i class="fa fa-search-plus"></i></a>
+      {% if featured_galleries %}
+        {% for gallery in featured_galleries %}
+          {% for image in gallery.sample_images|slice:":1" %}
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="gallery-card">
+              <div class="gallery-img-container">
+                <img src="{{ image.get_image_url }}" alt="{{ gallery.title }}" class="img-fluid">
+                <div class="gallery-overlay">
+                  <a href="{% url 'gallery' %}" class="gallery-link"><i class="fa fa-search-plus"></i></a>
+                </div>
+              </div>
+              <div class="gallery-card-body">
+                <h5>{{ gallery.title }}</h5>
+              </div>
             </div>
           </div>
-          <div class="gallery-card-body">
-            <h5>Academic Excellence</h5>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-6 mb-4">
-        <div class="gallery-card">
-          <div class="gallery-img-container">
-            <img src="https://cdn.prod.website-files.com/65de4c6f8dc17dc010f8ac55/65de4e8fa9dea47849bfe182_654d5b61a2e2c9c8d6cdeae7_5f57c46384cca65e79589acf_students1.jpeg" alt="Gallery Image 2" class="img-fluid">
-            <div class="gallery-overlay">
-              <a href="{% url 'gallery' %}" class="gallery-link"><i class="fa fa-search-plus"></i></a>
+          {% endfor %}
+        {% endfor %}
+      {% else %}
+        <!-- Don't show celebrations in gallery section if they're already shown in the celebration section -->
+        <!-- Show static fallback images instead -->
+        {% if celebration %}
+          <!-- Celebrations are already shown in the celebration section, so use static images -->
+        {% else %}
+          <!-- Static fallback images -->
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="gallery-card">
+              <div class="gallery-img-container">
+                <img src="https://cdn.prod.website-files.com/65de4c6f8dc17dc010f8ac55/65de4e8fa9dea47849bfe182_654d5b61a2e2c9c8d6cdeae7_5f57c46384cca65e79589acf_students1.jpeg" alt="Gallery Image 1" class="img-fluid">
+                <div class="gallery-overlay">
+                  <a href="{% url 'gallery' %}" class="gallery-link"><i class="fa fa-search-plus"></i></a>
+                </div>
+              </div>
+              <div class="gallery-card-body">
+                <h5>Academic Excellence</h5>
+              </div>
             </div>
           </div>
-          <div class="gallery-card-body">
-            <h5>Sports Activities</h5>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-6 mb-4">
-        <div class="gallery-card">
-          <div class="gallery-img-container">
-            <img src="https://cdn.prod.website-files.com/65de4c6f8dc17dc010f8ac55/65de4e8fa9dea47849bfe182_654d5b61a2e2c9c8d6cdeae7_5f57c46384cca65e79589acf_students1.jpeg" alt="Gallery Image 3" class="img-fluid">
-            <div class="gallery-overlay">
-              <a href="{% url 'gallery' %}" class="gallery-link"><i class="fa fa-search-plus"></i></a>
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="gallery-card">
+              <div class="gallery-img-container">
+                <img src="https://cdn.prod.website-files.com/65de4c6f8dc17dc010f8ac55/65de4e8fa9dea47849bfe182_654d5b61a2e2c9c8d6cdeae7_5f57c46384cca65e79589acf_students1.jpeg" alt="Gallery Image 2" class="img-fluid">
+                <div class="gallery-overlay">
+                  <a href="{% url 'gallery' %}" class="gallery-link"><i class="fa fa-search-plus"></i></a>
+                </div>
+              </div>
+              <div class="gallery-card-body">
+                <h5>Sports Activities</h5>
+              </div>
             </div>
           </div>
-          <div class="gallery-card-body">
-            <h5>Cultural Events</h5>
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="gallery-card">
+              <div class="gallery-img-container">
+                <img src="https://cdn.prod.website-files.com/65de4c6f8dc17dc010f8ac55/65de4e8fa9dea47849bfe182_654d5b61a2e2c9c8d6cdeae7_5f57c46384cca65e79589acf_students1.jpeg" alt="Gallery Image 3" class="img-fluid">
+                <div class="gallery-overlay">
+                  <a href="{% url 'gallery' %}" class="gallery-link"><i class="fa fa-search-plus"></i></a>
+                </div>
+              </div>
+              <div class="gallery-card-body">
+                <h5>Cultural Events</h5>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        {% endif %}
+      {% endif %}
     </div>
     <div class="row mt-4">
       <div class="col-12 text-center">
