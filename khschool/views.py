@@ -21,24 +21,38 @@ def home(request):
             # Log the error but continue with empty list
             print(f"Error loading carousel images: {str(e)}")
     
+    # Define the ThumbnailImage class outside the loop
+    class ThumbnailImage:
+        def __init__(self, gallery):
+            self.gallery = gallery
+        
+        def get_image_url(self):
+            return self.gallery.get_thumbnail_url()
+    
     # Try to get featured galleries first
     if 'khschool_gallery' in tables:
         try:
             featured_galleries = Gallery.objects.filter(is_featured=True).order_by('-date_created')[:3]
             # For each gallery, get a sample of images
             for gallery in featured_galleries:
-                gallery.sample_images = gallery.galleryimage_set.all().order_by('order')[:4]
+                sample_images = gallery.galleryimage_set.all().order_by('order')[:4]
+                if sample_images:
+                    gallery.sample_images = sample_images
+                else:
+                    # If no gallery images exist, use the gallery's thumbnail as a fallback
+                    gallery.sample_images = [ThumbnailImage(gallery)]
         except Exception as e:
             # Log the error but continue with empty list
             print(f"Error loading featured galleries: {str(e)}")
     
-    # If no featured galleries, fall back to celebrations
-    if not featured_galleries and 'khschool_celebration' in tables:
+    # Always load celebrations for the celebration section regardless of featured galleries
+    if 'khschool_celebration' in tables:
         try:
             celebrations = Celebration.objects.all().order_by('-date')[:3]
         except Exception as e:
             # Log the error but continue with empty list
             print(f"Error loading celebrations: {str(e)}")
+            celebrations = []
         
     context = {
         'carousel_images': carousel_images,
