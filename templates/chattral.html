@@ -97,54 +97,107 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <ul class="list-unstyled">
-          <!-- CBSE Affiliation Documents -->
-          <li><a href="{% static 'documents/CBSE-AFFLIATION-LETTER-CHHATRAL (1).pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> CBSE AFFILIATION LETTER - CHHATRAL</a></li>
-          <li><a href="{% static 'documents/affiliation_letter.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> AFFILIATION LETTER</a></li>
+        <div class="document-grid">
+          <!-- New PDFs Added -->
+          <div class="doc-card">
+            <a href="{% static 'documents/1. Affiliation Letter 2026 to 2031.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Affiliation Letter 2026-2031</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/2. TRUST REGISTRATION CERTIFICATE.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Trust Registration Certificate</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/3. NOC CERTIFICATE-CBSE.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>NOC Certificate - CBSE</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/4. RECOGNITION CERTIFICATE-1-5 & 6-8.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Recognition Certificate (1-5 & 6-8)</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/5. building_certificate.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Building Certificate</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/6. FIRE NOC HBK CHHATRAL 2025-2027.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Fire NOC 2025-2027</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/7.Self Certificate.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Self Certificate</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/8. Water, Health and Sanitation Certificate.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Water, Health & Sanitation</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/9 fee structure.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Fee Structure</span>
+            </a>
+          </div>
           
-          <!-- Trust & Registration -->
-          <li><a href="{% static 'documents/Trust Registration Certificate.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> TRUST REGISTRATION CERTIFICATE</a></li>
-          <li><a href="{% static 'documents/trust_certificate.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> TRUST CERTIFICATE</a></li>
-          
-          <!-- NOC Certificates -->
-          <li><a href="{% static 'documents/NOC CERTIFICATE-CBSE.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> NOC CERTIFICATE - CBSE</a></li>
-          <li><a href="{% static 'documents/noc.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> NOC</a></li>
-          
-          <!-- Recognition Certificates -->
-          <li><a href="{% static 'documents/RECOGNITION CERTIFICATE-1-5 & 6-8.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> RECOGNITION CERTIFICATE (1-5 & 6-8)</a></li>
-          <li><a href="{% static 'documents/Recognition Certificate.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> RECOGNITION CERTIFICATE</a></li>
-          <li><a href="{% static 'documents/recognition_certificate.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> RECOGNITION CERTIFICATE (GENERAL)</a></li>
-          
-          <!-- Building Safety Certificates -->
-          <li><a href="{% static 'documents/Building Safety Certificate.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> BUILDING SAFETY CERTIFICATE</a></li>
-          <li><a href="{% static 'documents/Building Safety structure stability.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> BUILDING SAFETY STRUCTURE STABILITY</a></li>
-          <li><a href="{% static 'documents/building_certificate.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> BUILDING CERTIFICATE</a></li>
-          
-          <!-- Fire Safety Certificates -->
-          <li><a href="{% static 'documents/Fire Safety Certificate.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> FIRE SAFETY CERTIFICATE</a></li>
-          <li><a href="{% static 'documents/HBK Chhatral FIRE NOC 2022-2025.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> FIRE NOC 2022-2025 - CHHATRAL</a></li>
-          <li><a href="{% static 'documents/fire_certificate.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> FIRE CERTIFICATE</a></li>
-          
-          <!-- Water Health Certificates -->
-          <li><a href="{% static 'documents/Water health & sanitation Certificate HBK Chhatral.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> WATER HEALTH & SANITATION - CHHATRAL</a></li>
-          <li><a href="{% static 'documents/Water, Health and Sanitation Certificate.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> WATER, HEALTH & SANITATION CERTIFICATE</a></li>
-          <li><a href="{% static 'documents/waterhealth_certificate.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> WATERHEALTH CERTIFICATE</a></li>
-          
-          <!-- PTA & SMC -->
-          <li><a href="{% static 'documents/List of PTA.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> LIST OF PTA</a></li>
-          <li><a href="{% static 'documents/List of SMC.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> LIST OF SMC</a></li>
-          
-          <!-- Academic & Results -->
-          <li><a href="{% static 'documents/Results.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> BOARD RESULTS</a></li>
-          <li><a href="{% static 'documents/academic_planner.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> ACADEMIC PLANNER</a></li>
-          <li><a href="{% static 'documents/Tentative Annual Academic Calendar.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> ANNUAL ACADEMIC CALENDAR</a></li>
-          <li><a href="{% static 'documents/TENTATIVE HOLIDAY LIST & IMPORTANT EVENTS 2025-26.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> HOLIDAY LIST & EVENTS 2025-26</a></li>
-          
-          <!-- Fees & Other -->
-          <li><a href="{% static 'documents/Fees.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> FEE STRUCTURE</a></li>
-          <li><a href="{% static 'documents/Self Certificate.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> SELF CERTIFICATE</a></li>
-          <li><a href="{% static 'documents/Appendix IX.pdf' %}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> MANDATORY DISCLOSURE - APPENDIX IX</a></li>
-        </ul>
+          <!-- Additional Documents -->
+          <div class="doc-card">
+            <a href="{% static 'documents/List of PTA.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>List of PTA</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/List of SMC.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>List of SMC</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/Results.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Board Results</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/academic_planner.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Academic Planner</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/Tentative Annual Academic Calendar.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Annual Academic Calendar</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/TENTATIVE HOLIDAY LIST & IMPORTANT EVENTS 2025-26.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Holiday List & Events 2025-26</span>
+            </a>
+          </div>
+          <div class="doc-card">
+            <a href="{% static 'documents/Appendix IX.pdf' %}" target="_blank" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>Mandatory Disclosure - Appendix IX</span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
