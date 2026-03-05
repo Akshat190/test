@@ -1,53 +1,76 @@
-/* Page Header Styles */
+/* Page Header Styles - Enhanced */
 .about-header {
-  background-color: #003264;
+  background: linear-gradient(135deg, #003264 0%, #002244 100%);
   color: white;
-  padding: 60px 0;
+  padding: 80px 0;
   margin-bottom: 0;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 80%, rgba(212,175,55,0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%);
+  pointer-events: none;
 }
 
 .page-title {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 600;
   margin-bottom: 15px;
+  letter-spacing: -0.02em;
+  position: relative;
 }
 
 .page-title i {
-  color: #F4C430;
-  margin-right: 10px;
+  color: #D4AF37;
+  margin-right: 12px;
 }
 
 .title-underline {
-  height: 3px;
+  height: 4px;
   width: 80px;
-  background-color: #ffd700;
+  background: linear-gradient(90deg, #D4AF37, #E8C547);
   margin: 0 auto 20px;
+  border-radius: 2px;
 }
 
 .lead {
-  font-size: 1.25rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
   font-weight: 300;
+  opacity: 0.95;
 }
 
-/* About Section Styles */
+/* About Section Styles - Enhanced */
 .about-section {
   padding: 80px 0;
-  background-color: #f8f9fa;
+  background: linear-gradient(180deg, #fafaf8 0%, #f5f5f0 100%);
+  position: relative;
 }
 
 .about-content h2 {
-  font-size: 2rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
   font-weight: 600;
   margin-bottom: 15px;
-  color: #003264;
+  color: #1a1a2e;
 }
 
 .section-underline {
-  height: 3px;
+  height: 4px;
   width: 60px;
-  background-color: #ffd700;
+  background: linear-gradient(90deg, #D4AF37, #E8C547);
   margin-bottom: 25px;
+  border-radius: 2px;
 }
 
 .about-content p {
@@ -82,18 +105,18 @@
 
 .mission-card, .vision-card {
   background-color: #FFFFFF;
-  border-radius: 10px;
-  padding: 30px;
+  border-radius: 16px;
+  padding: 35px;
   height: 100%;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-  border: 1px solid #E5E7EB;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 50, 100, 0.08);
+  border: 1px solid rgba(0, 50, 100, 0.06);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mission-card:hover, .vision-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-  border-color: #4DA8DA;
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 50, 100, 0.15);
+  border-color: rgba(212, 175, 55, 0.3);
 }
 
 .card-underline {

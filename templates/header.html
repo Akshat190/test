@@ -1,45 +1,113 @@
 {% load static %}
 <!-- Include header CSS -->
 <link href="{% static 'css/header.css' %}" rel='stylesheet' type='text/css'>
-<!-- FORCE BIGGER LOGO - Inline styles to override cache -->
+
+<!-- Enhanced Header Styles -->
 <style>
 .header-logo {
-  height: 120px !important;
-  width: 200px !important;  /* Force specific width to override SVG's aspect ratio */
+  height: 100px !important;
+  width: auto !important;
   max-width: 100% !important;
   object-fit: contain !important;
-  transform: scale(1.3) !important; /* Additional scaling */
+  transition: transform 0.3s ease;
 }
+
+.logo-container:hover .header-logo {
+  transform: scale(1.03);
+}
+
 .navbar {
-  min-height: 95px !important;
-  padding: 0.4rem 1rem !important;
+  min-height: 120px !important;
+  padding: 0.5rem 1rem !important;
+  background: linear-gradient(135deg, var(--primary-navy, #003264) 0%, var(--primary-navy-dark, #002244) 100%) !important;
+  box-shadow: 0 4px 30px rgba(0,50,100,0.2);
 }
+
 @media (max-width: 991.98px) {
-  .header-logo { 
-    height: 100px !important; 
-    width: 160px !important;
-    transform: scale(1.2) !important;
-  }
-  .navbar { min-height: 85px !important; }
+  .header-logo { height: 85px !important; }
+  .navbar { min-height: 100px !important; }
 }
 @media (max-width: 767.98px) {
-  .header-logo { 
-    height: 80px !important; 
-    width: 130px !important;
-    transform: scale(1.1) !important;
-  }
-  .navbar { min-height: 75px !important; }
+  .header-logo { height: 70px !important; }
+  .navbar { min-height: 85px !important; }
 }
 @media (max-width: 575.98px) {
-  .header-logo { 
-    height: 70px !important; 
-    width: 110px !important;
-    transform: scale(1.0) !important;
-  }
-  .navbar { min-height: 65px !important; }
+  .header-logo { height: 60px !important; }
+  .navbar { min-height: 75px !important; }
+}
+
+/* Enhanced dropdown */
+.dropdown-menu {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,50,100,0.15);
+  padding: 12px 0;
+  margin-top: 8px;
+  animation: dropdownReveal 0.3s ease-out;
+}
+
+@keyframes dropdownReveal {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-item {
+  padding: 10px 24px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background: linear-gradient(90deg, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0.05) 100%);
+  color: var(--accent-gold, #D4AF37) !important;
+  padding-left: 32px;
+}
+
+/* Enhanced admission button */
+.admission-btn {
+  background: linear-gradient(135deg, #D4AF37 0%, #E8C547 100%);
+  color: #003264 !important;
+  font-weight: 600;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 13px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admission-btn:hover {
+  background: #fff;
+  color: #003264 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(212,175,55,0.4);
+}
+
+/* Mobile menu */
+.navbar-collapse {
+  background: linear-gradient(180deg, #003264 0%, #002244 100%);
+  border-radius: 0 0 16px 16px;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+.navbar-toggler {
+  border: none;
+  padding: 8px 12px;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+.navbar-toggler .fa {
+  color: #fff;
+  font-size: 1.5rem;
 }
 </style>
-<!-- Navbar with logo in same line -->
+
+<!-- Navbar with logo -->
 <div class="container-fluid p-0">
   <nav class="navbar navbar-expand-lg py-2 px-lg-5">
     <a href="{% url 'home' %}" class="navbar-brand me-4 logo-container">
@@ -98,7 +166,9 @@
           <a href="{% url 'contact' %}" class="nav-link">Contact Us</a>
         </li>
       </ul>
-      <a href="https://forms.gle/sDftg7osPaxvGKAD8" class="btn btn-primary px-4 py-2 d-none d-lg-block admission-btn" target="_blank">Admission Open</a>
+      <a href="https://forms.gle/sDftg7osPaxvGKAD8" class="btn admission-btn d-none d-lg-block" target="_blank">
+      <i class="fas fa-graduation-cap me-2"></i>Admission Open
+    </a>
     </div>
   </nav>
 </div>
