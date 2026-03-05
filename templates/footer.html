@@ -1,47 +1,178 @@
 {% load static %}
 <!--Footer Start -->
 <footer class="footer">
+  <!-- Decorative top border -->
+  <div class="footer-accent-line"></div>
+  
   <div class="container">
-    <div class="row" style="display: flex; flex-wrap: wrap;">
-      <div class="footer-col col">
-        <h4>Kapadia High School </h4>
-        <div class="social-links">
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-brand">
+          <h4>Kapadia High School</h4>
           <p class="school-details">Classes from K-12 (Science, Commerce & Humanities Stream). Provides excellent infrastructure, sound organizational support and ample opportunity to students.</p>
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="https://www.instagram.com/_tirth._.shah_?igsh=MWJwdnZ0MHVwMmNzcQ%3D%3D&utm_source=qr"><i class="fab fa-instagram"></i></a>
-          <a href="https://chat.whatsapp.com/DjRwLEhzaqy5BjutusOsl6"><i class="fab fa-whatsapp"></i></a>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/_tirth._.shah_?igsh=MWJwdnZ0MHVwMmNzcQ%3D%3D&utm_source=qr" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://chat.whatsapp.com/DjRwLEhzaqy5BjutusOsl6" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          </div>
         </div>
       </div>
-      <div class="footer-col col">
-        <h4>Our Links</h4>
-        <ul>
-          <li><a href="{% url 'home' %}">Home</a></li>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Activities</a></li>
-          <li><a href="{% url 'contact' %}">Contact Us</a></li>
+      <div class="col-lg-2 col-md-6">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="{% url 'home' %}"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="{% url 'aboutSchool' %}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a href="{% url 'activities' %}"><i class="fas fa-chevron-right"></i> Activities</a></li>
+          <li><a href="{% url 'contact' %}"><i class="fas fa-chevron-right"></i> Contact</a></li>
         </ul>
       </div>
-      <div class="footer-col col">
-        <h4>Other Links</h4>
-        <ul>
-          <li><a href="#">FAQ</a></li>
-          <li><a href="#">Admissions</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">News & Events</a></li>
-          <li><a href="#">Resources</a></li>
+      <div class="col-lg-3 col-md-6">
+        <h4>Academics</h4>
+        <ul class="footer-links">
+          <li><a href="{% url 'facilities' %}"><i class="fas fa-chevron-right"></i> Facilities</a></li>
+          <li><a href="{% url 'success_stories' %}"><i class="fas fa-chevron-right"></i> Success Stories</a></li>
+          <li><a href="{% url 'team' %}"><i class="fas fa-chevron-right"></i> School Team</a></li>
+          <li><a href="{% url 'gallery' %}"><i class="fas fa-chevron-right"></i> Gallery</a></li>
         </ul>
       </div>
-      <div class="footer-col col">
-        <h4>Contact Us</h4>
-        <ul>
-          <li><i class="fas fa-phone"></i> Phone: +916354368335</li>
-          <li><i class="fas fa-map-marker"></i> Location: Near Chhatral Railway Station, Kalol, Pratappura, Gujarat 382721</li>
-          <li><i class="fas fa-envelope"></i> Email: info@kapadiahighschool.com </li>
+      <div class="col-lg-3 col-md-6">
+        <h4>Contact Info</h4>
+        <ul class="footer-contact">
+          <li>
+            <i class="fas fa-phone"></i>
+            <span>+91 6354368335</span>
+          </li>
+          <li>
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Near Chhatral Railway Station,<br>Kalol, Pratappura, Gujarat 382721</span>
+          </li>
+          <li>
+            <i class="fas fa-envelope"></i>
+            <span>info@kapadiahighschool.com</span>
+          </li>
         </ul>
       </div>
+    </div>
+    
+    <!-- Copyright -->
+    <div class="footer-bottom">
+      <p>&copy; 2024 Kapadia High School. All Rights Reserved.</p>
     </div>
   </div>
 </footer>
 
-<!-- Footer styles moved to external CSS file: footer.css -->
+<style>
+.footer-accent-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #D4AF37, #E8C547, #D4AF37);
+}
+
+.footer h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #D4AF37;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links li a {
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+}
+
+.footer-links li a i {
+  font-size: 10px;
+  color: #D4AF37;
+  transition: transform 0.3s ease;
+}
+
+.footer-links li a:hover {
+  color: #D4AF37;
+  padding-left: 8px;
+}
+
+.footer-links li a:hover i {
+  transform: translateX(4px);
+}
+
+.footer-contact {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-contact li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.footer-contact li i {
+  color: #D4AF37;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.footer-bottom {
+  margin-top: 40px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+}
+
+.footer-bottom p {
+  color: rgba(255,255,255,0.6);
+  font-size: 14px;
+  margin: 0;
+}
+
+.social-links {
+  margin-top: 20px;
+}
+
+.social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  margin-right: 10px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.social-links a:hover {
+  background: #D4AF37;
+  color: #003264;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(212,175,55,0.4);
+}
+</style>

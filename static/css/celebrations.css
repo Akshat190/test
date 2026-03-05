@@ -1,15 +1,28 @@
-/* Celebrations Section Styling */
+/* Celebrations Section Styling - Enhanced */
 .celebrations-section {
-  padding: 60px 0;
-  background-color: #f9fafb;
+  padding: 80px 0;
+  background: linear-gradient(180deg, #f5f5f0 0%, #fafaf8 100%);
+  position: relative;
+}
+
+.celebrations-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,50,100,0.1), transparent);
 }
 
 .celebrations-title {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #003264;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.8rem;
+  font-weight: 600;
+  color: #1a1a2e;
   margin-bottom: 15px;
   text-align: center;
+  letter-spacing: -0.02em;
 }
 
 .celebrations-subtitle {
@@ -23,25 +36,26 @@
 .celebrations-underline {
   height: 4px;
   width: 80px;
-  background-color: #F4C430;
+  background: linear-gradient(90deg, #D4AF37, #E8C547);
   margin: 0 auto 25px;
+  border-radius: 2px;
 }
 
 .celebration-card {
-  border-radius: 10px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 50, 100, 0.08);
   margin-bottom: 30px;
   background-color: #fff;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   height: 100%;
-  border: 1px solid #E5E7EB;
+  border: 1px solid rgba(0, 50, 100, 0.06);
 }
 
 .celebration-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-  border-color: #4DA8DA;
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 50, 100, 0.15);
+  border-color: rgba(212, 175, 55, 0.3);
 }
 
 .celebration-img-container {
@@ -65,12 +79,13 @@
   position: absolute;
   top: 15px;
   right: 15px;
-  background-color: #003264;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
+  background: linear-gradient(135deg, #D4AF37 0%, #E8C547 100%);
+  color: #003264;
+  padding: 8px 14px;
+  border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 .celebration-content {
@@ -78,30 +93,32 @@
 }
 
 .celebration-name {
-  font-size: 1.2rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
   font-weight: 600;
-  color: #003264;
+  color: #1a1a2e;
   margin-bottom: 10px;
 }
 
 .view-all-btn {
-  background-color: #F4C430;
-  color: #003264;
-  font-weight: 600;
-  border: 2px solid #F4C430;
-  padding: 10px 25px;
-  border-radius: 30px;
-  transition: all 0.3s ease;
   display: inline-block;
+  padding: 14px 35px;
+  background: #003264;
+  color: white;
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid #003264;
   margin-top: 20px;
 }
 
 .view-all-btn:hover {
-  background-color: #003264;
-  color: #fff;
-  border-color: #003264;
+  background: transparent;
+  color: #003264;
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 40px rgba(0,50,100,0.15);
 }
 
 @media (max-width: 768px) {

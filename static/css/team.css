@@ -1,8 +1,8 @@
-/* Team Page Styles */
+/* Team Page Styles - Enhanced with Faculty Data */
 
 /* Page Header Styles */
 .team-header {
-    background-color: #003264;
+    background: linear-gradient(135deg, #003264 0%, #002244 100%);
     color: #ffffff;
     padding: 60px 0;
     margin-bottom: 40px;
@@ -344,4 +344,179 @@
     .department-icon i {
         font-size: 1.2rem;
     }
+}
+
+/* ============================================
+   FACULTY DIRECTORY STYLES (New Section)
+   ============================================ */
+
+/* Filter Buttons */
+.faculty-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+.faculty-filter-btn {
+    background: transparent;
+    border: 2px solid var(--primary-navy, #003264);
+    color: var(--primary-navy, #003264);
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.faculty-filter-btn:hover,
+.faculty-filter-btn.active {
+    background: var(--primary-navy, #003264);
+    color: #fff;
+}
+
+/* Faculty Card Enhanced */
+.faculty-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 50, 100, 0.08);
+    overflow: hidden;
+    height: 100%;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0, 50, 100, 0.06);
+}
+
+.faculty-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 50, 100, 0.15);
+    border-color: rgba(212, 175, 55, 0.3);
+}
+
+.faculty-card-header {
+    background: linear-gradient(135deg, #003264 0%, #002244 100%);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.faculty-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #D4AF37 0%, #E8C547 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 2.5rem;
+    color: #003264;
+    font-weight: 600;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+}
+
+.faculty-branch-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(212, 175, 55, 0.9);
+    color: #003264;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.faculty-card-body {
+    padding: 20px;
+}
+
+.faculty-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.faculty-designation {
+    text-align: center;
+    color: #D4AF37;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+
+.faculty-details {
+    display: grid;
+    gap: 10px;
+}
+
+.faculty-detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.faculty-detail-item i {
+    color: #D4AF37;
+    margin-top: 3px;
+    width: 16px;
+}
+
+.faculty-detail-item span {
+    flex: 1;
+}
+
+.faculty-achievements {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.achievement-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.achievement-text {
+    font-size: 0.85rem;
+    color: #1a1a2e;
+    line-height: 1.5;
+}
+
+/* Department Section Header */
+.dept-section-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    background: linear-gradient(135deg, #003264 0%, #002244 100%);
+    border-radius: 16px;
+    color: #fff;
+}
+
+.dept-section-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.dept-section-header .dept-count {
+    color: #D4AF37;
+    font-size: 0.9rem;
+}
+
+/* Faculty Grid */
+.faculty-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
 }
