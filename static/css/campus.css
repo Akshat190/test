@@ -189,6 +189,60 @@ h1.campus-title:after {
     transform: translateX(5px);
 }
 
+/* Document Grid - New Enhanced Style */
+.document-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    padding: 10px 0;
+}
+
+.doc-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 50, 100, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.doc-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 50, 100, 0.15);
+    border-color: rgba(212, 175, 55, 0.4);
+}
+
+.doc-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 20px;
+    color: #1a1a2e;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.doc-link i {
+    font-size: 1.5rem;
+    color: #D4AF37;
+    transition: all 0.3s ease;
+}
+
+.doc-link span {
+    flex: 1;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.doc-card:hover .doc-link i {
+    transform: scale(1.1);
+    color: #003264;
+}
+
+.doc-card:hover .doc-link {
+    color: #003264;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 992px) {
     h1.campus-title {
