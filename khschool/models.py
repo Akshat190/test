@@ -69,18 +69,8 @@ class UserProfile(models.Model):
         return self.role.is_super_admin if self.role else False
 
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    """Auto-create UserProfile when a new User is created."""
-    if created:
-        UserProfile.objects.get_or_create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    """Save UserProfile when User is saved."""
-    if hasattr(instance, 'profile'):
-        instance.profile.save()
+# Note: UserProfile creation is handled in UserAdmin.save_model()
+# to avoid conflicts with the admin inline form.
 
 
 # Create your models here.

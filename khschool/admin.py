@@ -30,16 +30,16 @@ class RoleAdmin(admin.ModelAdmin):
     ordering = ['-level']
 
     def has_add_permission(self, request):
-        role = get_user_role(request.user)
-        return request.user.is_superuser or (role and role.can_manage_roles)
+        # Roles are pre-defined; nobody can create new ones
+        return False
 
     def has_change_permission(self, request, obj=None):
         role = get_user_role(request.user)
         return request.user.is_superuser or (role and role.can_manage_roles)
 
     def has_delete_permission(self, request, obj=None):
-        role = get_user_role(request.user)
-        return request.user.is_superuser or (role and role.can_manage_roles)
+        # Pre-defined roles cannot be deleted
+        return False
 
 
 # ─── UserProfile Admin ─────────────────────────────────────────
@@ -68,6 +68,12 @@ class UserAdmin(BaseUserAdmin):
             return qs
         # Regular users can only see themselves
         return qs.filter(id=request.user.id)
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        # Create UserProfile if it doesn't exist (avoids UNIQUE constraint error)
+        if not change:
+            UserProfile.objects.get_or_create(user=obj)
 
 
 # Re-register UserAdmin
