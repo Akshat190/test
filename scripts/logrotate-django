@@ -1,0 +1,18 @@
+# Logrotate configuration for Django application logs
+# Place this file at /etc/logrotate.d/django-khs on your VPS
+# Adjust the path below to match your project's logs directory
+
+/home/deploy/test/logs/django.log {
+    daily
+    rotate 14
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0644 deploy deploy
+    sharedscripts
+    postrotate
+        # Reload gunicorn to release file handles (adjust service name if different)
+        /bin/systemctl reload gunicorn || true
+    endscript
+}
