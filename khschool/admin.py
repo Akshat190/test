@@ -69,11 +69,19 @@ class UserAdmin(BaseUserAdmin):
         # Regular users can only see themselves
         return qs.filter(id=request.user.id)
 
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-        # Create UserProfile if it doesn't exist (avoids UNIQUE constraint error)
-        if not change:
-            UserProfile.objects.get_or_create(user=obj)
+    def save_formset(self, request, form, formset, change):
+        """Override to use get_or_create for UserProfile inline, preventing UNIQUE constraint errors."""
+        instances = formset.save(commit=False)
+        for instance in instances:
+            if isinstance(instance, UserProfile):
+                # Use get_or_create to avoid duplicate profile errors
+                UserProfile.objects.get_or_create(
+                    user=instance.user,
+                    defaults={'role': instance.role}
+                )
+            else:
+                instance.save()
+        formset.save_m2m()
 
 
 # Re-register UserAdmin
