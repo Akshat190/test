@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %} 
+{% load static %}
 
 {% block title %}Chhatral Campus - Kapadia High School{% endblock %}
 
@@ -15,37 +15,39 @@
         <!-- Left side - Image -->
         <div class="col-md-4">
             <div class="campus-image">
-                <img src="{% static 'image/campus_chhatral.jpg' %}" alt="Memnagar Campus" class="img-fluid rounded shadow" onerror="this.src='https://via.placeholder.com/400x300?text=Memnagar+Campus'">
+                {% if campus and campus.photo %}
+                    <img src="{{ campus.photo.url }}" alt="{{ campus.name }} Campus" class="img-fluid rounded shadow">
+                {% else %}
+                    <img src="{% static 'image/campus_chhatral.jpg' %}" alt="Chhatral Campus" class="img-fluid rounded shadow" onerror="this.src='https://via.placeholder.com/400x300?text=Chhatral+Campus'">
+                {% endif %}
             </div>
         </div>
-        
+
         <!-- Right side - Information -->
         <div class="col-md-8">
-            <h1 class="campus-title">Chhatral</h1>
-            
+            <h1 class="campus-title">{{ campus.name|default:"Chhatral" }}</h1>
+
             <div class="campus-details">
                 <div class="row mb-2">
                     <div class="col-md-3 fw-bold">Board</div>
-                    <div class="col-md-9">: CBSE</div>
+                    <div class="col-md-9">: {{ campus.board|default:"CBSE" }}</div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-3 fw-bold">Affiliation Number</div>
-                    <div class="col-md-9">: 430302
-                     </div>
+                    <div class="col-md-9">: {{ campus.affiliation_number|default:"430302" }}</div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-3 fw-bold">Timings</div>
-                    <div class="col-md-9">: 8:00 am to 2:00 pm (Monday-Saturday)</div>
+                    <div class="col-md-9">: {{ campus.timings|default:"8:00 am to 2:00 pm (Monday-Saturday)" }}</div>
                 </div>
             </div>
-            
+
             <div class="board-buttons mt-4">
                 <a href="#" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#cbseModal">CBSE</a>
-                <!-- <a href="#" class="btn btn-primary">LC</a> -->
             </div>
         </div>
     </div>
-    
+
     <!-- Document Links Section -->
     <div class="row mt-5">
         <div class="col-12">
@@ -60,7 +62,7 @@
                     <a href="#" class="facility-btn">LIBRARY</a>
                 </div>
             </div>
-            
+
             <div class="row mb-3">
                 <div class="col-md-4 mb-3">
                     <a href="#" class="facility-btn">ART ROOM</a>
@@ -72,7 +74,7 @@
                     <a href="#" class="facility-btn">CURATED LABS</a>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <a href="#" class="facility-btn">TRANSPORTATION</a>
@@ -98,105 +100,115 @@
       </div>
       <div class="modal-body">
         <div class="document-grid">
-          <!-- New PDFs Added -->
-          <div class="doc-card">
-            <a href="{% static 'documents/1. Affiliation Letter 2026 to 2031.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Affiliation Letter 2026-2031</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/2. TRUST REGISTRATION CERTIFICATE.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Trust Registration Certificate</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/3. NOC CERTIFICATE-CBSE.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>NOC Certificate - CBSE</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/4. RECOGNITION CERTIFICATE-1-5 & 6-8.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Recognition Certificate (1-5 & 6-8)</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/Building Safety Certificate.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Building Safety Certificate</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/fire-safety.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Fire Safety Certificate</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/Self Certificate (1).pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Self Certificate</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/8. Water, Health and Sanitation Certificate.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Water, Health & Sanitation</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/9 fee structure.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Fee Structure</span>
-            </a>
-          </div>
-          
-          <!-- Additional Documents -->
-          <div class="doc-card">
-            <a href="{% static 'documents/List of PTA.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>List of PTA</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/List of SMC.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>List of SMC</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/Results.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Board Results</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/academic_planner.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Academic Planner</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/Tentative Annual Academic Calendar.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Annual Academic Calendar</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/TENTATIVE HOLIDAY LIST & IMPORTANT EVENTS 2025-26.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Holiday List & Events 2025-26</span>
-            </a>
-          </div>
-          <div class="doc-card">
-            <a href="{% static 'documents/Appendix IX.pdf' %}" target="_blank" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>Mandatory Disclosure - Appendix IX</span>
-            </a>
-          </div>
+          {% if campus and campus.documents.exists %}
+            <!-- Dynamic documents from database -->
+            {% for doc in campus.documents.all %}
+              <div class="doc-card">
+                <a href="{{ doc.file.url }}" target="_blank" class="doc-link">
+                  <i class="fas fa-file-pdf"></i>
+                  <span>{{ doc.title }}</span>
+                </a>
+              </div>
+            {% endfor %}
+          {% else %}
+            <!-- Fallback static documents -->
+            <div class="doc-card">
+              <a href="{% static 'documents/1. Affiliation Letter 2026 to 2031.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Affiliation Letter 2026-2031</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/2. TRUST REGISTRATION CERTIFICATE.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Trust Registration Certificate</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/3. NOC CERTIFICATE-CBSE.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>NOC Certificate - CBSE</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/4. RECOGNITION CERTIFICATE-1-5 & 6-8.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Recognition Certificate (1-5 & 6-8)</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/Building Safety Certificate.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Building Safety Certificate</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/fire-safety.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Fire Safety Certificate</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/Self Certificate (1).pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Self Certificate</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/8. Water, Health and Sanitation Certificate.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Water, Health & Sanitation</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/9 fee structure.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Fee Structure</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/List of PTA.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>List of PTA</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/List of SMC.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>List of SMC</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/Results.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Board Results</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/academic_planner.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Academic Planner</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/Tentative Annual Academic Calendar.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Annual Academic Calendar</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/TENTATIVE HOLIDAY LIST & IMPORTANT EVENTS 2025-26.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Holiday List & Events 2025-26</span>
+              </a>
+            </div>
+            <div class="doc-card">
+              <a href="{% static 'documents/Appendix IX.pdf' %}" target="_blank" class="doc-link">
+                <i class="fas fa-file-pdf"></i>
+                <span>Mandatory Disclosure - Appendix IX</span>
+              </a>
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -210,17 +222,17 @@
         function removeBackdrops() {
             document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
         }
-        
+
         // Clean up any existing backdrops
         removeBackdrops();
-        
+
         // Modal event listeners to remove backdrop
         const modal = document.getElementById('cbseModal');
         if (modal) {
             modal.addEventListener('shown.bs.modal', function() {
                 removeBackdrops();
             });
-            
+
             modal.addEventListener('hidden.bs.modal', function() {
                 removeBackdrops();
                 document.body.style.overflow = '';

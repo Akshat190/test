@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.conf import settings
 import logging
-from .models import Celebration, CarouselImage, CelebrationPhoto, Gallery, GalleryImage
+from .models import Celebration, CarouselImage, CelebrationPhoto, Gallery, GalleryImage, Campus
 
 logger = logging.getLogger('khschool')
 
@@ -179,7 +179,13 @@ def chandkheda(request):
 
 
 def chattral(request):
-    return render(request, 'chattral.html')
+    campus = None
+    try:
+        campus = Campus.objects.prefetch_related('documents').get(slug='chattral', is_active=True)
+    except Campus.DoesNotExist:
+        pass
+
+    return render(request, 'chattral.html', {'campus': campus})
 
 
 def iffco(request):

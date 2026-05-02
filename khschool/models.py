@@ -147,6 +147,58 @@ class GalleryImage(models.Model):
         return self.image.url if self.image else None
 
 
+class Campus(models.Model):
+    slug = models.SlugField(unique=True, help_text='URL-friendly identifier, e.g., chattral, chandkheda')
+    name = models.CharField(max_length=100, verbose_name='Campus Name')
+    board = models.CharField(max_length=20, blank=True, verbose_name='Board')
+    affiliation_number = models.CharField(max_length=50, blank=True, verbose_name='Affiliation Number')
+    timings = models.CharField(max_length=100, blank=True, verbose_name='Timings')
+    photo = models.ImageField(
+        upload_to='campus/photos/',
+        blank=True,
+        null=True,
+        verbose_name='Campus Photo',
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'webp'])]
+    )
+    is_active = models.BooleanField(default=True, verbose_name='Active')
+
+    class Meta:
+        verbose_name = 'Campus'
+        verbose_name_plural = 'Campuses'
+        ordering = ['name']
+        permissions = [
+            ('change_campus_photo', 'Can change campus photo'),
+        ]
+
+    def __str__(self):
+        return self.name
+
+    def get_photo_url(self):
+        return self.photo.url if self.photo else None
+
+
+class CampusDocument(models.Model):
+    campus = models.ForeignKey(Campus, on_delete=models.CASCADE, related_name='documents')
+    title = models.CharField(max_length=200, verbose_name='Document Title')
+    file = models.FileField(
+        upload_to='campus/documents/',
+        verbose_name='PDF Document',
+        validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
+    )
+    order = models.IntegerField(default=0, verbose_name='Display Order')
+
+    class Meta:
+        verbose_name = 'Campus Document'
+        verbose_name_plural = 'Campus Documents'
+        ordering = ['campus', 'order']
+
+    def __str__(self):
+        return f"{self.campus.name} - {self.title}"
+
+    def get_file_url(self):
+        return self.file.url if self.file else None
+
+
 class CarouselImage(models.Model):
     URL_CHOICES = [
         ('/', 'Home'),
