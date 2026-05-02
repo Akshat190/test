@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Celebration, CarouselImage, CelebrationPhoto, Gallery, GalleryImage
-from django.contrib.auth.decorators import login_required
+
+
 # Create your views here.
 def home(request):
     # Set default empty values
@@ -187,33 +188,7 @@ def testimonials(request):
 def achievements(request):
     return render(request,'achievements.html')
 
-@login_required
-def image_test(request):
-    """
-    View for testing image display from local storage
-    Protected by login to prevent public access
-    """
-    carousel_images = CarouselImage.objects.filter(is_active=True).order_by('order')
-    celebrations = Celebration.objects.all().order_by('-date')
-    galleries = Gallery.objects.all().order_by('-date_created')
-    
-    # For each celebration, get its additional photos
-    for celebration in celebrations:
-        celebration.additional_photos = celebration.celebrationphoto_set.all().order_by('order')
-    
-    # For each gallery, get its images
-    for gallery in galleries:
-        gallery.images = gallery.galleryimage_set.all().order_by('order', '-date_added')
-    
-    context = {
-        'carousel_images': carousel_images,
-        'celebrations': celebrations,
-        'galleries': galleries
-    }
-    
-    return render(request, 'image_test.html', context)
-
-# Health check endpoint for keep-alive pinging
+# Health check endpoint
 def health_check(request):
     """
     Simple health check endpoint for keep-alive pinging
