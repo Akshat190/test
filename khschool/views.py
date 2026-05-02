@@ -1,7 +1,5 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.core.mail import send_mail
-from django.conf import settings
 import logging
 from .models import Celebration, CarouselImage, CelebrationPhoto, Gallery, GalleryImage, Campus
 
@@ -135,33 +133,13 @@ def contact(request):
                 'form_data': request.POST
             })
         
-        full_message = f"""
-New Contact Form Submission from Kapadia High School Website
-
-Name: {name}
-Email: {email}
-Phone: {phone}
-Subject: {subject}
-
-Message:
-{message}
-"""
-        
-        try:
-            send_mail(
-                subject=f"Contact Form: {subject}",
-                message=full_message,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=['info@kapadiahighschool.com'],
-                fail_silently=False,
-            )
-            return render(request, 'contact.html', {'success': True})
-        except Exception as e:
-            logger.error(f"Failed to send contact email: {str(e)}")
-            return render(request, 'contact.html', {
-                'error': 'Failed to send message. Please try again later.',
-                'form_data': request.POST
-            })
+        # Email sending removed - no email service configured
+        # Log form submission for manual follow-up
+        logger.info(
+            f"Contact form submitted: name={name}, email={email}, phone={phone}, "
+            f"subject={subject}, message={message}"
+        )
+        return render(request, 'contact.html', {'success': True})
     
     return render(request, 'contact.html')
 

@@ -13,6 +13,8 @@ from khschool.forms import (
 
 def get_user_role(user):
     """Helper to get a user's role from their profile."""
+    if not user or not user.is_authenticated:
+        return None
     if hasattr(user, 'profile') and user.profile.role:
         return user.profile.role
     return None
