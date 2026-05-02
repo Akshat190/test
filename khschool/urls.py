@@ -19,7 +19,6 @@ urlpatterns = [
     path('activities/',views.activities,name='activities'),
     path('testimonials/',views.testimonials,name='testimonials'),
     path('achievements/',views.achievements,name='achievements'),
-    path('image-test/',views.image_test,name='image_test'),
     path('health/', views.health_check, name='health_check'),
 ]
 

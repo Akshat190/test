@@ -1,11 +1,7 @@
-# VPS Deployment Requirements (No Supabase needed)
 Django==4.2.7
 psycopg2-binary==2.9.9
 gunicorn==21.2.0
 whitenoise==6.6.0
 Pillow==10.0.1
-requests==2.31.0
-python-slugify==8.0.1
-APScheduler==3.10.1
-psutil==5.9.6
-redis==5.0.0
+python-dotenv==1.0.0
+dj-database-url==2.1.0

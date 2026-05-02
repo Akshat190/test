@@ -1,127 +1,54 @@
-# Kapadia High School Website - 100% VPS-Only Version
+# Kapadia High School Website
 
-**✅ ZERO EXTERNAL DEPENDENCIES - PURE VPS STORAGE**
+A Django-based website for Kapadia High School, built with simplicity and local storage in mind.
 
-This version has been optimized to run **entirely on VPS** with **no external cloud services** required.
+## Tech Stack
 
-## 🎯 What Makes This VPS-Only?
+- Django 4.2
+- PostgreSQL (production) / SQLite (development)
+- WhiteNoise for static files
+- Pillow for image processing
+- Bootstrap 5 (CDN)
 
-### ❌ Removed External Dependencies:
-- ❌ No Supabase cloud storage
-- ❌ No external API calls
-- ❌ No third-party image hosting
-- ❌ No cloud database connections
-- ❌ Zero external service dependencies
-
-### ✅ VPS-Native Features:
-- ✅ Local VPS file storage only (`/var/www/khs/media/`)
-- ✅ PostgreSQL database on same VPS
-- ✅ Nginx serves images directly from VPS disk
-- ✅ Django admin uploads to local VPS storage
-- ✅ All processing happens on your VPS server
-
-## 🏗️ Architecture
-
-```
-YOUR VPS SERVER (₹249/month)
-├── 🐍 Django Application
-├── 🗄️  PostgreSQL Database  
-├── 🖼️  Local Media Storage (/var/www/khs/media/)
-├── ⚡ Nginx (serves images directly)
-├── 🔄 Redis (caching)
-└── 🛡️  All security & backups
-```
-
-## 📁 Storage Structure
+## Local Development
 
 ```bash
-/var/www/khs/media/
-├── carousel/images/      # Homepage banners
-├── festival/
-│   ├── images/          # Festival main photos  
-│   └── gallery/         # Festival galleries
-└── gallery/
-    ├── images/          # Gallery photos
-    └── thumbnails/      # Thumbnails
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
 ```
 
-## 🚀 Deployment
+## Admin Panel
 
-**Use the VPS_DEPLOYMENT_GUIDE.md** - it's been updated for VPS-only setup.
+Access `/admin/` to manage:
+- **Carousel Images** – homepage banner slides
+- **Celebrations** – festivals & school events with photo galleries
+- **Galleries** – categorized photo collections
 
-### Quick Start:
-1. Get Hostinger VPS (₹249/month)
-2. Follow `VPS_DEPLOYMENT_GUIDE.md`
-3. Upload photos via `/admin/` panel
-4. All images stored and served from your VPS
-
-## 📋 Admin Panel Usage
-
-### Upload Photos:
-1. **Access:** `https://your-domain.com/admin/`
-2. **Login:** Your superuser account
-3. **Upload Images:**
-   - **Celebrations** → Festival photos
-   - **Gallery** → Photo collections  
-   - **Carousel Images** → Homepage banners
-4. **Storage:** All images saved to VPS disk automatically
-
-## ⚡ Performance Benefits
-
-| Feature | VPS-Only | Cloud Storage |
-|---------|----------|---------------|
-| **Speed** | ⚡ Instant | 🐌 API delays |
-| **Cost** | 💰 ₹249/month only | 💸 VPS + cloud fees |
-| **Control** | 🎯 100% yours | 📡 Third-party dependent |
-| **Reliability** | 🛡️ No external failures | ❌ API downtime risk |
-
-## 🔧 Photo Optimization
-
-Advanced photo optimization built-in:
+## Environment Variables (Production)
 
 ```bash
-# Optimize by folder
-python manage.py optimize_photos --folder carousel
-python manage.py optimize_photos --folder gallery
-python manage.py optimize_photos --folder festival
-
-# Optimize all photos  
-python manage.py optimize_photos
-
-# Check storage usage
-du -sh /var/www/khs/media/
+SECRET_KEY=your-secret-key
+DEBUG=False
+DB_NAME=kapadiaschool_db
+DB_USER=kapadiaschool_user
+DB_PASSWORD=your-password
+DB_HOST=localhost
+DB_PORT=5432
 ```
 
-## 🛠️ Technical Stack
+## Project Structure
 
-### Dependencies (VPS-Only):
 ```
-Django==4.2.7          # Web framework
-PostgreSQL              # Database  
-Nginx                   # Web server
-Gunicorn               # WSGI server
-Redis                  # Caching
-Pillow                 # Image processing
-WhiteNoise             # Static files
+kapadiaschool/    # Django project settings
+khschool/         # Main Django app (models, views, urls, admin)
+templates/        # HTML templates
+static/           # CSS, JS, images, documents
+gallery/          # Uploaded media (local dev)
 ```
 
-### Removed Dependencies:
-- ❌ `supabase==2.7.0` (removed)
-- ❌ External storage APIs (removed)
-- ❌ Third-party image services (removed)
+## License
 
-## 🎊 Benefits Summary
-
-✅ **Faster Performance** - No API calls, direct file serving  
-✅ **Lower Cost** - Only VPS cost, no additional cloud fees  
-✅ **Better Privacy** - All data stays on your server  
-✅ **Full Control** - You own everything  
-✅ **Simpler Deployment** - No external API configuration  
-✅ **More Reliable** - No external service dependencies  
-✅ **Better SEO** - Faster image loading improves rankings  
-
-## 🚀 Ready to Deploy!
-
-Your website is now **100% VPS-native** and ready for deployment on Hostinger VPS (₹249/month).
-
-**No external services needed. Pure VPS power!** 🎉
+Internal use only.
