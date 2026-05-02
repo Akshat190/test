@@ -20,6 +20,30 @@ def get_user_role(user):
     return None
 
 
+def is_photo_editor(user):
+    """Check if user has photo editing permissions."""
+    if user.is_superuser:
+        return True
+    role = get_user_role(user)
+    return role and (role.can_change_photo or role.is_super_admin)
+
+
+def is_document_editor(user):
+    """Check if user has document editing permissions."""
+    if user.is_superuser:
+        return True
+    role = get_user_role(user)
+    return role and (role.can_change_documents or role.is_super_admin)
+
+
+def is_admin_or_higher(user):
+    """Check if user is Admin or Super Admin."""
+    if user.is_superuser:
+        return True
+    role = get_user_role(user)
+    return role and (role.can_manage_users or role.is_super_admin)
+
+
 # ─── Role Admin ────────────────────────────────────────────────
 
 @admin.register(Role)
@@ -30,7 +54,6 @@ class RoleAdmin(admin.ModelAdmin):
     ordering = ['-level']
 
     def has_add_permission(self, request):
-        # Roles are pre-defined; nobody can create new ones
         return False
 
     def has_change_permission(self, request, obj=None):
@@ -38,7 +61,6 @@ class RoleAdmin(admin.ModelAdmin):
         return request.user.is_superuser or (role and role.can_manage_roles)
 
     def has_delete_permission(self, request, obj=None):
-        # Pre-defined roles cannot be deleted
         return False
 
 
@@ -66,15 +88,12 @@ class UserAdmin(BaseUserAdmin):
         role = get_user_role(request.user)
         if request.user.is_superuser or (role and role.can_manage_users):
             return qs
-        # Regular users can only see themselves
         return qs.filter(id=request.user.id)
 
     def save_formset(self, request, form, formset, change):
-        """Override to use get_or_create for UserProfile inline, preventing UNIQUE constraint errors."""
         instances = formset.save(commit=False)
         for instance in instances:
             if isinstance(instance, UserProfile):
-                # Use get_or_create to avoid duplicate profile errors
                 UserProfile.objects.get_or_create(
                     user=instance.user,
                     defaults={'role': instance.role}
@@ -84,12 +103,11 @@ class UserAdmin(BaseUserAdmin):
         formset.save_m2m()
 
 
-# Re-register UserAdmin
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
 
-# ─── Campus Document Inline ────────────────────────────────────
+# ─── Campus Admin ──────────────────────────────────────────────
 
 class CampusDocumentInline(admin.TabularInline):
     model = CampusDocument
@@ -98,25 +116,14 @@ class CampusDocumentInline(admin.TabularInline):
     ordering = ['order']
 
     def has_add_permission(self, request, obj=None):
-        role = get_user_role(request.user)
-        if not role:
-            return False
-        return role.can_change_documents or role.is_super_admin
+        return is_document_editor(request.user)
 
     def has_change_permission(self, request, obj=None):
-        role = get_user_role(request.user)
-        if not role:
-            return False
-        return role.can_change_documents or role.is_super_admin
+        return is_document_editor(request.user)
 
     def has_delete_permission(self, request, obj=None):
-        role = get_user_role(request.user)
-        if not role:
-            return False
-        return role.can_change_documents or role.is_super_admin
+        return is_document_editor(request.user)
 
-
-# ─── Campus Admin ──────────────────────────────────────────────
 
 @admin.register(Campus)
 class CampusAdmin(admin.ModelAdmin):
@@ -129,59 +136,45 @@ class CampusAdmin(admin.ModelAdmin):
         return get_user_role(request.user)
 
     def get_fields(self, request, obj=None):
-        role = self._get_role(request)
-        if request.user.is_superuser or (role and role.is_super_admin):
+        if request.user.is_superuser or is_admin_or_higher(request.user):
             return ['slug', 'name', 'board', 'affiliation_number', 'timings', 'photo', 'is_active']
-        if role and role.can_change_photo:
+        if is_photo_editor(request.user):
             return ['name', 'photo']
         return ['name']
 
     def get_readonly_fields(self, request, obj=None):
-        role = self._get_role(request)
-        if request.user.is_superuser or (role and role.is_super_admin):
+        if request.user.is_superuser or is_admin_or_higher(request.user):
             return []
-        if role and role.can_change_photo:
+        if is_photo_editor(request.user):
             return ['name']
         return ['slug', 'name', 'board', 'affiliation_number', 'timings', 'photo', 'is_active']
 
     def get_inline_instances(self, request, obj=None):
         inlines = []
-        role = self._get_role(request)
-        if role and (role.can_change_documents or role.is_super_admin):
+        if is_document_editor(request.user):
             inlines.append(CampusDocumentInline(self.model, self.admin_site))
         return inlines
 
     def has_change_permission(self, request, obj=None):
         if super().has_change_permission(request, obj):
             return True
-        role = self._get_role(request)
-        if role and (role.can_change_photo or role.can_change_documents):
-            return True
-        return False
+        return is_photo_editor(request.user) or is_document_editor(request.user)
 
     def has_module_permission(self, request):
         if super().has_module_permission(request):
             return True
-        role = self._get_role(request)
-        if role and (role.can_change_photo or role.can_change_documents or role.is_super_admin):
-            return True
-        return False
+        return is_photo_editor(request.user) or is_document_editor(request.user)
 
     def has_view_permission(self, request, obj=None):
         if super().has_view_permission(request, obj):
             return True
-        role = self._get_role(request)
-        if role and (role.can_change_photo or role.can_change_documents or role.is_super_admin):
-            return True
-        return False
+        return is_photo_editor(request.user) or is_document_editor(request.user)
 
     def has_add_permission(self, request):
-        role = self._get_role(request)
-        return request.user.is_superuser or (role and role.is_super_admin)
+        return request.user.is_superuser or is_admin_or_higher(request.user)
 
     def has_delete_permission(self, request, obj=None):
-        role = self._get_role(request)
-        return request.user.is_superuser or (role and role.is_super_admin)
+        return request.user.is_superuser or is_admin_or_higher(request.user)
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -189,7 +182,6 @@ class CampusAdmin(admin.ModelAdmin):
             return qs
         role = self._get_role(request)
         if role and role.can_change_documents and not role.can_change_photo:
-            # Document-only editor - show all active campuses
             return qs.filter(is_active=True)
         return qs
 
@@ -213,26 +205,27 @@ class CampusDocumentAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        role = get_user_role(request.user)
-        if request.user.is_superuser or (role and role.can_manage_roles):
+        if request.user.is_superuser or is_admin_or_higher(request.user):
             return qs
-        # Document editors and photo editors only see their campuses
         return qs.filter(campus__is_active=True)
 
     def has_add_permission(self, request):
-        role = get_user_role(request.user)
-        return request.user.is_superuser or (role and (role.can_change_documents or role.is_super_admin))
+        return is_document_editor(request.user)
 
     def has_change_permission(self, request, obj=None):
-        role = get_user_role(request.user)
-        return request.user.is_superuser or (role and (role.can_change_documents or role.is_super_admin))
+        return is_document_editor(request.user)
 
     def has_delete_permission(self, request, obj=None):
-        role = get_user_role(request.user)
-        return request.user.is_superuser or (role and (role.can_change_documents or role.is_super_admin))
+        return is_document_editor(request.user)
+
+    def has_module_permission(self, request):
+        return is_document_editor(request.user)
+
+    def has_view_permission(self, request, obj=None):
+        return is_document_editor(request.user)
 
 
-# ─── Existing Model Admins ─────────────────────────────────────
+# ─── Celebration Admin ─────────────────────────────────────────
 
 class CelebrationPhotoInline(admin.TabularInline):
     model = CelebrationPhoto
@@ -244,18 +237,14 @@ class CelebrationPhotoInline(admin.TabularInline):
     def photo_url(self, obj):
         return obj.get_photo_url()
 
+    def has_add_permission(self, request, obj=None):
+        return is_photo_editor(request.user)
 
-@admin.register(CarouselImage)
-class CarouselImageAdmin(admin.ModelAdmin):
-    form = CarouselImageForm
-    list_display = ('title', 'order', 'is_active')
-    list_editable = ('order', 'is_active')
-    list_filter = ('is_active',)
-    search_fields = ('title', 'subtitle')
-    readonly_fields = ('image_url',)
+    def has_change_permission(self, request, obj=None):
+        return is_photo_editor(request.user)
 
-    def image_url(self, obj):
-        return obj.get_image_url()
+    def has_delete_permission(self, request, obj=None):
+        return is_photo_editor(request.user)
 
 
 @admin.register(Celebration)
@@ -286,6 +275,41 @@ class CelebrationAdmin(admin.ModelAdmin):
     def image_url(self, obj):
         return obj.get_image_url()
 
+    def get_fields(self, request, obj=None):
+        if request.user.is_superuser or is_admin_or_higher(request.user):
+            return None  # Use default fields
+        if is_photo_editor(request.user):
+            return ['festivalname', 'image', 'celebration_type', 'date', 'is_featured']
+        return ['festivalname']
+
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.is_superuser or is_admin_or_higher(request.user):
+            return ['image_url']
+        if is_photo_editor(request.user):
+            return ['image_url']
+        return ['festivalname', 'description', 'celebration_type', 'image', 'date', 'is_featured', 'image_url']
+
+    def has_module_permission(self, request):
+        if super().has_module_permission(request):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_view_permission(self, request, obj=None):
+        if super().has_view_permission(request, obj):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        if super().has_change_permission(request, obj):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_add_permission(self, request):
+        return request.user.is_superuser or is_admin_or_higher(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser or is_admin_or_higher(request.user)
+
 
 @admin.register(CelebrationPhoto)
 class CelebrationPhotoAdmin(admin.ModelAdmin):
@@ -308,6 +332,27 @@ class CelebrationPhotoAdmin(admin.ModelAdmin):
     def photo_url(self, obj):
         return obj.get_photo_url()
 
+    def has_module_permission(self, request):
+        if super().has_module_permission(request):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_view_permission(self, request, obj=None):
+        if super().has_view_permission(request, obj):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_add_permission(self, request):
+        return is_photo_editor(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        return is_photo_editor(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        return is_photo_editor(request.user)
+
+
+# ─── Gallery Admin ─────────────────────────────────────────────
 
 class GalleryImageInline(admin.TabularInline):
     model = GalleryImage
@@ -318,6 +363,15 @@ class GalleryImageInline(admin.TabularInline):
 
     def image_url(self, obj):
         return obj.get_image_url()
+
+    def has_add_permission(self, request, obj=None):
+        return is_photo_editor(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        return is_photo_editor(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        return is_photo_editor(request.user)
 
 
 @admin.register(Gallery)
@@ -348,6 +402,41 @@ class GalleryAdmin(admin.ModelAdmin):
     def thumbnail_url(self, obj):
         return obj.get_thumbnail_url()
 
+    def get_fields(self, request, obj=None):
+        if request.user.is_superuser or is_admin_or_higher(request.user):
+            return None
+        if is_photo_editor(request.user):
+            return ['name', 'thumbnail', 'category', 'description', 'is_featured']
+        return ['name']
+
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.is_superuser or is_admin_or_higher(request.user):
+            return ['thumbnail_url']
+        if is_photo_editor(request.user):
+            return ['thumbnail_url', 'date_created']
+        return ['name', 'description', 'category', 'thumbnail', 'date_created', 'is_featured', 'thumbnail_url']
+
+    def has_module_permission(self, request):
+        if super().has_module_permission(request):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_view_permission(self, request, obj=None):
+        if super().has_view_permission(request, obj):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        if super().has_change_permission(request, obj):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_add_permission(self, request):
+        return request.user.is_superuser or is_admin_or_higher(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser or is_admin_or_higher(request.user)
+
 
 @admin.register(GalleryImage)
 class GalleryImageAdmin(admin.ModelAdmin):
@@ -370,3 +459,58 @@ class GalleryImageAdmin(admin.ModelAdmin):
 
     def image_url(self, obj):
         return obj.get_image_url()
+
+    def has_module_permission(self, request):
+        if super().has_module_permission(request):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_view_permission(self, request, obj=None):
+        if super().has_view_permission(request, obj):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_add_permission(self, request):
+        return is_photo_editor(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        return is_photo_editor(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        return is_photo_editor(request.user)
+
+
+# ─── Carousel Admin ────────────────────────────────────────────
+
+@admin.register(CarouselImage)
+class CarouselImageAdmin(admin.ModelAdmin):
+    form = CarouselImageForm
+    list_display = ('title', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('title', 'subtitle')
+    readonly_fields = ('image_url',)
+
+    def image_url(self, obj):
+        return obj.get_image_url()
+
+    def has_module_permission(self, request):
+        if super().has_module_permission(request):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_view_permission(self, request, obj=None):
+        if super().has_view_permission(request, obj):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_add_permission(self, request):
+        return request.user.is_superuser or is_photo_editor(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        if super().has_change_permission(request, obj):
+            return True
+        return is_photo_editor(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser or is_photo_editor(request.user)
