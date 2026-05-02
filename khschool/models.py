@@ -2,8 +2,86 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_save
 from django.dispatch import receiver
+from django.contrib.auth.models import User
+
+
+class Role(models.Model):
+    """Hierarchy-based roles for campus management access control."""
+
+    ROLE_CHOICES = [
+        ('super_admin', 'Super Admin'),
+        ('admin', 'Admin'),
+        ('photo_editor', 'Photo Editor'),
+        ('document_editor', 'Document Editor'),
+    ]
+
+    name = models.CharField(max_length=20, choices=ROLE_CHOICES, unique=True)
+    display_name = models.CharField(max_length=50)
+    level = models.PositiveSmallIntegerField(
+        default=1,
+        help_text='Higher number = more access (1=Document Editor, 2=Photo Editor, 3=Admin, 4=Super Admin)'
+    )
+    can_change_photo = models.BooleanField(default=False)
+    can_change_documents = models.BooleanField(default=False)
+    can_manage_users = models.BooleanField(default=False)
+    can_manage_roles = models.BooleanField(default=False)
+    is_super_admin = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-level']
+        verbose_name = 'Role'
+        verbose_name_plural = 'Roles'
+
+    def __str__(self):
+        return self.display_name
+
+
+class UserProfile(models.Model):
+    """Links a Django User to a Role for campus management access."""
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True, related_name='users')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'User Profile'
+        verbose_name_plural = 'User Profiles'
+
+    def __str__(self):
+        return f"{self.user.email or self.user.username} - {self.role.display_name if self.role else 'No Role'}"
+
+    def can_change_photo(self):
+        return self.role.can_change_photo if self.role else False
+
+    def can_change_documents(self):
+        return self.role.can_change_documents if self.role else False
+
+    def can_manage_users(self):
+        return self.role.can_manage_users if self.role else False
+
+    def can_manage_roles(self):
+        return self.role.can_manage_roles if self.role else False
+
+    def is_super_admin(self):
+        return self.role.is_super_admin if self.role else False
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    """Auto-create UserProfile when a new User is created."""
+    if created:
+        UserProfile.objects.get_or_create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    """Save UserProfile when User is saved."""
+    if hasattr(instance, 'profile'):
+        instance.profile.save()
+
 
 # Create your models here.
 class Celebration(models.Model):
