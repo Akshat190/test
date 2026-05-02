@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %} 
+{% load static %}
 
 {% block title %}Shela Campus - Kapadia High School{% endblock %}
 
@@ -8,44 +8,38 @@
 {% endblock page_css %}
 
 {% block content %}
-{% load static %}
 
 <div class="container my-5">
     <div class="row">
         <!-- Left side - Image -->
         <div class="col-md-4">
             <div class="campus-image">
-                <img src="{% static 'image/blur.png' %}" alt="Memnagar Campus" class="img-fluid rounded shadow" onerror="this.src='https://via.placeholder.com/400x300?text=Memnagar+Campus'">
+                {% if campus and campus.photo %}
+                    <img src="{{ campus.photo.url }}" alt="{{ campus.name }} Campus" class="img-fluid rounded shadow">
+                {% else %}
+                    <img src="{% static 'image/blur.png' %}" alt="Shela Campus" class="img-fluid rounded shadow" onerror="this.src='https://via.placeholder.com/400x300?text=Shela+Campus'">
+                {% endif %}
             </div>
         </div>
         
         <!-- Right side - Information -->
         <div class="col-md-8">
-            <h1 class="campus-title">Shela</h1>
+            <h1 class="campus-title">{{ campus.name|default:"Shela" }}</h1>
             
             <div class="campus-details">
-                <!-- <div class="row mb-2">
-                    <div class="col-md-3 fw-bold">Board</div>
-                    <div class="col-md-9">: GSEB</div>
-                </div> -->
                 <div class="row mb-2">
                     <div class="col-md-3 fw-bold">Contact Number</div>
-                    <div class="col-md-9">: 6356000941/42</div>
+                    <div class="col-md-9">: {{ campus.affiliation_number|default:"6356000941/42" }}</div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-3 fw-bold">Timings</div>
-                    <div class="col-md-9">: 8:00 am to 2:00 pm (Monday-Saturday)</div>
+                    <div class="col-md-9">: {{ campus.timings|default:"8:00 am to 2:00 pm (Monday-Saturday)" }}</div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-3 fw-bold">Address</div>
                     <div class="col-md-9">: Nr. Anand Elegance, Nr. Mahadev Elegance, VIP Road, Shela, Ahmedabad - 380057</div>
                 </div>
             </div>
-            
-            <!-- <div class="board-buttons mt-4">
-                <a href="#" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#cbseModal">CBSE</a>
-                <a href="#" class="btn btn-primary">LC</a>
-            </div> -->
         </div>
     </div>
     
@@ -101,21 +95,27 @@
       </div>
       <div class="modal-body">
         <ul class="list-unstyled">
-          <li><span class="circle-bullet"></span> AFFILIATION LETTER</li>
-          <li><span class="circle-bullet"></span> TRUST CERTIFICATE</li>
-          <li><span class="circle-bullet"></span> NOC</li>
-          <li><span class="circle-bullet"></span> RECOGNITION CERTIFICATE</li>
-          <li><span class="circle-bullet"></span> BUILDING CERTIFICATE</li>
-          <li><span class="circle-bullet"></span> FIRE CERTIFICATE</li>
-          <li><span class="circle-bullet"></span> SELF CERTIFICATION</li>
-          <li><span class="circle-bullet"></span> WATERHEALTH CERTIFICATE</li>
-          <li><span class="circle-bullet"></span> PTA</li>
-          <li><span class="circle-bullet"></span> BOARD RESULT</li>
-          <li><span class="circle-bullet"></span> SMC</li>
-          <li><span class="circle-bullet"></span> ACADEMIC PLANNER</li>
-          <li><span class="circle-bullet"></span> FEE STRUCTURE</li>
-          <li><span class="circle-bullet"></span> SELF AFFIDAVIT</li>
-          <li><span class="circle-bullet"></span> MANDATORY DISCLOSURE_Appendix-IX</li>
+          {% if campus and campus.documents.exists %}
+            {% for doc in campus.documents.all %}
+              <li><a href="{{ doc.file.url }}" target="_blank" class="pdf-link"><span class="circle-bullet"></span> {{ doc.title }} <i class="fa fa-file-pdf-o ms-1"></i></a></li>
+            {% endfor %}
+          {% else %}
+            <li><span class="circle-bullet"></span> AFFILIATION LETTER</li>
+            <li><span class="circle-bullet"></span> TRUST CERTIFICATE</li>
+            <li><span class="circle-bullet"></span> NOC</li>
+            <li><span class="circle-bullet"></span> RECOGNITION CERTIFICATE</li>
+            <li><span class="circle-bullet"></span> BUILDING CERTIFICATE</li>
+            <li><span class="circle-bullet"></span> FIRE CERTIFICATE</li>
+            <li><span class="circle-bullet"></span> SELF CERTIFICATION</li>
+            <li><span class="circle-bullet"></span> WATERHEALTH CERTIFICATE</li>
+            <li><span class="circle-bullet"></span> PTA</li>
+            <li><span class="circle-bullet"></span> BOARD RESULT</li>
+            <li><span class="circle-bullet"></span> SMC</li>
+            <li><span class="circle-bullet"></span> ACADEMIC PLANNER</li>
+            <li><span class="circle-bullet"></span> FEE STRUCTURE</li>
+            <li><span class="circle-bullet"></span> SELF AFFIDAVIT</li>
+            <li><span class="circle-bullet"></span> MANDATORY DISCLOSURE_Appendix-IX</li>
+          {% endif %}
         </ul>
       </div>
     </div>

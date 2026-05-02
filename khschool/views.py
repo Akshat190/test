@@ -152,30 +152,32 @@ def aboutSchool(request):
     return render(request, 'aboutSchool.html')
 
 
+def _get_campus(slug):
+    """Helper to fetch campus by slug with documents."""
+    try:
+        return Campus.objects.prefetch_related('documents').get(slug=slug, is_active=True)
+    except Campus.DoesNotExist:
+        return None
+
+
 def chandkheda(request):
-    return render(request, 'chandkheda.html')
+    return render(request, 'chandkheda.html', {'campus': _get_campus('chandkheda')})
 
 
 def chattral(request):
-    campus = None
-    try:
-        campus = Campus.objects.prefetch_related('documents').get(slug='chattral', is_active=True)
-    except Campus.DoesNotExist:
-        pass
-
-    return render(request, 'chattral.html', {'campus': campus})
+    return render(request, 'chattral.html', {'campus': _get_campus('chattral')})
 
 
 def iffco(request):
-    return render(request, 'iffco.html')
+    return render(request, 'iffco.html', {'campus': _get_campus('iffco')})
 
 
 def kadi(request):
-    return render(request, 'kadi.html')
+    return render(request, 'kadi.html', {'campus': _get_campus('kadi')})
 
 
 def shela(request):
-    return render(request, 'shela.html')
+    return render(request, 'shela.html', {'campus': _get_campus('shela')})
 
 
 def success_stories(request):
