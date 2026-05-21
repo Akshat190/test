@@ -21,6 +21,7 @@ sitemaps = {
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
+    path('api/', include('khschool.api_urls')),
     path('', include('khschool.urls')),
 ]
 
