@@ -2,7 +2,7 @@
 # healthcheck.sh - Auto-recover if site goes down
 # Run via cron: */5 * * * * /home/deploy/test/healthcheck.sh
 
-PROJECT_DIR="/home/deploy/test"
+PROJECT_DIR="/home/deploy/coolify"
 LOGS_DIR="$PROJECT_DIR/logs"
 URL="https://kapadiahighschool.com"
 

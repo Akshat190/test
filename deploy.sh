@@ -3,7 +3,7 @@
 # Usage: ./deploy.sh
 set -e
 
-PROJECT_DIR="/home/deploy/test"
+PROJECT_DIR="/home/deploy/coolify"
 LOGS_DIR="$PROJECT_DIR/logs"
 VENV_DIR="$PROJECT_DIR/venv"
 
