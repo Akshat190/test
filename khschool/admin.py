@@ -235,6 +235,8 @@ class CelebrationPhotoInline(admin.TabularInline):
     readonly_fields = ('photo_url',)
 
     def photo_url(self, obj):
+        if not obj or not obj.pk:
+            return '-'
         return obj.get_photo_url()
 
     def has_add_permission(self, request, obj=None):
@@ -259,12 +261,16 @@ class CelebrationAdmin(admin.ModelAdmin):
     inlines = [CelebrationPhotoInline]
 
     def preview_image(self, obj):
+        if not obj or not obj.pk:
+            return '-'
         image_url = obj.get_image_url()
         if image_url:
             return f'<img src="{image_url}" width="50" height="50" style="object-fit: cover; border-radius: 5px;" />'
         return 'No Image'
 
     def photo_count_display(self, obj):
+        if not obj or not obj.pk:
+            return '0 photos'
         count = obj.photo_count()
         return f'{count} photo{"s" if count != 1 else ""}'
 
@@ -273,6 +279,8 @@ class CelebrationAdmin(admin.ModelAdmin):
     photo_count_display.short_description = 'Additional Photos'
 
     def image_url(self, obj):
+        if not obj or not obj.pk:
+            return '-'
         return obj.get_image_url()
 
     def get_fields(self, request, obj=None):
@@ -321,6 +329,8 @@ class CelebrationPhotoAdmin(admin.ModelAdmin):
     search_fields = ('celebration__festivalname', 'caption')
 
     def preview_photo(self, obj):
+        if not obj or not obj.pk:
+            return '-'
         photo_url = obj.get_photo_url()
         if photo_url:
             return f'<img src="{photo_url}" width="50" height="50" style="object-fit: cover; border-radius: 5px;" />'
@@ -330,6 +340,8 @@ class CelebrationPhotoAdmin(admin.ModelAdmin):
     preview_photo.short_description = 'Photo Preview'
 
     def photo_url(self, obj):
+        if not obj or not obj.pk:
+            return '-'
         return obj.get_photo_url()
 
     def has_module_permission(self, request):
@@ -362,6 +374,8 @@ class GalleryImageInline(admin.TabularInline):
     readonly_fields = ('image_url',)
 
     def image_url(self, obj):
+        if not obj or not obj.pk:
+            return '-'
         return obj.get_image_url()
 
     def has_add_permission(self, request, obj=None):
@@ -386,12 +400,16 @@ class GalleryAdmin(admin.ModelAdmin):
     inlines = [GalleryImageInline]
 
     def preview_thumbnail(self, obj):
+        if not obj or not obj.pk:
+            return '-'
         thumbnail_url = obj.get_thumbnail_url()
         if thumbnail_url:
             return f'<img src="{thumbnail_url}" width="50" height="50" style="object-fit: cover; border-radius: 5px;" />'
         return 'No Thumbnail'
 
     def image_count_display(self, obj):
+        if not obj or not obj.pk:
+            return '0 images'
         count = obj.image_count()
         return f'{count} image{"s" if count != 1 else ""}'
 
@@ -400,6 +418,8 @@ class GalleryAdmin(admin.ModelAdmin):
     image_count_display.short_description = 'Images'
 
     def thumbnail_url(self, obj):
+        if not obj or not obj.pk:
+            return '-'
         return obj.get_thumbnail_url()
 
     def get_fields(self, request, obj=None):
@@ -449,6 +469,8 @@ class GalleryImageAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_added'
 
     def preview_image(self, obj):
+        if not obj or not obj.pk:
+            return '-'
         image_url = obj.get_image_url()
         if image_url:
             return f'<img src="{image_url}" width="50" height="50" style="object-fit: cover; border-radius: 5px;" />'
@@ -458,6 +480,8 @@ class GalleryImageAdmin(admin.ModelAdmin):
     preview_image.short_description = 'Image Preview'
 
     def image_url(self, obj):
+        if not obj or not obj.pk:
+            return '-'
         return obj.get_image_url()
 
     def has_module_permission(self, request):
@@ -492,6 +516,8 @@ class CarouselImageAdmin(admin.ModelAdmin):
     readonly_fields = ('image_url',)
 
     def image_url(self, obj):
+        if not obj or not obj.pk:
+            return '-'
         return obj.get_image_url()
 
     def has_module_permission(self, request):
