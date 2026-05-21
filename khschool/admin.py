@@ -285,7 +285,7 @@ class CelebrationAdmin(admin.ModelAdmin):
 
     def get_fields(self, request, obj=None):
         if request.user.is_superuser or is_admin_or_higher(request.user):
-            return None  # Use default fields
+            return ['festivalname', 'description', 'celebration_type', 'image', 'date', 'is_featured']
         if is_photo_editor(request.user):
             return ['festivalname', 'image', 'celebration_type', 'date', 'is_featured']
         return ['festivalname']
@@ -424,7 +424,7 @@ class GalleryAdmin(admin.ModelAdmin):
 
     def get_fields(self, request, obj=None):
         if request.user.is_superuser or is_admin_or_higher(request.user):
-            return None
+            return ['name', 'description', 'category', 'thumbnail', 'date_created', 'is_featured']
         if is_photo_editor(request.user):
             return ['name', 'thumbnail', 'category', 'description', 'is_featured']
         return ['name']
