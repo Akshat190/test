@@ -21,10 +21,14 @@ sitemaps = {
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
-    path('', include('django_prometheus.urls')),
     path('', include('khschool.urls')),
-    path('robots.txt', robots_txt, name='robots_txt'),
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+]
+
+# Prometheus metrics - staff-only access
+from django.contrib.admin.views.decorators import staff_member_required
+from django_prometheus import exports
+urlpatterns += [
+    path('metrics/', staff_member_required(exports.ExportToDjangoView), name='prometheus-metrics'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

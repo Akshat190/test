@@ -135,7 +135,7 @@ def contact(request):
         
         # Email sending removed - no email service configured
         # Log form submission for manual follow-up
-        logger.info(
+        logger.debug(
             f"Contact form submitted: name={name}, email={email}, phone={phone}, "
             f"subject={subject}, message={message}"
         )

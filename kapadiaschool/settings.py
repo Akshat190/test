@@ -137,9 +137,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Security Headers
-SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
+SECURE_REFERRER_POLICY = 'same-origin'
 
 # HTTPS Settings (auto-enable when SSL is active via env)
 SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() == 'true'
@@ -188,7 +188,13 @@ CACHE_MIDDLEWARE_SECONDS = 60 * 15  # 15 minutes
 CACHE_MIDDLEWARE_KEY_PREFIX = 'kapadiaschool'
 
 # Session settings
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+# File upload limits
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

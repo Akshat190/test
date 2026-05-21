@@ -47,7 +47,9 @@ python manage.py migrate --no-input
 
 echo "Database migrations completed."
 
-# Create a superuser if not exists (for admin access)
-echo "from django.contrib.auth.models import User; User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@kapadiaschool.com', 'admin@123')" | python manage.py shell
+# Create a superuser if DJANGO_SUPERUSER_* env vars are set
+if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ]; then
+  echo "from django.contrib.auth.models import User; User.objects.filter(username='$DJANGO_SUPERUSER_USERNAME').exists() or User.objects.create_superuser('$DJANGO_SUPERUSER_USERNAME', '${DJANGO_SUPERUSER_EMAIL:-admin@example.com}', '$DJANGO_SUPERUSER_PASSWORD')" | python manage.py shell
+fi
 
 echo "Build script completed successfully"
