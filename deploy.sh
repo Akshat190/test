@@ -32,20 +32,32 @@ pip install --upgrade pip -q
 pip install -r requirements.txt -q
 echo "  ✓ Done"
 
-# ── 4. Run migrations ──
-echo "[4/6] Running migrations..."
+# ── 4. Build Astro frontend ──
+echo "[4/7] Building Astro frontend..."
+if command -v node &>/dev/null; then
+    cd "$PROJECT_DIR/frontend"
+    npm ci
+    npm run build
+    cd "$PROJECT_DIR"
+    echo "  ✓ Astro built"
+else
+    echo "  ⚠ Node.js not found — skipping Astro build"
+fi
+
+# ── 5. Run migrations ──
+echo "[5/7] Running migrations..."
 python manage.py migrate
 echo "  ✓ Done"
 
-# ── 5. Collect static files ──
-echo "[5/6] Collecting static files..."
+# ── 6. Collect static files ──
+echo "[6/7] Collecting static files..."
 python manage.py collectstatic --noinput
 sudo chown -R deploy:www-data "$PROJECT_DIR/staticfiles" 2>/dev/null || true
 sudo chmod -R 755 "$PROJECT_DIR/staticfiles" 2>/dev/null || true
 echo "  ✓ Done"
 
-# ── 6. Restart services ──
-echo "[6/6] Restarting services..."
+# ── 7. Restart services ──
+echo "[7/7] Restarting services..."
 if systemctl is-active --quiet gunicorn; then
     sudo systemctl restart gunicorn
     echo "  ✓ Gunicorn restarted"
@@ -54,6 +66,7 @@ else
 fi
 
 if command -v nginx &>/dev/null; then
+    sudo cp "$PROJECT_DIR/nginx.conf" /etc/nginx/nginx.conf 2>/dev/null || true
     sudo nginx -t && sudo systemctl reload nginx
     echo "  ✓ Nginx reloaded"
 fi

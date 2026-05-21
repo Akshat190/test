@@ -5,8 +5,20 @@ set -o errexit
 # Print commands before executing them (for debugging)
 set -o xtrace
 
-# Install dependencies
+# Install Python dependencies
 pip install -r requirements.txt
+
+# Build Astro frontend
+echo "Building Astro frontend..."
+if command -v node &>/dev/null; then
+    cd frontend
+    npm ci
+    npm run build
+    cd ..
+    echo "Astro frontend built successfully"
+else
+    echo "Node.js not found — skipping Astro build"
+fi
 
 # Verify database connection
 echo "Verifying database connection..."
