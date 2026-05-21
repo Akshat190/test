@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-50: #e6edf5;
+  --color-navy-100: #b3c8e0;
+  --color-navy-200: #80a3cc;
+  --color-navy-300: #4d7eb8;
+  --color-navy-400: #1a59a4;
+  --color-navy-500: #003264;
+  --color-navy-600: #002a55;
+  --color-navy-700: #002244;
+  --color-navy-800: #001a33;
+  --color-navy-900: #001122;
+
+  --color-gold-50: #fbf5e0;
+  --color-gold-100: #f5e6b3;
+  --color-gold-200: #eed780;
+  --color-gold-300: #e8c84d;
+  --color-gold-400: #e1b91a;
+  --color-gold-500: #d4af37;
+  --color-gold-600: #b8962e;
+  --color-gold-700: #9c7d25;
+  --color-gold-800: #80641c;
+  --color-gold-900: #644b13;
+
+  --color-cream: #fafaf8;
+
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'Outfit', sans-serif;
+
+  --shadow-soft: 0 4px 20px rgba(0, 50, 100, 0.08);
+  --shadow-hover: 0 12px 40px rgba(0, 50, 100, 0.15);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-cream);
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: var(--color-gold-500);
+    color: var(--color-navy-500);
+  }
+}
+
+@layer components {
+  .section-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-navy-500 mb-4;
+  }
+
+  .section-subtitle {
+    @apply text-base md:text-lg text-gray-600 max-w-2xl mx-auto;
+  }
+
+  .gold-underline {
+    @apply w-20 h-1 bg-gold-500 mx-auto rounded-full mb-6;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-6 py-3 bg-gold-500 text-navy-500 font-semibold rounded-full
+           hover:bg-white hover:text-navy-500 transition-all duration-300
+           shadow-lg hover:shadow-xl hover:-translate-y-0.5;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 px-6 py-3 border-2 border-gold-500 text-gold-500 font-semibold rounded-full
+           hover:bg-gold-500 hover:text-navy-700 transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-hover hover:-translate-y-1;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

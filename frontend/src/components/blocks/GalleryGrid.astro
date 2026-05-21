@@ -1,0 +1,76 @@
+---
+import SectionTitle from "../ui/SectionTitle.astro";
+import Button from "../ui/Button.astro";
+import { getGalleries, getImageUrl } from "../../lib/api";
+
+interface Props {
+  limit?: number;
+  featured?: boolean;
+}
+
+const { limit = 6, featured = false } = Astro.props;
+const { results: allGalleries } = await getGalleries(featured);
+const display = allGalleries.slice(0, limit);
+---
+
+<section class="py-16 md:py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionTitle
+      title="Our Gallery"
+      subtitle="Glimpses of our vibrant campus life and student activities"
+    />
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {display.length > 0 ? display.map((gallery) => (
+        <a href={`/gallery/${gallery.id}`} class="group block">
+          <div class="bg-gray-50 rounded-2xl overflow-hidden shadow-soft hover:shadow-hover transition-all duration-300 hover:-translate-y-1">
+            <div class="relative aspect-[4/3] overflow-hidden">
+              <img
+                src={getImageUrl(gallery.thumbnail_url) || '/placeholder.jpg'}
+                alt={gallery.name}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-navy-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </div>
+            <div class="p-5">
+              <span class="text-xs uppercase tracking-wider text-gold-600 font-semibold">{gallery.category}</span>
+              <h3 class="text-xl font-heading font-semibold text-navy-600 mt-1 group-hover:text-gold-600 transition-colors">
+                {gallery.name}
+              </h3>
+              <p class="text-sm text-gray-500 mt-2">{gallery.image_count} images</p>
+            </div>
+          </div>
+        </a>
+      )) : (
+        <>
+          {[
+            { name: 'Academic Excellence', slug: 'academic' },
+            { name: 'Sports Activities', slug: 'sports' },
+            { name: 'Cultural Events', slug: 'cultural' },
+          ].slice(0, limit).map((item) => (
+            <div class="bg-gray-50 rounded-2xl overflow-hidden shadow-soft">
+              <div class="aspect-[4/3] bg-gray-200 flex items-center justify-center">
+                <svg class="w-16 h-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div class="p-5">
+                <h3 class="text-xl font-heading font-semibold text-navy-600">{item.name}</h3>
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+    </div>
+
+    <div class="text-center mt-10">
+      <Button variant="primary" href="/gallery">
+        View Full Gallery
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </Button>
+    </div>
+  </div>
+</section>

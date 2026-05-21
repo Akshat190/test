@@ -1,0 +1,45 @@
+---
+import SectionTitle from "../ui/SectionTitle.astro";
+import { TEAM_MEMBERS, FACULTY_DEPARTMENTS } from "../../lib/constants";
+import { getInitials } from "../../lib/utils";
+
+interface Props {
+  showFaculty?: boolean;
+}
+
+const { showFaculty = true } = Astro.props;
+---
+
+<section class="py-16 md:py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-4 gap-8">
+      {TEAM_MEMBERS.map((member) => (
+        <div class="text-center group">
+          <div class="w-40 h-40 mx-auto mb-4 rounded-full bg-gradient-to-br from-navy-100 to-navy-200 flex items-center justify-center overflow-hidden">
+            <svg class="w-20 h-20 text-navy-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-heading font-semibold text-navy-600">{member.name}</h3>
+          <p class="text-gold-600 font-medium text-sm mt-1">{member.role}</p>
+          <p class="text-gray-500 text-sm mt-2">{member.desc}</p>
+        </div>
+      ))}
+    </div>
+
+    {showFaculty && (
+      <div class="mt-20 text-center">
+        <SectionTitle title="Our Faculty" subtitle="Our dedicated team of experienced and passionate educators is committed to nurturing every student's potential." centered />
+
+        <div class="grid md:grid-cols-3 gap-6 text-left">
+          {FACULTY_DEPARTMENTS.map((dept) => (
+            <div class="p-6 bg-white rounded-2xl shadow-soft hover:shadow-hover transition-all duration-300">
+              <h3 class="text-lg font-heading font-semibold text-navy-600 mb-2">{dept.dept}</h3>
+              <p class="text-gray-500 text-sm">{dept.teachers}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</section>

@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/blocks/PageHero.astro';
+import CampusDetail from '../../components/blocks/CampusDetail.astro';
+import { getCampuses } from '../../lib/api';
+
+export async function getStaticPaths() {
+  const { results: campuses } = await getCampuses();
+  return campuses.map((campus) => ({
+    params: { slug: campus.slug },
+    props: { campus },
+  }));
+}
+
+const { campus } = Astro.props;
+---
+
+<BaseLayout title={campus.name} description={`${campus.name} - ${campus.board} campus of Kapadia High School`} canonical={`/campuses/${campus.slug}`}>
+  <PageHero title={campus.name} subtitle={campus.timings || undefined} badge={campus.board} />
+  <CampusDetail campus={campus} />
+</BaseLayout>

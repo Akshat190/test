@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/blocks/PageHero.astro';
+import TeamGrid from '../components/blocks/TeamGrid.astro';
+---
+
+<BaseLayout title="School Team" canonical="/team">
+  <PageHero title="Our School Team" subtitle="Dedicated educators shaping the leaders of tomorrow" />
+  <TeamGrid showFaculty />
+</BaseLayout>

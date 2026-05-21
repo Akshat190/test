@@ -1,0 +1,26 @@
+---
+import { SUCCESS_STORIES } from "../../lib/constants";
+import { getInitials } from "../../lib/utils";
+---
+
+<section class="py-16 md:py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="space-y-12">
+      {SUCCESS_STORIES.map((story, i) => (
+        <div class={`grid md:grid-cols-3 gap-8 items-center p-8 rounded-2xl ${i % 2 === 0 ? 'bg-white shadow-soft' : 'bg-navy-50'}`}>
+          <div class={i % 2 === 0 ? 'md:order-1' : 'md:order-2'}>
+            <div class="aspect-square w-48 h-48 mx-auto rounded-full bg-gradient-to-br from-navy-100 to-gold-100 flex items-center justify-center">
+              <span class="text-4xl font-heading font-bold text-navy-400">{getInitials(story.name)}</span>
+            </div>
+          </div>
+          <div class={`md:col-span-2 ${i % 2 === 0 ? 'md:order-2' : 'md:order-1'}`}>
+            <span class="text-sm text-gold-600 font-semibold uppercase tracking-wider">{story.batch}</span>
+            <h2 class="text-2xl font-heading font-bold text-navy-600 mt-1">{story.name}</h2>
+            <p class="text-base text-gold-600 font-medium mb-3">{story.achievement}</p>
+            <p class="text-gray-600 leading-relaxed">{story.story}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

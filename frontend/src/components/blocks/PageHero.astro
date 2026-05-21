@@ -1,0 +1,25 @@
+---
+import { cn } from "../../lib/utils";
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  badge?: string;
+  class?: string;
+}
+
+const { title, subtitle, badge, class: className } = Astro.props;
+---
+
+<div class={cn("bg-gradient-to-br from-navy-500 to-navy-800 text-white py-16 md:py-24", className)}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    {badge && (
+      <span class="inline-block bg-gold-500 text-navy-500 text-sm font-semibold px-4 py-1 rounded-full mb-4">
+        {badge}
+      </span>
+    )}
+    <h1 class="text-4xl md:text-6xl font-heading font-bold mb-4">{title}</h1>
+    <div class="w-20 h-1 bg-gold-500 mx-auto rounded-full mb-4" />
+    {subtitle && <p class="text-lg text-gray-200 max-w-2xl mx-auto">{subtitle}</p>}
+  </div>
+</div>

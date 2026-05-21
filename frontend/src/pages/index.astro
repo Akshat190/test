@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroCarousel from '../components/HeroCarousel.astro';
+import AboutPreview from '../components/blocks/AboutPreview.astro';
+import Stats from '../components/blocks/Stats.astro';
+import CelebrationGrid from '../components/blocks/CelebrationGrid.astro';
+import GalleryGrid from '../components/blocks/GalleryGrid.astro';
+---
+
+<BaseLayout carousel canonical="/">
+  <div slot="carousel">
+    <HeroCarousel />
+  </div>
+
+  <AboutPreview />
+  <Stats />
+  <CelebrationGrid limit={3} />
+  <GalleryGrid limit={3} featured />
+</BaseLayout>

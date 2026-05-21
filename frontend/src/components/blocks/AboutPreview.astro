@@ -1,0 +1,38 @@
+---
+import Button from "../ui/Button.astro";
+---
+
+<section class="py-16 md:py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div class="relative">
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
+          <img
+            src="/placeholder.jpg"
+            alt="Kapadia High School Students"
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-gold-500/10 rounded-full blur-3xl" aria-hidden="true" />
+      </div>
+      <div>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-navy-500 mb-4">About Our School</h2>
+        <div class="w-16 h-1 bg-gold-500 rounded-full mb-6" />
+        <h3 class="text-2xl font-heading font-semibold text-navy-600 mb-4">Excellence in Education Since 1956</h3>
+        <p class="text-gray-600 mb-4 leading-relaxed">
+          Kapadia High School was founded in 1956, starting with a modest group of students eager to learn. Over the years, our institution has grown into a vibrant educational center, nurturing a diverse array of students who shine brightly both locally and internationally.
+        </p>
+        <p class="text-gray-600 mb-8 leading-relaxed">
+          Situated in the heart of the community, Kapadia High School is a co-educational English medium school dedicated to fostering academic excellence and personal growth in a supportive environment.
+        </p>
+        <Button variant="primary" href="/about">
+          Learn More
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </Button>
+      </div>
+    </div>
+  </div>
+</section>

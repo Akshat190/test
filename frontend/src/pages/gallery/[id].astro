@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getGalleries, getImageUrl } from '../../lib/api';
+import Button from '../../components/ui/Button.astro';
+
+export async function getStaticPaths() {
+  const { results: galleries } = await getGalleries();
+  return galleries.map((g) => ({
+    params: { id: String(g.id) },
+    props: { gallery: g },
+  }));
+}
+
+const { gallery } = Astro.props;
+const images = gallery.images || [];
+---
+
+<BaseLayout title={gallery.name} description={gallery.description || gallery.name} canonical={`/gallery/${gallery.id}`}>
+  <div class="bg-gradient-to-br from-navy-500 to-navy-800 text-white py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <a href="/gallery" class="inline-flex items-center gap-2 text-gold-400 hover:text-gold-300 text-sm mb-6 transition-colors">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to Gallery
+      </a>
+      <div class="text-center">
+        <span class="inline-block bg-gold-500 text-navy-500 text-sm font-semibold px-4 py-1 rounded-full mb-4">{gallery.category}</span>
+        <h1 class="text-4xl md:text-5xl font-heading font-bold mb-4">{gallery.name}</h1>
+        {gallery.description && <p class="text-lg text-gray-200 max-w-2xl mx-auto">{gallery.description}</p>}
+        <p class="text-sm text-gold-400 mt-2">{gallery.image_count} images</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {images.length > 0 ? (
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {images.map((img) => (
+            <a
+              href={getImageUrl(img.get_image_url) || '#'}
+              target="_blank"
+              class="group block aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 shadow-soft hover:shadow-hover transition-all duration-300"
+            >
+              <img
+                src={getImageUrl(img.get_image_url) || '/placeholder.jpg'}
+                alt={img.caption || img.title || gallery.name}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              {(img.caption || img.title) && (
+                <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-navy-900/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <p class="text-white text-sm">{img.caption || img.title}</p>
+                </div>
+              )}
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-16">
+          <p class="text-gray-500">No images in this gallery yet.</p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

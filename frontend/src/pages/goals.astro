@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/blocks/PageHero.astro';
+import ValuesGrid from '../components/blocks/ValuesGrid.astro';
+---
+
+<BaseLayout title="Institutional Goals" canonical="/goals">
+  <PageHero title="Institutional Goals" />
+
+  <section class="py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-8 mb-16">
+        <div class="p-8 bg-white rounded-2xl shadow-soft hover:shadow-hover transition-all border-t-4 border-gold-500">
+          <h2 class="text-2xl font-heading font-bold text-navy-600 mb-4">Our Vision</h2>
+          <p class="text-gray-600 leading-relaxed">To be a leading educational institution that sets benchmarks in academic excellence, character building, and community engagement, nurturing students to become compassionate leaders and lifelong learners.</p>
+        </div>
+        <div class="p-8 bg-white rounded-2xl shadow-soft hover:shadow-hover transition-all border-t-4 border-gold-500">
+          <h2 class="text-2xl font-heading font-bold text-navy-600 mb-4">Our Mission</h2>
+          <p class="text-gray-600 leading-relaxed">To provide a nurturing environment that fosters intellectual curiosity, critical thinking, and moral values, preparing students to become responsible global citizens who contribute positively to society.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ValuesGrid />
+</BaseLayout>
