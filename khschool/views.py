@@ -40,7 +40,11 @@ def home(request):
         logger.warning(f"Error loading featured galleries: {str(e)}")
     
     try:
-        celebrations = Celebration.objects.all().order_by('-date')[:3]
+        campus_slug = request.GET.get('campus', None)
+        celebration_qs = Celebration.objects.all()
+        if campus_slug:
+            celebration_qs = celebration_qs.filter(campus__slug=campus_slug)
+        celebrations = celebration_qs.order_by('-date')[:3]
         for celebration in celebrations:
             try:
                 photos = celebration.celebrationphoto_set.all().order_by('order')
@@ -53,11 +57,19 @@ def home(request):
         celebrations = []
     except Exception as e:
         logger.warning(f"Error loading celebrations: {str(e)}")
+
+    campuses = []
+    try:
+        campuses = Campus.objects.filter(is_active=True).order_by('name')
+    except Exception:
+        pass
         
     context = {
         'carousel_images': carousel_images,
         'celebration': celebrations,
-        'featured_galleries': featured_galleries
+        'featured_galleries': featured_galleries,
+        'campuses': campuses,
+        'current_campus': campus_slug or 'all',
     }
     
     return render(request, 'home.html', context)
@@ -66,13 +78,13 @@ def home(request):
 def gallery(request):
     galleries = []
     category_filter = request.GET.get('category', None)
-    
+
     try:
         if category_filter and category_filter != 'all':
             galleries = Gallery.objects.filter(category=category_filter).order_by('-date_created')
         else:
             galleries = Gallery.objects.all().order_by('-date_created')
-        
+
         for gallery_obj in galleries:
             try:
                 images = gallery_obj.galleryimage_set.all().order_by('order', '-date_added')
@@ -87,35 +99,45 @@ def gallery(request):
     except Exception as e:
         logger.warning(f"Error loading galleries: {str(e)}")
         galleries = []
-    
+
     celebrations = []
-    if not galleries:
-        try:
-            celebrations = Celebration.objects.all().order_by('-date')
-            for celebration in celebrations:
-                try:
-                    photos = celebration.celebrationphoto_set.all().order_by('order')
-                    celebration.additional_photos = list(photos)
-                    celebration.photo_count = len(celebration.additional_photos)
-                except Exception as e:
-                    logger.warning(f"Error loading additional photos for celebration {celebration.id}: {str(e)}")
-                    celebration.additional_photos = []
-                    celebration.photo_count = 0
-        except OperationalError:
-            celebrations = []
-        except Exception as e:
-            logger.warning(f"Error loading celebrations: {str(e)}")
-            celebrations = []
-    
+    campus_filter = request.GET.get('campus', None)
+    try:
+        celebration_qs = Celebration.objects.all()
+        if campus_filter and campus_filter != 'all':
+            celebration_qs = celebration_qs.filter(campus__slug=campus_filter)
+        celebrations = celebration_qs.order_by('-date')
+        for celebration in celebrations:
+            try:
+                photos = celebration.celebrationphoto_set.all().order_by('order')
+                celebration.additional_photos = list(photos)
+                celebration.photo_count = len(celebration.additional_photos)
+            except Exception as e:
+                logger.warning(f"Error loading additional photos for celebration {celebration.id}: {str(e)}")
+                celebration.additional_photos = []
+                celebration.photo_count = 0
+    except OperationalError:
+        celebrations = []
+    except Exception as e:
+        logger.warning(f"Error loading celebrations: {str(e)}")
+        celebrations = []
+
     categories = [choice[0] for choice in Gallery.CATEGORY_CHOICES]
-    
+    campuses = []
+    try:
+        campuses = Campus.objects.filter(is_active=True).order_by('name')
+    except Exception:
+        pass
+
     context = {
         'galleries': galleries,
         'celebration': celebrations,
         'categories': categories,
-        'current_category': category_filter or 'all'
+        'current_category': category_filter or 'all',
+        'campuses': campuses,
+        'current_campus': campus_filter or 'all',
     }
-    
+
     return render(request, 'gallery.html', context)
 
 

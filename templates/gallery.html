@@ -95,6 +95,14 @@
             <p class="section-description">Celebrating festivals and special occasions</p>
           </div>
         </div>
+        {% if campuses %}
+        <div class="gallery-categories mb-4">
+          <a href="{% url 'gallery' %}{% if current_category != 'all' %}?category={{ current_category }}{% endif %}" class="gallery-category {% if current_campus == 'all' %}active{% endif %}">All</a>
+          {% for campus in campuses %}
+            <a href="{% url 'gallery' %}?campus={{ campus.slug }}{% if current_category != 'all' %}&category={{ current_category }}{% endif %}" class="gallery-category {% if current_campus == campus.slug %}active{% endif %}">{{ campus.name }}</a>
+          {% endfor %}
+        </div>
+        {% endif %}
         <div class="row">
           {% for celebration in celebration %}
             <div class="col-lg-4 col-md-6 mb-4">

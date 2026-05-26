@@ -252,8 +252,8 @@ class CelebrationPhotoInline(admin.TabularInline):
 @admin.register(Celebration)
 class CelebrationAdmin(admin.ModelAdmin):
     form = CelebrationForm
-    list_display = ('festivalname', 'celebration_type', 'date', 'photo_count_display', 'preview_image')
-    list_filter = ('date', 'celebration_type', 'is_featured')
+    list_display = ('festivalname', 'celebration_type', 'campus', 'date', 'photo_count_display', 'preview_image')
+    list_filter = ('date', 'celebration_type', 'campus', 'is_featured')
     search_fields = ('festivalname', 'description')
     date_hierarchy = 'date'
     ordering = ('-date',)
@@ -296,7 +296,7 @@ class CelebrationAdmin(admin.ModelAdmin):
 
     def get_fields(self, request, obj=None):
         if request.user.is_superuser or is_admin_or_higher(request.user):
-            return ['festivalname', 'description', 'celebration_type', 'image', 'date', 'is_featured', 'bulk_photos']
+            return ['festivalname', 'description', 'celebration_type', 'campus', 'image', 'date', 'is_featured', 'bulk_photos']
         if is_photo_editor(request.user):
             return ['festivalname', 'image', 'celebration_type', 'date', 'is_featured', 'bulk_photos']
         return ['festivalname']

@@ -55,7 +55,15 @@
         <p class="celebrations-subtitle">Celebrating festivals and special occasions that enrich our school culture</p>
       </div>
     </div>
-    <div class="row">
+    {% if campuses %}
+    <div class="celebration-campus-filter">
+      <a href="{% url 'home' %}" class="gallery-category {% if current_campus == 'all' %}active{% endif %}">All</a>
+      {% for campus in campuses %}
+        <a href="{% url 'home' %}?campus={{ campus.slug }}" class="gallery-category {% if current_campus == campus.slug %}active{% endif %}">{{ campus.name }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div class="row mt-4">
       {% if celebration %}
         {% for celebration in celebration|slice:":3" %}
           <div class="col-lg-4 col-md-6 mb-4">

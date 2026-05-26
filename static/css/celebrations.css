@@ -121,6 +121,23 @@
   box-shadow: 0 12px 40px rgba(0,50,100,0.15);
 }
 
+/* Campus filter */
+.celebration-campus-filter {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.celebration-campus-filter .gallery-category {
+  background-color: transparent; border: 2px solid #003264; color: #374151;
+  padding: 8px 20px; margin: 0 8px 10px; border-radius: 30px; font-weight: 600;
+  cursor: pointer; transition: all 0.3s ease; text-decoration: none;
+}
+.celebration-campus-filter .gallery-category:hover,
+.celebration-campus-filter .gallery-category.active {
+  background-color: #003264; color: #FFFFFF; box-shadow: 0 4px 10px rgba(0,50,100,0.2);
+}
+
 @media (max-width: 768px) {
   .celebrations-section {
     padding: 40px 0;

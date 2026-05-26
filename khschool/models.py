@@ -98,6 +98,10 @@ class Celebration(models.Model):
     festivalname = models.CharField(max_length=255, verbose_name='Celebration Name')
     description = models.TextField(blank=True, verbose_name='Description')
     celebration_type = models.CharField(max_length=20, choices=CELEBRATION_TYPES, default='festival', verbose_name='Type')
+    campus = models.ForeignKey(
+        'Campus', on_delete=models.SET_NULL, null=True, blank=True,
+        verbose_name='Campus', related_name='celebrations'
+    )
     image = models.ImageField(
         upload_to='festival/images/',
         verbose_name='Main Image',
