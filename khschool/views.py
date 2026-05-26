@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.db.utils import OperationalError
 import logging
-from .models import Celebration, CarouselImage, CelebrationPhoto, Gallery, GalleryImage, Campus
+from .models import Celebration, CarouselImage, CelebrationPhoto, Gallery, GalleryImage, Campus, ContactSubmission
 
 logger = logging.getLogger('khschool')
 
@@ -11,15 +12,6 @@ def home(request):
     celebrations = []
     featured_galleries = []
     
-    from django.db import connection
-    tables = connection.introspection.table_names()
-    
-    if 'khschool_carouselimage' in tables:
-        try:
-            carousel_images = CarouselImage.objects.filter(is_active=True).order_by('order')
-        except Exception as e:
-            logger.warning(f"Error loading carousel images: {str(e)}")
-    
     class ThumbnailImage:
         def __init__(self, gallery):
             self.gallery = gallery
@@ -27,24 +19,40 @@ def home(request):
         def get_image_url(self):
             return self.gallery.get_thumbnail_url()
     
-    if 'khschool_gallery' in tables:
-        try:
-            featured_galleries = Gallery.objects.filter(is_featured=True).order_by('-date_created')[:3]
-            for gallery in featured_galleries:
-                sample_images = gallery.galleryimage_set.all().order_by('order')[:4]
-                if sample_images:
-                    gallery.sample_images = sample_images
-                else:
-                    gallery.sample_images = [ThumbnailImage(gallery)]
-        except Exception as e:
-            logger.warning(f"Error loading featured galleries: {str(e)}")
+    try:
+        carousel_images = CarouselImage.objects.filter(is_active=True).order_by('order')
+    except OperationalError:
+        carousel_images = []
+    except Exception as e:
+        logger.warning(f"Error loading carousel images: {str(e)}")
     
-    if 'khschool_celebration' in tables:
-        try:
-            celebrations = Celebration.objects.all().order_by('-date')[:3]
-        except Exception as e:
-            logger.warning(f"Error loading celebrations: {str(e)}")
-            celebrations = []
+    try:
+        featured_galleries = Gallery.objects.filter(is_featured=True).order_by('-date_created')[:3]
+        for gallery in featured_galleries:
+            sample_images = gallery.galleryimage_set.all().order_by('order')[:4]
+            if sample_images:
+                gallery.sample_images = sample_images
+            else:
+                gallery.sample_images = [ThumbnailImage(gallery)]
+    except OperationalError:
+        featured_galleries = []
+    except Exception as e:
+        logger.warning(f"Error loading featured galleries: {str(e)}")
+    
+    try:
+        celebrations = Celebration.objects.all().order_by('-date')[:3]
+        for celebration in celebrations:
+            try:
+                photos = celebration.celebrationphoto_set.all().order_by('order')
+                celebration.additional_photos = list(photos)
+                celebration.photo_count = len(celebration.additional_photos)
+            except Exception as e:
+                celebration.additional_photos = []
+                celebration.photo_count = 0
+    except OperationalError:
+        celebrations = []
+    except Exception as e:
+        logger.warning(f"Error loading celebrations: {str(e)}")
         
     context = {
         'carousel_images': carousel_images,
@@ -59,32 +67,29 @@ def gallery(request):
     galleries = []
     category_filter = request.GET.get('category', None)
     
-    from django.db import connection
-    tables = connection.introspection.table_names()
-    
-    if 'khschool_gallery' in tables:
-        try:
-            if category_filter and category_filter != 'all':
-                galleries = Gallery.objects.filter(category=category_filter).order_by('-date_created')
-            else:
-                galleries = Gallery.objects.all().order_by('-date_created')
-            
-            # Prefetch related images for better performance
-            for gallery_obj in galleries:
-                try:
-                    images = gallery_obj.galleryimage_set.all().order_by('order', '-date_added')
-                    gallery_obj.images = list(images)
-                    gallery_obj.image_count = len(gallery_obj.images)
-                except Exception as e:
-                    logger.warning(f"Error loading images for gallery {gallery_obj.id}: {str(e)}")
-                    gallery_obj.images = []
-                    gallery_obj.image_count = 0
-        except Exception as e:
-            logger.warning(f"Error loading galleries: {str(e)}")
-            galleries = []
+    try:
+        if category_filter and category_filter != 'all':
+            galleries = Gallery.objects.filter(category=category_filter).order_by('-date_created')
+        else:
+            galleries = Gallery.objects.all().order_by('-date_created')
+        
+        for gallery_obj in galleries:
+            try:
+                images = gallery_obj.galleryimage_set.all().order_by('order', '-date_added')
+                gallery_obj.images = list(images)
+                gallery_obj.image_count = len(gallery_obj.images)
+            except Exception as e:
+                logger.warning(f"Error loading images for gallery {gallery_obj.id}: {str(e)}")
+                gallery_obj.images = []
+                gallery_obj.image_count = 0
+    except OperationalError:
+        galleries = []
+    except Exception as e:
+        logger.warning(f"Error loading galleries: {str(e)}")
+        galleries = []
     
     celebrations = []
-    if 'khschool_celebration' in tables:
+    if not galleries:
         try:
             celebrations = Celebration.objects.all().order_by('-date')
             for celebration in celebrations:
@@ -96,6 +101,8 @@ def gallery(request):
                     logger.warning(f"Error loading additional photos for celebration {celebration.id}: {str(e)}")
                     celebration.additional_photos = []
                     celebration.photo_count = 0
+        except OperationalError:
+            celebrations = []
         except Exception as e:
             logger.warning(f"Error loading celebrations: {str(e)}")
             celebrations = []
@@ -133,12 +140,16 @@ def contact(request):
                 'form_data': request.POST
             })
         
-        # Email sending removed - no email service configured
-        # Log form submission for manual follow-up
-        logger.debug(
-            f"Contact form submitted: name={name}, email={email}, phone={phone}, "
-            f"subject={subject}, message={message}"
+        ContactSubmission.objects.create(
+            name=name,
+            email=email,
+            phone=phone,
+            subject=subject,
+            message=message,
         )
+
+        masked_email = email[0] + '***@' + email.split('@')[-1] if '@' in email else 'invalid'
+        logger.info(f"Contact form submitted: name={name}, email={masked_email}, subject={subject}")
         return render(request, 'contact.html', {'success': True})
     
     return render(request, 'contact.html')

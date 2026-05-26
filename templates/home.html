@@ -59,19 +59,20 @@
       {% if celebration %}
         {% for celebration in celebration|slice:":3" %}
           <div class="col-lg-4 col-md-6 mb-4">
-            <a href="{% url 'gallery' %}?category={{ celebration.celebration_type }}" class="text-decoration-none">
-              <div class="celebration-card">
-                <div class="celebration-img-container">
-                  {% with img_url=celebration.get_image_url %}
-                    <img src="{% if img_url %}{{ img_url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}" alt="{{ celebration.festivalname }}" class="celebration-img">
-                  {% endwith %}
-                  <div class="celebration-date">{{ celebration.date|date:"d M Y" }}</div>
-                </div>
-                <div class="celebration-content">
-                  <h3 class="celebration-name">{{ celebration.festivalname }}</h3>
-                </div>
+            <div class="celebration-card" onclick="{% if celebration.photo_count > 0 or celebration.get_image_url %}openCelebrationLightbox('{{ celebration.id }}'){% else %}return false{% endif %}" style="cursor:pointer">
+              <div class="celebration-img-container">
+                {% with img_url=celebration.get_image_url %}
+                  <img src="{% if img_url %}{{ img_url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}" alt="{{ celebration.festivalname }}" class="celebration-img">
+                {% endwith %}
+                <div class="celebration-date">{{ celebration.date|date:"d M Y" }}</div>
               </div>
-            </a>
+              <div class="celebration-content">
+                <h3 class="celebration-name">{{ celebration.festivalname }}</h3>
+                {% if celebration.photo_count > 0 %}
+                  <span class="celebration-count">{{ celebration.photo_count }} photos</span>
+                {% endif %}
+              </div>
+            </div>
           </div>
         {% endfor %}
       {% else %}
@@ -124,6 +125,42 @@
     </div>
   </div>
 </section>
+
+<!-- Celebration Modals -->
+{% if celebration %}
+  {% for celebration in celebration|slice:":3" %}
+    {% if celebration.photo_count > 0 or celebration.get_image_url %}
+    <div class="modal fade celebration-modal" id="celebModal{{ celebration.id }}" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ celebration.festivalname }} <span class="photo-badge">{{ celebration.photo_count|add:1 }} photos</span></h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row g-2 gallery-modal-grid" id="homeCelebGrid{{ celebration.id }}">
+              <div class="col-6 col-md-4 col-lg-3">
+                <div class="modal-thumb-wrap" onclick="openHomeLightbox('homeCelebGrid{{ celebration.id }}', 0)">
+                  {% with img_url=celebration.get_image_url %}
+                  <img src="{% if img_url %}{{ img_url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}" alt="{{ celebration.festivalname }}" class="modal-thumb-img" loading="lazy">
+                  {% endwith %}
+                </div>
+              </div>
+              {% for photo in celebration.additional_photos %}
+                <div class="col-6 col-md-4 col-lg-3">
+                  <div class="modal-thumb-wrap" onclick="openHomeLightbox('homeCelebGrid{{ celebration.id }}', {{ forloop.counter }})">
+                    <img src="{{ photo.get_photo_url }}" alt="{{ photo.caption|default:celebration.festivalname }}" class="modal-thumb-img" loading="lazy">
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
 <!--gallery section-->
 <section class="gallery-home-section py-5">
@@ -211,5 +248,109 @@
   </div>
 </section>
 
+<!-- Lightbox Overlay -->
+<div class="lightbox-overlay" id="homeLightbox" onclick="closeHomeLightbox(event)">
+  <button class="lightbox-close" onclick="closeHomeLightbox()">&times;</button>
+  <button class="lightbox-nav lightbox-prev" onclick="changeHomeLightbox(-1)">&#10094;</button>
+  <button class="lightbox-nav lightbox-next" onclick="changeHomeLightbox(1)">&#10095;</button>
+  <div class="lightbox-counter" id="homeLightboxCounter"></div>
+  <img class="lightbox-img" id="homeLightboxImg" src="" alt="">
+</div>
+
+<style>
+  .celebration-modal .modal-content { border-radius: 0; background: #0a0a0a; }
+  .celebration-modal .modal-header { background: #1a1a2e; color: white; border-bottom: 1px solid #2a2a3e; padding: 12px 20px; }
+  .celebration-modal .modal-title { font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 12px; }
+  .celebration-modal .modal-body { padding: 20px; overflow-y: auto; max-height: calc(100vh - 60px); background: #0a0a0a; }
+  .celebration-modal .btn-close-white { filter: brightness(0) invert(1); }
+  .celebration-count { font-size: 0.85rem; color: #D4AF37; font-weight: 500; }
+  .lightbox-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999999; justify-content: center; align-items: center; cursor: zoom-out; }
+  .lightbox-overlay.active { display: flex; }
+  .lightbox-img { max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 4px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); cursor: default; }
+  .lightbox-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 3rem; background: none; border: none; cursor: pointer; z-index: 10; line-height: 1; opacity: 0.8; }
+  .lightbox-close:hover { opacity: 1; }
+  .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); color: white; font-size: 2.5rem; background: rgba(255,255,255,0.1); border: none; cursor: pointer; padding: 15px 10px; border-radius: 8px; transition: background 0.2s; line-height: 1; opacity: 0.7; }
+  .lightbox-nav:hover { background: rgba(255,255,255,0.2); opacity: 1; }
+  .lightbox-prev { left: 20px; }
+  .lightbox-next { right: 20px; }
+  .lightbox-counter { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.7); font-size: 0.9rem; background: rgba(0,0,0,0.5); padding: 6px 16px; border-radius: 20px; }
+  .modal-thumb-wrap { position: relative; width: 100%; padding-bottom: 75%; overflow: hidden; border-radius: 6px; cursor: pointer; transition: transform 0.2s ease; background: #1a1a2e; }
+  .modal-thumb-wrap:hover { transform: scale(1.03); }
+  .modal-thumb-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+  .photo-badge { font-size: 0.8rem; background: #003264; color: #F4C430; padding: 3px 12px; border-radius: 20px; font-weight: 500; }
+  .gallery-modal-grid { max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 576px) {
+    .lightbox-nav { font-size: 1.8rem; padding: 12px 8px; opacity: 0.9; background: rgba(255,255,255,0.15); }
+    .lightbox-prev { left: 8px; }
+    .lightbox-next { right: 8px; }
+    .lightbox-close { font-size: 2.5rem; top: 10px; right: 15px; }
+    .lightbox-img { max-width: 95%; max-height: 85%; }
+    .celebration-modal .modal-body { padding: 10px; }
+  }
+</style>
+
+<script>
+let homeLightboxData = {};
+let homeCurrentId = null;
+let homeCurrentIndex = 0;
+
+function openCelebrationLightbox(id) {
+  const modal = new bootstrap.Modal(document.getElementById('celebModal' + id));
+  modal.show();
+}
+
+function openHomeLightbox(gridId, index) {
+  homeCurrentId = gridId;
+  homeCurrentIndex = index;
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  const images = grid.querySelectorAll('.modal-thumb-img');
+  if (images.length === 0) return;
+  homeLightboxData[gridId] = [];
+  images.forEach(img => homeLightboxData[gridId].push(img.src));
+  updateHomeLightbox();
+  document.getElementById('homeLightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function updateHomeLightbox() {
+  const data = homeLightboxData[homeCurrentId];
+  if (!data || !data[homeCurrentIndex]) return;
+  document.getElementById('homeLightboxImg').src = data[homeCurrentIndex];
+  document.getElementById('homeLightboxCounter').textContent = (homeCurrentIndex + 1) + ' / ' + data.length;
+}
+
+function changeHomeLightbox(dir) {
+  const data = homeLightboxData[homeCurrentId];
+  if (!data) return;
+  homeCurrentIndex = (homeCurrentIndex + dir + data.length) % data.length;
+  updateHomeLightbox();
+}
+
+function closeHomeLightbox(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('homeLightbox').classList.remove('active');
+  document.body.style.overflow = '';
+  homeCurrentId = null;
+}
+
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('homeLightbox').classList.contains('active')) return;
+  if (e.key === 'Escape') closeHomeLightbox();
+  if (e.key === 'ArrowLeft') changeHomeLightbox(-1);
+  if (e.key === 'ArrowRight') changeHomeLightbox(1);
+});
+
+(function() {
+  const lb = document.getElementById('homeLightbox');
+  let startX = 0, distX = 0;
+  lb.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchmove', function(e) { distX = e.touches[0].clientX - startX; }, { passive: true });
+  lb.addEventListener('touchend', function() {
+    if (Math.abs(distX) > 50) { if (distX > 0) changeHomeLightbox(-1); else changeHomeLightbox(1); }
+    startX = 0; distX = 0;
+  }, { passive: true });
+})();
+</script>
 
 {% endblock content %}

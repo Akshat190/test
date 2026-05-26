@@ -6,4 +6,4 @@ class KhschoolConfig(AppConfig):
     name = 'khschool'
 
     def ready(self):
-        pass
+        import khschool.signals

@@ -2,8 +2,6 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
-from django.db.models.signals import pre_delete, post_save
-from django.dispatch import receiver
 from django.contrib.auth.models import User
 
 
@@ -69,11 +67,24 @@ class UserProfile(models.Model):
         return self.role.is_super_admin if self.role else False
 
 
-# Note: UserProfile creation is handled in UserAdmin.save_model()
-# to avoid conflicts with the admin inline form.
+class ContactSubmission(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15, blank=True)
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    is_read = models.BooleanField(default=False, db_index=True)
+
+    class Meta:
+        verbose_name = 'Contact Submission'
+        verbose_name_plural = 'Contact Submissions'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.name} - {self.subject}"
 
 
-# Create your models here.
 class Celebration(models.Model):
     CELEBRATION_TYPES = [
         ('festival', 'Festival'),
