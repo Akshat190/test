@@ -56,17 +56,17 @@
       </div>
     </div>
     {% if campuses %}
-    <div class="celebration-campus-filter">
-      <a href="{% url 'home' %}" class="gallery-category {% if current_campus == 'all' %}active{% endif %}">All</a>
+    <div class="celebration-campus-filter" id="celebrationFilter">
+      <button class="gallery-category active" data-campus="all" onclick="filterCelebrations('all')">All</button>
       {% for campus in campuses %}
-        <a href="{% url 'home' %}?campus={{ campus.slug }}" class="gallery-category {% if current_campus == campus.slug %}active{% endif %}">{{ campus.name }}</a>
+        <button class="gallery-category" data-campus="{{ campus.slug }}" onclick="filterCelebrations('{{ campus.slug }}')">{{ campus.name }}</button>
       {% endfor %}
     </div>
     {% endif %}
-    <div class="row mt-4">
+    <div class="row mt-4" id="celebrationGrid">
       {% if celebration %}
-        {% for celebration in celebration|slice:":3" %}
-          <div class="col-lg-4 col-md-6 mb-4">
+        {% for celebration in celebration %}
+          <div class="col-lg-4 col-md-6 mb-4 celebration-card-wrap" data-campus="{{ celebration.campus.slug|default:'none' }}">
             <div class="celebration-card" onclick="{% if celebration.photo_count > 0 or celebration.get_image_url %}openCelebrationLightbox('{{ celebration.id }}'){% else %}return false{% endif %}" style="cursor:pointer">
               <div class="celebration-img-container">
                 {% with img_url=celebration.get_image_url %}
@@ -84,45 +84,8 @@
           </div>
         {% endfor %}
       {% else %}
-        <!-- Default celebrations if none in database -->
-        <div class="col-lg-4 col-md-6 mb-4">
-          <a href="{% url 'gallery' %}?category=festival" class="text-decoration-none">
-            <div class="celebration-card">
-              <div class="celebration-img-container">
-                <img src="{% static 'images/placeholder.jpg' %}" alt="Diwali Celebration" class="celebration-img">
-                <div class="celebration-date">15 Nov 2024</div>
-              </div>
-              <div class="celebration-content">
-                <h3 class="celebration-name">Diwali Celebration</h3>
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-          <a href="{% url 'gallery' %}?category=national" class="text-decoration-none">
-            <div class="celebration-card">
-              <div class="celebration-img-container">
-                <img src="{% static 'images/placeholder.jpg' %}" alt="Republic Day" class="celebration-img">
-                <div class="celebration-date">26 Jan 2025</div>
-              </div>
-              <div class="celebration-content">
-                <h3 class="celebration-name">Republic Day</h3>
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-          <a href="{% url 'gallery' %}?category=annual" class="text-decoration-none">
-            <div class="celebration-card">
-              <div class="celebration-img-container">
-                <img src="{% static 'images/placeholder.jpg' %}" alt="Annual Day" class="celebration-img">
-                <div class="celebration-date">10 Dec 2024</div>
-            </div>
-            <div class="celebration-content">
-              <h3 class="celebration-name">Annual Day</h3>
-            </div>
-          </div>
-          </a>
+        <div class="col-12 text-center py-5">
+          <p style="color:#4B5563;font-size:1.1rem">No celebrations yet.</p>
         </div>
       {% endif %}
     </div>
@@ -136,7 +99,7 @@
 
 <!-- Celebration Modals -->
 {% if celebration %}
-  {% for celebration in celebration|slice:":3" %}
+  {% for celebration in celebration %}
     {% if celebration.photo_count > 0 or celebration.get_image_url %}
     <div class="modal fade celebration-modal" id="celebModal{{ celebration.id }}" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-fullscreen">
@@ -359,6 +322,28 @@ document.addEventListener('keydown', function(e) {
     startX = 0; distX = 0;
   }, { passive: true });
 })();
+
+function filterCelebrations(campus) {
+  const cards = document.querySelectorAll('.celebration-card-wrap');
+  const buttons = document.querySelectorAll('#celebrationFilter .gallery-category');
+  buttons.forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.querySelector('#celebrationFilter [data-campus="' + campus + '"]');
+  if (activeBtn) activeBtn.classList.add('active');
+  let visible = 0;
+  cards.forEach(function(card) {
+    const match = campus === 'all' || card.getAttribute('data-campus') === campus;
+    if (match && visible < 3) {
+      card.style.display = '';
+      visible++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  filterCelebrations('all');
+});
 </script>
 
 {% endblock content %}

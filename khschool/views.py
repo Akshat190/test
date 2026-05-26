@@ -39,13 +39,10 @@ def home(request):
     except Exception as e:
         logger.warning(f"Error loading featured galleries: {str(e)}")
     
+    all_celebrations = []
     try:
-        campus_slug = request.GET.get('campus', None)
-        celebration_qs = Celebration.objects.all()
-        if campus_slug:
-            celebration_qs = celebration_qs.filter(campus__slug=campus_slug)
-        celebrations = celebration_qs.order_by('-date')[:3]
-        for celebration in celebrations:
+        qs = Celebration.objects.all().order_by('-date')[:30]
+        for celebration in qs:
             try:
                 photos = celebration.celebrationphoto_set.all().order_by('order')
                 celebration.additional_photos = list(photos)
@@ -53,10 +50,12 @@ def home(request):
             except Exception as e:
                 celebration.additional_photos = []
                 celebration.photo_count = 0
+        all_celebrations = list(qs)
     except OperationalError:
-        celebrations = []
+        all_celebrations = []
     except Exception as e:
         logger.warning(f"Error loading celebrations: {str(e)}")
+        all_celebrations = []
 
     campuses = []
     try:
@@ -66,10 +65,10 @@ def home(request):
         
     context = {
         'carousel_images': carousel_images,
-        'celebration': celebrations,
+        'celebration': all_celebrations,
         'featured_galleries': featured_galleries,
         'campuses': campuses,
-        'current_campus': campus_slug or 'all',
+        'current_campus': 'all',
     }
     
     return render(request, 'home.html', context)
@@ -101,13 +100,9 @@ def gallery(request):
         galleries = []
 
     celebrations = []
-    campus_filter = request.GET.get('campus', None)
     try:
-        celebration_qs = Celebration.objects.all()
-        if campus_filter and campus_filter != 'all':
-            celebration_qs = celebration_qs.filter(campus__slug=campus_filter)
-        celebrations = celebration_qs.order_by('-date')
-        for celebration in celebrations:
+        celebration_qs = Celebration.objects.all().order_by('-date')[:50]
+        for celebration in celebration_qs:
             try:
                 photos = celebration.celebrationphoto_set.all().order_by('order')
                 celebration.additional_photos = list(photos)
@@ -116,6 +111,7 @@ def gallery(request):
                 logger.warning(f"Error loading additional photos for celebration {celebration.id}: {str(e)}")
                 celebration.additional_photos = []
                 celebration.photo_count = 0
+        celebrations = list(celebration_qs)
     except OperationalError:
         celebrations = []
     except Exception as e:
@@ -135,7 +131,7 @@ def gallery(request):
         'categories': categories,
         'current_category': category_filter or 'all',
         'campuses': campuses,
-        'current_campus': campus_filter or 'all',
+        'current_campus': 'all',
     }
 
     return render(request, 'gallery.html', context)

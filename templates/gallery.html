@@ -96,16 +96,16 @@
           </div>
         </div>
         {% if campuses %}
-        <div class="gallery-categories mb-4">
-          <a href="{% url 'gallery' %}{% if current_category != 'all' %}?category={{ current_category }}{% endif %}" class="gallery-category {% if current_campus == 'all' %}active{% endif %}">All</a>
+        <div class="gallery-categories mb-4" id="galleryCelebrationFilter">
+          <button class="gallery-category active" data-campus="all" onclick="filterGalleryCelebrations('all')">All</button>
           {% for campus in campuses %}
-            <a href="{% url 'gallery' %}?campus={{ campus.slug }}{% if current_category != 'all' %}&category={{ current_category }}{% endif %}" class="gallery-category {% if current_campus == campus.slug %}active{% endif %}">{{ campus.name }}</a>
+            <button class="gallery-category" data-campus="{{ campus.slug }}" onclick="filterGalleryCelebrations('{{ campus.slug }}')">{{ campus.name }}</button>
           {% endfor %}
         </div>
         {% endif %}
-        <div class="row">
+        <div class="row" id="galleryCelebrationGrid">
           {% for celebration in celebration %}
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 gallery-celebration-card" data-campus="{{ celebration.campus.slug|default:'none' }}">
               <div class="gallery-item">
                 <div class="gallery-image-container">
                   {% with img_url=celebration.get_image_url %}
@@ -406,7 +406,20 @@ document.addEventListener('DOMContentLoaded', function() {
       this.classList.add('active');
     });
   });
+  filterGalleryCelebrations('all');
 });
+
+function filterGalleryCelebrations(campus) {
+  const cards = document.querySelectorAll('.gallery-celebration-card');
+  const buttons = document.querySelectorAll('#galleryCelebrationFilter .gallery-category');
+  buttons.forEach(function(btn) { btn.classList.remove('active'); });
+  var activeBtn = document.querySelector('#galleryCelebrationFilter [data-campus="' + campus + '"]');
+  if (activeBtn) activeBtn.classList.add('active');
+  cards.forEach(function(card) {
+    var match = campus === 'all' || card.getAttribute('data-campus') === campus;
+    card.style.display = match ? '' : 'none';
+  });
+}
 </script>
 
 {% endblock content %}
