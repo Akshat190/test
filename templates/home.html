@@ -84,8 +84,38 @@
           </div>
         {% endfor %}
       {% else %}
-        <div class="col-12 text-center py-5">
-          <p style="color:#4B5563;font-size:1.1rem">No celebrations yet.</p>
+        <div class="col-lg-4 col-md-6 mb-4 celebration-card-wrap" data-campus="all">
+          <div class="celebration-card" style="cursor:default">
+            <div class="celebration-img-container">
+              <img src="{% static 'images/placeholder.jpg' %}" alt="Diwali Celebration" class="celebration-img">
+              <div class="celebration-date">15 Nov 2024</div>
+            </div>
+            <div class="celebration-content">
+              <h3 class="celebration-name">Diwali Celebration</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4 celebration-card-wrap" data-campus="all">
+          <div class="celebration-card" style="cursor:default">
+            <div class="celebration-img-container">
+              <img src="{% static 'images/placeholder.jpg' %}" alt="Republic Day" class="celebration-img">
+              <div class="celebration-date">26 Jan 2025</div>
+            </div>
+            <div class="celebration-content">
+              <h3 class="celebration-name">Republic Day</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4 celebration-card-wrap" data-campus="all">
+          <div class="celebration-card" style="cursor:default">
+            <div class="celebration-img-container">
+              <img src="{% static 'images/placeholder.jpg' %}" alt="Annual Day" class="celebration-img">
+              <div class="celebration-date">10 Dec 2024</div>
+            </div>
+            <div class="celebration-content">
+              <h3 class="celebration-name">Annual Day</h3>
+            </div>
+          </div>
         </div>
       {% endif %}
     </div>
