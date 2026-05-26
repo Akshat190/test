@@ -285,7 +285,8 @@ class CelebrationAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        for f in request.FILES.getlist('bulk_photos'):
+        files = form.cleaned_data.get('bulk_photos') or request.FILES.getlist('bulk_photos')
+        for f in files:
             CelebrationPhoto.objects.create(
                 celebration=obj,
                 photo=f,
@@ -434,7 +435,8 @@ class GalleryAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        for f in request.FILES.getlist('bulk_images'):
+        files = form.cleaned_data.get('bulk_images') or request.FILES.getlist('bulk_images')
+        for f in files:
             GalleryImage.objects.create(
                 gallery=obj,
                 image=f,
