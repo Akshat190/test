@@ -1,22 +1,24 @@
 ---
 import SectionTitle from "../ui/SectionTitle.astro";
 import Button from "../ui/Button.astro";
-import { getCelebrations, getImageUrl } from "../../lib/api";
+import { getCelebrations, getCampuses, getImageUrl } from "../../lib/api";
 import { formatDate } from "../../lib/utils";
 
 interface Props {
   limit?: number;
 }
 
-const { limit = 6 } = Astro.props;
+const { limit = 3 } = Astro.props;
 const { results: celebrations } = await getCelebrations();
-const display = celebrations.slice(0, limit);
-
+const { results: campuses } = await getCampuses();
 const fallbackItems = [
-  { name: "Diwali Celebration", date: "2024-11-15", type: "festival" },
-  { name: "Republic Day", date: "2025-01-26", type: "festival" },
-  { name: "Annual Day", date: "2024-12-10", type: "event" },
-].slice(0, limit);
+  { name: "Diwali Celebration", date: "2024-11-15", type: "festival", campus: null },
+  { name: "Republic Day", date: "2025-01-26", type: "festival", campus: null },
+  { name: "Annual Day", date: "2024-12-10", type: "event", campus: null },
+];
+const displayItems = celebrations.length > 0 ? celebrations : fallbackItems;
+const activeClass = "bg-[var(--color-accent)] text-[var(--color-paper)]";
+const inactiveClass = "bg-[var(--color-paper-surface)] text-[var(--color-ink-2)]";
 ---
 
 <section class="hallmark-section paper-light">
@@ -26,14 +28,24 @@ const fallbackItems = [
       subtitle="Festivals and special occasions that enrich our school culture"
     />
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-      {(display.length > 0 ? display : fallbackItems).map((item, i) => {
+    {campuses.length > 0 && (
+      <div class="flex flex-wrap gap-3 justify-center mb-10" id="celebration-filter">
+        <button class="celebration-filter-btn px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-[var(--dur-fast)] focus-visible:outline-2 focus-visible:outline-[var(--color-accent)] {activeClass}" data-campus="all">All Campuses</button>
+        {campuses.map((c) => (
+          <button class="celebration-filter-btn px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-[var(--dur-fast)] focus-visible:outline-2 focus-visible:outline-[var(--color-accent)] {inactiveClass}" data-campus={c.slug}>{c.name}</button>
+        ))}
+      </div>
+    )}
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8" id="celebration-grid" data-limit={limit}>
+      {displayItems.map((item) => {
         const date = "date" in item ? item.date : "";
-        const name = "festivalname" in item ? item.festivalname : item.name;
+        const name = "festivalname" in item ? item.festivalname : (item as any).name;
         const type = "celebration_type" in item ? item.celebration_type : (item as any).type;
         const img = "get_image_url" in item ? getImageUrl(item.get_image_url) : null;
+        const campusSlug = "campus" in item && item.campus ? item.campus.slug : "none";
         return (
-          <a href={`/gallery?category=${type}`} class="group block">
+          <a href={`/gallery?category=${type}`} class="block celebration-card" data-campus={campusSlug}>
             <article class="bg-[var(--color-paper-raised)] rounded-xl overflow-hidden shadow-md transition-[transform,box-shadow] duration-[var(--dur-base)] hover:shadow-lg hover:-translate-y-1">
               <div class="relative aspect-[16/10] overflow-hidden bg-[var(--color-paper-surface-2)]">
                 {img ? (
@@ -75,3 +87,33 @@ const fallbackItems = [
     </div>
   </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.celebration-filter-btn');
+    const cards = document.querySelectorAll('.celebration-card');
+    const grid = document.getElementById('celebration-grid');
+    const maxVisible = parseInt(grid?.dataset.limit || '3', 10);
+    const activeClass = 'bg-[var(--color-accent)] text-[var(--color-paper)]';
+    const inactiveClass = 'bg-[var(--color-paper-surface)] text-[var(--color-ink-2)]';
+
+    function filter(campus) {
+      buttons.forEach((btn) => {
+        btn.className = `celebration-filter-btn px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-[var(--dur-fast)] focus-visible:outline-2 focus-visible:outline-[var(--color-accent)] ${btn.dataset.campus === campus ? activeClass : inactiveClass}`;
+      });
+
+      let visible = 0;
+      cards.forEach((card) => {
+        const match = campus === 'all' || card.dataset.campus === campus;
+        card.style.display = match && visible < maxVisible ? '' : 'none';
+        if (match) visible++;
+      });
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => filter(btn.dataset.campus));
+    });
+
+    filter('all');
+  });
+</script>

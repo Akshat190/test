@@ -89,6 +89,10 @@ class Celebration(models.Model):
     )
     date = models.DateTimeField(verbose_name='Date', db_index=True)
     is_featured = models.BooleanField(default=False, verbose_name='Feature on Homepage', db_index=True)
+    campus = models.ForeignKey(
+        'Campus', on_delete=models.SET_NULL, null=True, blank=True,
+        verbose_name='Campus', db_index=True,
+    )
     
     class Meta:
         verbose_name = 'Celebration'

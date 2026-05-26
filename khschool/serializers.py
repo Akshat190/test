@@ -14,14 +14,20 @@ class CelebrationPhotoSerializer(serializers.ModelSerializer):
 class CelebrationSerializer(serializers.ModelSerializer):
     photos = CelebrationPhotoSerializer(source='celebrationphoto_set', many=True, read_only=True)
     photo_count = serializers.IntegerField(read_only=True)
+    campus = serializers.SerializerMethodField()
 
     class Meta:
         model = Celebration
         fields = [
             'id', 'festivalname', 'description', 'celebration_type',
             'image', 'get_image_url', 'date', 'is_featured',
-            'photos', 'photo_count',
+            'photos', 'photo_count', 'campus',
         ]
+
+    def get_campus(self, obj):
+        if obj.campus:
+            return {'id': obj.campus.id, 'slug': obj.campus.slug, 'name': obj.campus.name}
+        return None
 
 
 class GalleryImageSerializer(serializers.ModelSerializer):
