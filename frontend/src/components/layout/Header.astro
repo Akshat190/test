@@ -11,14 +11,14 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
 ---
 
 <header class="sticky top-0 z-50">
-  <nav class="bg-gradient-to-r from-navy-500 to-navy-700 shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <nav class="paper-dark bg-[var(--color-paper)] shadow-lg" aria-label="Main navigation">
+    <div class="hallmark-container">
       <div class="flex items-center justify-between h-20 lg:h-28">
-        <a href="/" class="flex-shrink-0">
+        <a href="/" class="flex-shrink-0 focus-visible:outline-2 focus-visible:outline-[var(--color-accent)] focus-visible:outline-offset-4 rounded-sm" aria-label="Kapadia High School home">
           <img
             src="/logo.svg"
-            alt="Kapadia High School"
-            class="h-16 lg:h-20 w-auto transition-transform duration-300 hover:scale-105"
+            alt=""
+            class="h-16 lg:h-20 w-auto transition-transform duration-[var(--dur-fast)] hover:scale-[1.03]"
             oncontextmenu="return false"
           />
         </a>
@@ -27,17 +27,20 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
           {NAV_ITEMS.map((item) => (
             item.children ? (
               <div class="relative group">
-                <button class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-white/90 hover:text-gold-500 transition-colors duration-200">
+                <button
+                  class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-[var(--color-ink-on-paper)]/90 hover:text-[var(--color-accent)] transition-colors duration-[var(--dur-fast)] rounded-md focus-visible:outline-2 focus-visible:outline-[var(--color-accent)]"
+                  aria-expanded="false"
+                >
                   {item.label}
-                  <svg class="w-3 h-3 mt-0.5 transition-transform duration-200 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  <svg class="w-3 h-3 mt-0.5 transition-transform duration-[var(--dur-base)] group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
-                <div class="absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0 py-2 z-50">
+                <div class="absolute top-full left-0 mt-1 w-56 bg-[var(--color-paper-raised)] rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-[opacity,visibility,transform] duration-[var(--dur-base)] translate-y-2 group-hover:translate-y-0 py-2 z-50">
                   {item.children.map((child) => (
                     <a
                       href={child.path}
-                      class="block px-5 py-2.5 text-sm text-gray-700 hover:text-gold-600 hover:bg-gold-50 transition-all duration-200 border-l-2 border-transparent hover:border-gold-500"
+                      class="block px-5 py-2.5 text-sm text-[var(--color-ink-2)] hover:text-[var(--color-accent-3)] hover:bg-[var(--color-accent-soft)] transition-[color,background-color,border-color] duration-[var(--dur-fast)] border-l-2 border-transparent hover:border-[var(--color-accent)]"
                     >
                       {child.label}
                     </a>
@@ -47,7 +50,7 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
             ) : (
               <a
                 href={item.path}
-                class={`px-3 py-2 text-sm font-medium transition-colors duration-200 ${isActive(item.path) ? "text-gold-500" : "text-white/90 hover:text-gold-500"}`}
+                class={`px-3 py-2 text-sm font-medium transition-colors duration-[var(--dur-fast)] rounded-md ${isActive(item.path) ? "text-[var(--color-accent)]" : "text-[var(--color-ink-on-paper)]/90 hover:text-[var(--color-accent)]"}`}
               >
                 {item.label}
               </a>
@@ -57,38 +60,36 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
           <a
             href="https://forms.gle/sDftg7osPaxvGKAD8"
             target="_blank"
-            class="ml-4 inline-flex items-center gap-2 px-5 py-2.5 bg-gold-500 text-navy-500 font-semibold text-sm rounded-full hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+            rel="noopener"
+            class="ml-4 inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--color-accent)] text-[var(--color-paper)] font-semibold text-sm rounded-full hover:bg-[var(--color-paper-raised)] hover:text-[var(--color-paper)] transition-[background-color,color,box-shadow,transform] duration-[var(--dur-base)] shadow-lg hover:shadow-xl hover:-translate-y-0.5"
           >
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 7l-9-5 9-5 9 5-9 5z" />
-            </svg>
             Admission Open
           </a>
         </div>
 
-        <button id="mobile-menu-btn" class="lg:hidden p-2 text-white hover:text-gold-500 transition-colors" aria-label="Toggle navigation">
-          <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        <button id="mobile-menu-btn" class="lg:hidden p-2 text-[var(--color-ink-on-paper)]/90 hover:text-[var(--color-accent)] transition-colors rounded-md" aria-label="Toggle navigation" aria-expanded="false">
+          <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
       </div>
     </div>
 
-    <div id="mobile-menu" class="lg:hidden hidden bg-navy-600 rounded-b-2xl shadow-2xl px-4 pb-4 pt-2">
+    <div id="mobile-menu" class="lg:hidden hidden paper-dark bg-[var(--color-paper-2)] rounded-b-2xl shadow-2xl px-4 pb-4 pt-2" aria-label="Mobile navigation">
       {NAV_ITEMS.map((item) => (
         item.children ? (
           <div class="mb-1">
-            <button class="mobile-dropdown-toggle flex items-center justify-between w-full px-3 py-2.5 text-sm font-medium text-white/90 hover:text-gold-500 transition-colors rounded-lg">
+            <button class="mobile-dropdown-toggle flex items-center justify-between w-full px-3 py-2.5 text-sm font-medium text-[var(--color-ink-on-paper)]/90 hover:text-[var(--color-accent)] transition-colors rounded-lg">
               {item.label}
-              <svg class="w-3 h-3 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              <svg class="w-3 h-3 transition-transform duration-[var(--dur-fast)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M19 9l-7 7-7-7" />
               </svg>
             </button>
             <div class="mobile-dropdown hidden pl-4 mt-1 mb-2 space-y-1">
               {item.children.map((child) => (
                 <a
                   href={child.path}
-                  class="block px-3 py-2 text-sm text-gray-300 hover:text-gold-500 hover:bg-navy-500/50 rounded-lg transition-colors"
+                  class="block px-3 py-2 text-sm text-[var(--color-ink-on-paper-2)] hover:text-[var(--color-accent)] hover:bg-[var(--color-paper-3)]/50 rounded-lg transition-colors"
                 >
                   {child.label}
                 </a>
@@ -98,7 +99,7 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
         ) : (
           <a
             href={item.path}
-            class={`block px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${isActive(item.path) ? "text-gold-500 bg-navy-700" : "text-white/90 hover:text-gold-500 hover:bg-navy-500/50"}`}
+            class={`block px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${isActive(item.path) ? "text-[var(--color-accent)] bg-[var(--color-paper-3)]" : "text-[var(--color-ink-on-paper)]/90 hover:text-[var(--color-accent)] hover:bg-[var(--color-paper-3)]/50"}`}
           >
             {item.label}
           </a>
@@ -107,11 +108,9 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
       <a
         href="https://forms.gle/sDftg7osPaxvGKAD8"
         target="_blank"
-        class="mt-3 block text-center px-5 py-3 bg-gold-500 text-navy-500 font-semibold text-sm rounded-full hover:bg-gold-400 transition-colors"
+        rel="noopener"
+        class="mt-3 block text-center px-5 py-3 bg-[var(--color-accent)] text-[var(--color-paper)] font-semibold text-sm rounded-full hover:bg-[var(--color-accent-2)] transition-colors"
       >
-        <svg class="w-4 h-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 7l-9-5 9-5 9 5-9 5z" />
-        </svg>
         Admission Open
       </a>
     </div>

@@ -1,94 +1,85 @@
 ---
-import Input from "../ui/Input.astro";
+import SectionTitle from "../ui/SectionTitle.astro";
+import { SITE } from "../../lib/constants";
 ---
 
-<section class="py-16 md:py-24">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid md:grid-cols-2 gap-12">
+<section class="hallmark-section paper-light">
+  <div class="hallmark-container">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16">
       <div>
-        <h2 class="text-3xl font-heading font-bold text-navy-500 mb-6">Send Us a Message</h2>
-        <div class="w-16 h-1 bg-gold-500 rounded-full mb-8" />
-        <form id="contact-form" class="space-y-6">
-          <div class="grid md:grid-cols-2 gap-6">
-            <Input type="text" label="Full Name" name="name" required placeholder="Your name" />
-            <Input type="email" label="Email Address" name="email" required placeholder="your@email.com" />
+        <h2 class="font-[var(--font-display)] text-[var(--text-3xl)] font-semibold text-[var(--color-paper)] mb-2">Send us a message</h2>
+        <div class="h-[var(--rule-base)] bg-[var(--color-accent)] rounded-full mb-8" style="width: 3rem" />
+        <p class="text-[var(--color-ink-2)] mb-8 leading-relaxed">Have a question about admissions, curriculum, or anything else? We'd love to hear from you.</p>
+
+        <form id="contact-form" class="space-y-5" novalidate>
+          <div class="grid md:grid-cols-2 gap-5">
+            <div class="space-y-1.5">
+              <label for="field-name" class="block text-sm font-semibold text-[var(--color-paper)]">Full name <span class="text-[var(--color-error)]">*</span></label>
+              <input type="text" id="field-name" name="name" required
+                class="w-full px-4 py-3 rounded-lg border-2 border-[var(--color-border)] bg-[var(--color-paper-raised)] text-[var(--color-ink)] placeholder:text-[var(--color-ink-muted)] transition-[border-color,box-shadow,background-color] duration-[var(--dur-fast)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent-soft)] disabled:opacity-50 disabled:cursor-not-allowed aria-[invalid=true]:border-[var(--color-error)]"
+                placeholder="Your name" />
+            </div>
+            <div class="space-y-1.5">
+              <label for="field-email" class="block text-sm font-semibold text-[var(--color-paper)]">Email address <span class="text-[var(--color-error)]">*</span></label>
+              <input type="email" id="field-email" name="email" required
+                class="w-full px-4 py-3 rounded-lg border-2 border-[var(--color-border)] bg-[var(--color-paper-raised)] text-[var(--color-ink)] placeholder:text-[var(--color-ink-muted)] transition-[border-color,box-shadow,background-color] duration-[var(--dur-fast)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent-soft)] disabled:opacity-50 disabled:cursor-not-allowed aria-[invalid=true]:border-[var(--color-error)]"
+                placeholder="your@email.com" />
+            </div>
           </div>
-          <div class="grid md:grid-cols-2 gap-6">
-            <Input type="tel" label="Phone Number" name="phone" placeholder="+91 98765 43210" />
-            <Input type="text" label="Subject" name="subject" required placeholder="How can we help?" />
+          <div class="grid md:grid-cols-2 gap-5">
+            <div class="space-y-1.5">
+              <label for="field-phone" class="block text-sm font-semibold text-[var(--color-paper)]">Phone number</label>
+              <input type="tel" id="field-phone" name="phone"
+                class="w-full px-4 py-3 rounded-lg border-2 border-[var(--color-border)] bg-[var(--color-paper-raised)] text-[var(--color-ink)] placeholder:text-[var(--color-ink-muted)] transition-[border-color,box-shadow,background-color] duration-[var(--dur-fast)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent-soft)] disabled:opacity-50 disabled:cursor-not-allowed"
+                placeholder="+91 98765 43210" />
+            </div>
+            <div class="space-y-1.5">
+              <label for="field-subject" class="block text-sm font-semibold text-[var(--color-paper)]">Subject <span class="text-[var(--color-error)]">*</span></label>
+              <input type="text" id="field-subject" name="subject" required
+                class="w-full px-4 py-3 rounded-lg border-2 border-[var(--color-border)] bg-[var(--color-paper-raised)] text-[var(--color-ink)] placeholder:text-[var(--color-ink-muted)] transition-[border-color,box-shadow,background-color] duration-[var(--dur-fast)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent-soft)] disabled:opacity-50 disabled:cursor-not-allowed aria-[invalid=true]:border-[var(--color-error)]"
+                placeholder="How can we help?" />
+            </div>
           </div>
-          <Input label="Message" name="message" required placeholder="Write your message here..." rows={5} />
-          <div id="form-message" class="hidden" />
+          <div class="space-y-1.5">
+            <label for="field-message" class="block text-sm font-semibold text-[var(--color-paper)]">Message <span class="text-[var(--color-error)]">*</span></label>
+            <textarea id="field-message" name="message" rows="5" required
+              class="w-full px-4 py-3 rounded-lg border-2 border-[var(--color-border)] bg-[var(--color-paper-raised)] text-[var(--color-ink)] placeholder:text-[var(--color-ink-muted)] transition-[border-color,box-shadow,background-color] duration-[var(--dur-fast)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent-soft)] disabled:opacity-50 disabled:cursor-not-allowed resize-none aria-[invalid=true]:border-[var(--color-error)]"
+              placeholder="Write your message here..."></textarea>
+          </div>
+          <div id="form-message" class="hidden text-sm rounded-lg p-4" role="alert" />
           <button type="submit" id="submit-btn"
-            class="inline-flex items-center gap-2 px-8 py-3.5 bg-gold-500 text-navy-500 font-semibold rounded-full hover:bg-gold-400 transition-all duration-300 shadow-lg hover:shadow-xl text-sm">
+            class="inline-flex items-center gap-2 px-8 py-3.5 bg-[var(--color-accent)] text-[var(--color-paper)] font-semibold rounded-full hover:bg-[var(--color-accent-2)] transition-[background-color,box-shadow] duration-[var(--dur-base)] shadow-lg hover:shadow-xl text-sm disabled:opacity-50 disabled:cursor-not-allowed">
             Send Message
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
             </svg>
           </button>
         </form>
       </div>
 
       <div>
-        <h2 class="text-3xl font-heading font-bold text-navy-500 mb-6">Get in Touch</h2>
-        <div class="w-16 h-1 bg-gold-500 rounded-full mb-8" />
+        <h2 class="font-[var(--font-display)] text-[var(--text-3xl)] font-semibold text-[var(--color-paper)] mb-2">Get in touch</h2>
+        <div class="h-[var(--rule-base)] bg-[var(--color-accent)] rounded-full mb-8" style="width: 3rem" />
 
-        <div class="space-y-8">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-gold-100 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg class="w-6 h-6 text-gold-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+        <div class="space-y-6">
+          {[
+            { icon: "M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z", label: "Address", value: `${SITE.address.street}, ${SITE.address.area}, ${SITE.address.state} ${SITE.address.pincode}` },
+            { icon: "M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z", label: "Phone", value: SITE.phone },
+            { icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z", label: "Email", value: SITE.email },
+            { icon: "M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z", label: "Office Hours", value: `Mon-Fri: 8:00 AM - 4:00 PM\nSat: 8:00 AM - 1:00 PM` },
+          ].map((item) => (
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-[var(--color-accent-soft)] rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-[var(--color-accent-3)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  {item.icon.split(" ").map((d, i) => <path key={i} d={d} />)}
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-[var(--font-display)] text-base font-semibold text-[var(--color-paper)]">{item.label}</h3>
+                <p class="text-sm text-[var(--color-ink-2)] mt-0.5 whitespace-pre-line">{item.value}</p>
+              </div>
             </div>
-            <div>
-              <h3 class="text-lg font-heading font-semibold text-navy-600">Address</h3>
-              <p class="text-gray-600 text-sm mt-1">
-                Near Chhatral Railway Station,<br />
-                Kalol, Pratappura,<br />
-                Gujarat 382721
-              </p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-gold-100 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg class="w-6 h-6 text-gold-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-lg font-heading font-semibold text-navy-600">Phone</h3>
-              <p class="text-gray-600 text-sm mt-1">+91 6354368335</p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-gold-100 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg class="w-6 h-6 text-gold-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-lg font-heading font-semibold text-navy-600">Email</h3>
-              <p class="text-gray-600 text-sm mt-1">info@kapadiahighschool.com</p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-gold-100 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg class="w-6 h-6 text-gold-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-lg font-heading font-semibold text-navy-600">Office Hours</h3>
-              <p class="text-gray-600 text-sm mt-1">
-                Monday - Friday: 8:00 AM - 4:00 PM<br />
-                Saturday: 8:00 AM - 1:00 PM
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
@@ -101,18 +92,24 @@ import Input from "../ui/Input.astro";
     const messageEl = document.getElementById('form-message');
     const submitBtn = document.getElementById('submit-btn');
 
+    async function getVal(id) {
+      const el = document.getElementById(id);
+      return el ? el.value : '';
+    }
+
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!submitBtn || !messageEl) return;
+
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Sending...';
+      submitBtn.innerHTML = 'Sending\u2026';
 
       const data = {
-        name: (document.getElementById('field-name') as HTMLInputElement).value,
-        email: (document.getElementById('field-email') as HTMLInputElement).value,
-        phone: (document.getElementById('field-phone') as HTMLInputElement).value,
-        subject: (document.getElementById('field-subject') as HTMLInputElement).value,
-        message: (document.getElementById('field-message') as HTMLTextAreaElement).value,
+        name: await getVal('field-name'),
+        email: await getVal('field-email'),
+        phone: await getVal('field-phone'),
+        subject: await getVal('field-subject'),
+        message: await getVal('field-message'),
       };
 
       try {
@@ -123,15 +120,15 @@ import Input from "../ui/Input.astro";
         });
         const result = await res.json();
         if (result.success) {
-          messageEl.className = 'p-4 bg-green-50 text-green-700 rounded-xl text-sm';
+          messageEl.className = 'p-4 bg-[var(--color-success)]/10 text-[var(--color-success)] rounded-lg text-sm';
           messageEl.textContent = 'Thank you! Your message has been sent successfully.';
           form.reset();
         } else {
-          messageEl.className = 'p-4 bg-red-50 text-red-700 rounded-xl text-sm';
+          messageEl.className = 'p-4 bg-[var(--color-error)]/10 text-[var(--color-error)] rounded-lg text-sm';
           messageEl.textContent = result.error || 'Something went wrong. Please try again.';
         }
       } catch {
-        messageEl.className = 'p-4 bg-red-50 text-red-700 rounded-xl text-sm';
+        messageEl.className = 'p-4 bg-[var(--color-error)]/10 text-[var(--color-error)] rounded-lg text-sm';
         messageEl.textContent = 'Network error. Please check your connection and try again.';
       }
       messageEl.classList.remove('hidden');

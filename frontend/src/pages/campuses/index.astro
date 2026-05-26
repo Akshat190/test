@@ -10,8 +10,8 @@ const { results: campuses } = await getCampuses();
 <BaseLayout title="Our Campuses" canonical="/campuses">
   <PageHero title="Our Campuses" subtitle="Five campuses across Gujarat, each with its unique character" />
 
-  <section class="py-16 md:py-24">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="hallmark-section paper-light">
+    <div class="hallmark-container">
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {campuses.map((campus) => (
           <CampusCard campus={campus} />

@@ -8,15 +8,21 @@ interface Props {
 const { items = STATS } = Astro.props;
 ---
 
-<section class="py-16 bg-gradient-to-r from-navy-500 to-navy-700 text-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+<section class="paper-dark bg-[var(--color-paper-3)] py-14 md:py-20">
+  <div class="hallmark-container">
+    <dl class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
       {items.map((stat) => (
-        <div class="space-y-2">
-          <div class="text-4xl md:text-5xl font-heading font-bold text-gold-500">{stat.number}</div>
-          <div class="text-sm uppercase tracking-wider text-white/70">{stat.label}</div>
+        <div class="space-y-1">
+          <dt class="font-[var(--font-display)] text-[var(--color-accent)] leading-[var(--leading-display)]"
+              style="font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 3.75rem); font-weight: 600;">
+            {stat.number}
+          </dt>
+          <dd class="text-xs uppercase tracking-[var(--tracking-wide)] text-[var(--color-ink-on-paper-muted)]"
+              style="letter-spacing: var(--tracking-wide);">
+            {stat.label}
+          </dd>
         </div>
       ))}
-    </div>
+    </dl>
   </div>
 </section>

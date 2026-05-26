@@ -11,15 +11,34 @@ interface Props {
 const { title, subtitle, badge, class: className } = Astro.props;
 ---
 
-<div class={cn("bg-gradient-to-br from-navy-500 to-navy-800 text-white py-16 md:py-24", className)}>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+<div class={cn("paper-dark bg-[var(--color-paper)] py-16 md:py-28", className)}>
+  <div class="hallmark-container">
     {badge && (
-      <span class="inline-block bg-gold-500 text-navy-500 text-sm font-semibold px-4 py-1 rounded-full mb-4">
-        {badge}
-      </span>
+      <div class="text-center mb-4">
+        <span
+          class="inline-block bg-[var(--color-accent)] text-[var(--color-paper)] text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-[var(--tracking-wide)]"
+          style="letter-spacing: var(--tracking-wide)"
+        >
+          {badge}
+        </span>
+      </div>
     )}
-    <h1 class="text-4xl md:text-6xl font-heading font-bold mb-4">{title}</h1>
-    <div class="w-20 h-1 bg-gold-500 mx-auto rounded-full mb-4" />
-    {subtitle && <p class="text-lg text-gray-200 max-w-2xl mx-auto">{subtitle}</p>}
+    <div class={cn("max-w-4xl", badge ? "text-center mx-auto" : "text-center mx-auto")}>
+      <h1
+        class="text-[var(--color-ink-on-paper)] overflow-wrap-anywhere"
+        style="font-size: var(--text-display-s);"
+      >
+        {title}
+      </h1>
+      <div
+        class="h-[var(--rule-base)] bg-[var(--color-accent)] rounded-full mx-auto mt-4"
+        style="width: 3rem"
+      />
+      {subtitle && (
+        <p class="mt-5 text-base md:text-xl text-[var(--color-ink-on-paper-2)] max-w-2xl mx-auto leading-relaxed">
+          {subtitle}
+        </p>
+      )}
+    </div>
   </div>
 </div>

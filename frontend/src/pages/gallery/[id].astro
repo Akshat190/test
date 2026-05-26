@@ -16,50 +16,52 @@ const images = gallery.images || [];
 ---
 
 <BaseLayout title={gallery.name} description={gallery.description || gallery.name} canonical={`/gallery/${gallery.id}`}>
-  <div class="bg-gradient-to-br from-navy-500 to-navy-800 text-white py-16 md:py-24">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <a href="/gallery" class="inline-flex items-center gap-2 text-gold-400 hover:text-gold-300 text-sm mb-6 transition-colors">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+  <section class="bg-[var(--color-paper-4)] text-[var(--color-ink-on-paper)] py-16 md:py-24">
+    <div class="hallmark-container">
+      <a href="/gallery" class="inline-flex items-center gap-2 text-[var(--color-accent-3)] hover:text-[var(--color-accent-2)] text-sm mb-6 transition-colors duration-[var(--dur-fast)]">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M15 19l-7-7 7-7" />
         </svg>
         Back to Gallery
       </a>
       <div class="text-center">
-        <span class="inline-block bg-gold-500 text-navy-500 text-sm font-semibold px-4 py-1 rounded-full mb-4">{gallery.category}</span>
-        <h1 class="text-4xl md:text-5xl font-heading font-bold mb-4">{gallery.name}</h1>
-        {gallery.description && <p class="text-lg text-gray-200 max-w-2xl mx-auto">{gallery.description}</p>}
-        <p class="text-sm text-gold-400 mt-2">{gallery.image_count} images</p>
+        <span class="inline-block bg-[var(--color-accent)] text-[var(--color-paper)] text-sm font-semibold px-4 py-1 rounded-full mb-4">{gallery.category}</span>
+        <h1 class="font-[var(--font-display)] text-[var(--text-3xl)] md:text-[var(--text-display)] font-semibold mb-4">{gallery.name}</h1>
+        {gallery.description && <p class="text-lg text-[var(--color-ink-on-paper-2)] max-w-2xl mx-auto">{gallery.description}</p>}
+        <p class="text-sm text-[var(--color-accent-3)] mt-2">{gallery.image_count} images</p>
       </div>
     </div>
-  </div>
+  </section>
 
-  <section class="py-16 md:py-24">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="hallmark-section paper-light">
+    <div class="hallmark-container">
       {images.length > 0 ? (
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {images.map((img) => (
             <a
               href={getImageUrl(img.get_image_url) || '#'}
               target="_blank"
-              class="group block aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 shadow-soft hover:shadow-hover transition-all duration-300"
+              class="group block bg-[var(--color-paper-raised)] rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-[var(--dur-base)]"
             >
-              <img
-                src={getImageUrl(img.get_image_url) || '/placeholder.jpg'}
-                alt={img.caption || img.title || gallery.name}
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-              {(img.caption || img.title) && (
-                <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-navy-900/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <p class="text-white text-sm">{img.caption || img.title}</p>
-                </div>
-              )}
+              <div class="relative aspect-[4/3] bg-[var(--color-paper-surface-2)]">
+                <img
+                  src={getImageUrl(img.get_image_url) || '/placeholder.jpg'}
+                  alt={img.caption || img.title || gallery.name}
+                  class="w-full h-full object-cover transition-transform duration-[var(--dur-slow)] group-hover:scale-[1.03]"
+                  loading="lazy"
+                />
+                {(img.caption || img.title) && (
+                  <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-[var(--color-paper-4)]/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--dur-base)]">
+                    <p class="text-[var(--color-ink-on-paper)] text-sm">{img.caption || img.title}</p>
+                  </div>
+                )}
+              </div>
             </a>
           ))}
         </div>
       ) : (
         <div class="text-center py-16">
-          <p class="text-gray-500">No images in this gallery yet.</p>
+          <p class="text-[var(--color-ink-muted)]">No images in this gallery yet.</p>
         </div>
       )}
     </div>

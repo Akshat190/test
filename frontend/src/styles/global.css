@@ -1,92 +1,171 @@
+/* Hallmark · macrostructure: Marquee Hero + Long Document · tone: editorial
+ * anchor hue: gold 42° · paper: navy L20% C0.04 H255°
+ * pre-emit critique: P5 H4 E5 S4 R5 V5
+ * Last 3 themes in session: none (first Hallmark run for this project)
+ */
+
 @import "tailwindcss";
+@import "./tokens.css";
 
 @theme {
-  --color-navy-50: #e6edf5;
-  --color-navy-100: #b3c8e0;
-  --color-navy-200: #80a3cc;
-  --color-navy-300: #4d7eb8;
-  --color-navy-400: #1a59a4;
-  --color-navy-500: #003264;
-  --color-navy-600: #002a55;
-  --color-navy-700: #002244;
-  --color-navy-800: #001a33;
-  --color-navy-900: #001122;
+  --color-paper: #003264;
+  --color-paper-2: #002a55;
+  --color-paper-3: #002244;
+  --color-paper-4: #001a33;
+  --color-paper-surface: #fafaf8;
+  --color-paper-surface-2: #f5f3ee;
+  --color-paper-raised: #ffffff;
+  --color-accent: #d4af37;
+  --color-accent-2: #e8c84d;
+  --color-accent-3: #b8962e;
+  --color-accent-soft: rgba(212, 175, 55, 0.12);
+  --color-accent-glow: rgba(212, 175, 55, 0.25);
+  --color-ink: #1a1a2e;
+  --color-ink-2: #3a3a4e;
+  --color-ink-3: #6b6b7e;
+  --color-ink-muted: #9a9aae;
+  --color-ink-on-paper: #f0ede8;
+  --color-ink-on-paper-2: #c8c4be;
+  --color-ink-on-paper-muted: #8a8680;
+  --color-border: rgba(0, 50, 100, 0.10);
+  --color-border-2: rgba(0, 50, 100, 0.06);
+  --color-focus: #d4af37;
+  --color-success: #2d9a5e;
+  --color-error: #c0392b;
 
-  --color-gold-50: #fbf5e0;
-  --color-gold-100: #f5e6b3;
-  --color-gold-200: #eed780;
-  --color-gold-300: #e8c84d;
-  --color-gold-400: #e1b91a;
-  --color-gold-500: #d4af37;
-  --color-gold-600: #b8962e;
-  --color-gold-700: #9c7d25;
-  --color-gold-800: #80641c;
-  --color-gold-900: #644b13;
-
-  --color-cream: #fafaf8;
-
-  --font-heading: 'Cormorant Garamond', serif;
-  --font-body: 'Outfit', sans-serif;
-
-  --shadow-soft: 0 4px 20px rgba(0, 50, 100, 0.08);
-  --shadow-hover: 0 12px 40px rgba(0, 50, 100, 0.15);
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-x: clip;
   }
 
   body {
+    overflow-x: clip;
     font-family: var(--font-body);
-    background: var(--color-cream);
-    color: #1a1a2e;
-    line-height: 1.7;
+    font-size: var(--text-base);
+    line-height: var(--leading-body);
+    color: var(--color-ink);
+    background: var(--color-paper-surface);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: var(--tracking-heading);
+    line-height: var(--leading-heading);
   }
+
+  h1 { font-size: var(--text-display); line-height: var(--leading-display); }
+  h2 { font-size: var(--text-3xl); }
+  h3 { font-size: var(--text-2xl); }
+  h4 { font-size: var(--text-xl); }
 
   ::selection {
-    background: var(--color-gold-500);
-    color: var(--color-navy-500);
+    background: var(--color-accent);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
   }
 }
 
 @layer components {
-  .section-title {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-navy-500 mb-4;
+  .hallmark-section {
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-16);
   }
 
-  .section-subtitle {
-    @apply text-base md:text-lg text-gray-600 max-w-2xl mx-auto;
+  @media (min-width: 768px) {
+    .hallmark-section {
+      padding-top: var(--space-24);
+      padding-bottom: var(--space-24);
+    }
   }
 
-  .gold-underline {
-    @apply w-20 h-1 bg-gold-500 mx-auto rounded-full mb-6;
+  .hallmark-container {
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
   }
 
-  .btn-primary {
-    @apply inline-flex items-center gap-2 px-6 py-3 bg-gold-500 text-navy-500 font-semibold rounded-full
-           hover:bg-white hover:text-navy-500 transition-all duration-300
-           shadow-lg hover:shadow-xl hover:-translate-y-0.5;
+  @media (min-width: 640px) {
+    .hallmark-container {
+      padding-left: var(--space-6);
+      padding-right: var(--space-6);
+    }
   }
 
-  .btn-outline {
-    @apply inline-flex items-center gap-2 px-6 py-3 border-2 border-gold-500 text-gold-500 font-semibold rounded-full
-           hover:bg-gold-500 hover:text-navy-700 transition-all duration-300;
+  @media (min-width: 1024px) {
+    .hallmark-container {
+      padding-left: var(--space-8);
+      padding-right: var(--space-8);
+    }
   }
 
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-hover hover:-translate-y-1;
+  .heading-accent {
+    display: inline-block;
+    position: relative;
+  }
+
+  .heading-accent::after {
+    content: '';
+    display: block;
+    width: 3rem;
+    height: var(--rule-base);
+    background: var(--color-accent);
+    border-radius: var(--radius-full);
+    margin-top: var(--space-3);
+  }
+
+  .heading-accent\:center::after {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .prose-longform {
+    max-width: 65ch;
+    font-size: var(--text-base);
+    line-height: var(--leading-body);
+    color: var(--color-ink-2);
+  }
+
+  .prose-longform p {
+    margin-bottom: var(--space-5);
+  }
+
+  .prose-longform h2 {
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-4);
+    color: var(--color-paper);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-on-scroll {
+      opacity: 1 !important;
+      transform: none !important;
+    }
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .overflow-wrap-anywhere {
+    overflow-wrap: anywhere;
+    min-width: 0;
   }
 }

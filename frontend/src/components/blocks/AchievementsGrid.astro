@@ -2,14 +2,14 @@
 import { ACHIEVEMENTS } from "../../lib/constants";
 ---
 
-<section class="py-16 md:py-24">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+<section class="hallmark-section paper-light">
+  <div class="hallmark-container">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
       {ACHIEVEMENTS.map((a) => (
-        <div class="p-6 bg-white rounded-2xl shadow-soft hover:shadow-hover transition-all duration-300 border-l-4 border-gold-500">
-          <span class="text-xs text-gold-600 font-semibold uppercase tracking-wider">{a.year}</span>
-          <h3 class="text-xl font-heading font-semibold text-navy-600 mt-1 mb-2">{a.title}</h3>
-          <p class="text-gray-500 text-sm leading-relaxed">{a.desc}</p>
+        <div class="p-6 bg-[var(--color-paper-raised)] rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-[transform,box-shadow] duration-[var(--dur-base)] border-l-[var(--rule-thick)] border-[var(--color-accent)]">
+          <span class="text-xs uppercase tracking-[var(--tracking-wide)] text-[var(--color-accent-3)] font-semibold">{a.year}</span>
+          <h3 class="font-[var(--font-display)] text-xl font-semibold text-[var(--color-paper)] mt-1 mb-2">{a.title}</h3>
+          <p class="text-sm text-[var(--color-ink-2)] leading-relaxed">{a.desc}</p>
         </div>
       ))}
     </div>

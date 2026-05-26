@@ -1,0 +1,166 @@
+/* Hallmark · macrostructure: Marquee Hero + Long Document · genre: editorial
+ * tone: editorial · anchor hue: gold (42°) · paper: navy (L 20% · C 0.04 · H 255°)
+ * pre-emit critique: P5 H4 E5 S4 R5 V5
+ *
+ * Custom-branded system — Kapadia High School
+ * Paper band: dark · Display style: italic-serif · Accent hue: warm (gold 42°)
+ */
+
+:root {
+  /* — Paper */
+  --color-paper: #003264;
+  --color-paper-2: #002a55;
+  --color-paper-3: #002244;
+  --color-paper-4: #001a33;
+  --color-paper-surface: #fafaf8;
+  --color-paper-surface-2: #f5f3ee;
+  --color-paper-raised: #ffffff;
+
+  /* — Accent */
+  --color-accent: #d4af37;
+  --color-accent-2: #e8c84d;
+  --color-accent-3: #b8962e;
+  --color-accent-soft: rgba(212, 175, 55, 0.12);
+  --color-accent-glow: rgba(212, 175, 55, 0.25);
+
+  /* — Ink */
+  --color-ink: #1a1a2e;
+  --color-ink-2: #3a3a4e;
+  --color-ink-3: #6b6b7e;
+  --color-ink-muted: #9a9aae;
+
+  /* — Ink on paper (light text on dark bg) */
+  --color-ink-on-paper: #f0ede8;
+  --color-ink-on-paper-2: #c8c4be;
+  --color-ink-on-paper-muted: #8a8680;
+
+  /* — Borders */
+  --color-border: rgba(0, 50, 100, 0.10);
+  --color-border-2: rgba(0, 50, 100, 0.06);
+
+  /* — State */
+  --color-focus: #d4af37;
+  --color-success: #2d9a5e;
+  --color-error: #c0392b;
+
+  /* — Typography */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* — Text sizes (4-pt scale) */
+  --text-display: clamp(2.75rem, 6vw, 4.5rem);
+  --text-display-s: clamp(2.25rem, 4.5vw, 3.5rem);
+  --text-3xl: clamp(1.75rem, 3vw, 2.5rem);
+  --text-2xl: clamp(1.375rem, 2.25vw, 1.875rem);
+  --text-xl: clamp(1.125rem, 1.5vw, 1.375rem);
+  --text-base: clamp(0.9375rem, 1.1vw, 1.0625rem);
+  --text-sm: 0.875rem;
+  --text-xs: 0.75rem;
+
+  /* — Leading */
+  --leading-display: 1.05;
+  --leading-heading: 1.2;
+  --leading-body: 1.7;
+  --leading-tight: 1.4;
+
+  /* — Letter-spacing */
+  --tracking-display: -0.02em;
+  --tracking-heading: -0.01em;
+  --tracking-wide: 0.06em;
+  --tracking-mono: -0.01em;
+
+  /* — Spacing (4-pt scale) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-28: 7rem;
+
+  /* — Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* — Easings */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.4, 0, 0.68, 0.06);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* — Durations */
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 400ms;
+  --dur-reveal: 600ms;
+
+  /* — Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 50, 100, 0.06);
+  --shadow-md: 0 4px 20px rgba(0, 50, 100, 0.08);
+  --shadow-lg: 0 12px 40px rgba(0, 50, 100, 0.12);
+  --shadow-xl: 0 20px 60px rgba(0, 50, 100, 0.18);
+  --shadow-glow: 0 0 30px rgba(212, 175, 55, 0.15);
+
+  /* — Rules */
+  --rule-thin: 1px;
+  --rule-base: 2px;
+  --rule-thick: 3px;
+
+  /* — Z-index */
+  --z-base: 1;
+  --z-dropdown: 50;
+  --z-sticky: 100;
+  --z-sticky-nav: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+}
+
+/* — Dark paper sections (navy backgrounds) */
+.paper-dark {
+  --color-bg: var(--color-paper);
+  --color-text: var(--color-ink-on-paper);
+  --color-text-2: var(--color-ink-on-paper-2);
+  --color-text-muted: var(--color-ink-on-paper-muted);
+  --color-border: rgba(255, 255, 255, 0.10);
+}
+
+/* — Light paper sections (cream/white backgrounds) */
+.paper-light {
+  --color-bg: var(--color-paper-surface);
+  --color-text: var(--color-ink);
+  --color-text-2: var(--color-ink-2);
+  --color-text-muted: var(--color-ink-muted);
+  --color-border: var(--color-border);
+}
+
+/* — White raised sections */
+.paper-raised {
+  --color-bg: var(--color-paper-raised);
+  --color-text: var(--color-ink);
+  --color-text-2: var(--color-ink-2);
+  --color-text-muted: var(--color-ink-muted);
+  --color-border: var(--color-border);
+}
+
+/* — Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+    --dur-reveal: 0ms;
+    --ease-out: ease;
+    --ease-in: ease;
+    --ease-in-out: ease;
+  }
+}

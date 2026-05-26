@@ -3,25 +3,25 @@ import { TESTIMONIALS } from "../../lib/constants";
 import { getInitials } from "../../lib/utils";
 ---
 
-<section class="py-16 md:py-24">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid md:grid-cols-2 gap-8">
+<section class="hallmark-section paper-light">
+  <div class="hallmark-container" style="max-width: 56rem; margin-left: auto; margin-right: auto;">
+    <div class="grid md:grid-cols-2 gap-6 md:gap-8">
       {TESTIMONIALS.map((t) => (
-        <div class="p-6 bg-white rounded-2xl shadow-soft hover:shadow-hover transition-all duration-300 relative">
-          <svg class="w-8 h-8 text-gold-200 absolute top-4 right-4" fill="currentColor" viewBox="0 0 24 24">
+        <blockquote class="p-6 md:p-8 bg-[var(--color-paper-raised)] rounded-xl shadow-md relative">
+          <svg class="w-8 h-8 text-[var(--color-accent-soft)] absolute top-4 right-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11H10v10H0z" />
           </svg>
-          <p class="text-gray-600 text-sm leading-relaxed mb-4 italic">"{t.quote}"</p>
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-navy-100 flex items-center justify-center text-navy-500 font-semibold text-sm">
+          <p class="text-[var(--color-ink-2)] text-sm leading-relaxed mb-4 italic">"{t.quote}"</p>
+          <footer class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-[var(--color-paper-surface-2)] flex items-center justify-center text-[var(--color-paper)] font-semibold text-sm">
               {getInitials(t.name)}
             </div>
             <div>
-              <p class="text-sm font-semibold text-navy-600">{t.name}</p>
-              <p class="text-xs text-gray-500">{t.role}</p>
+              <cite class="text-sm font-semibold text-[var(--color-paper)] not-italic">{t.name}</cite>
+              <p class="text-xs text-[var(--color-ink-muted)]">{t.role}</p>
             </div>
-          </div>
-        </div>
+          </footer>
+        </blockquote>
       ))}
     </div>
   </div>

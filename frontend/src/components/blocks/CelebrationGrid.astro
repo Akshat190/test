@@ -11,73 +11,65 @@ interface Props {
 const { limit = 6 } = Astro.props;
 const { results: celebrations } = await getCelebrations();
 const display = celebrations.slice(0, limit);
+
+const fallbackItems = [
+  { name: "Diwali Celebration", date: "2024-11-15", type: "festival" },
+  { name: "Republic Day", date: "2025-01-26", type: "festival" },
+  { name: "Annual Day", date: "2024-12-10", type: "event" },
+].slice(0, limit);
 ---
 
-<section class="py-16 md:py-24">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="hallmark-section paper-light">
+  <div class="hallmark-container">
     <SectionTitle
       title="School Celebrations"
-      subtitle="Celebrating festivals and special occasions that enrich our school culture"
+      subtitle="Festivals and special occasions that enrich our school culture"
     />
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {display.length > 0 ? display.map((celebration) => (
-        <a href={`/gallery?category=${celebration.celebration_type}`} class="group block">
-          <div class="bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-hover transition-all duration-300 hover:-translate-y-1">
-            <div class="relative aspect-[16/10] overflow-hidden">
-              <img
-                src={getImageUrl(celebration.get_image_url) || '/placeholder.jpg'}
-                alt={celebration.festivalname}
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-              <div class="absolute top-4 left-4 bg-gold-500 text-navy-500 text-xs font-semibold px-3 py-1 rounded-full">
-                {formatDate(celebration.date)}
-              </div>
-            </div>
-            <div class="p-5">
-              <h3 class="text-xl font-heading font-semibold text-navy-600 group-hover:text-gold-600 transition-colors">
-                {celebration.festivalname}
-              </h3>
-            </div>
-          </div>
-        </a>
-      )) : (
-        <>
-          {[
-            { name: 'Diwali Celebration', date: '2024-11-15', type: 'festival' },
-            { name: 'Republic Day', date: '2025-01-26', type: 'festival' },
-            { name: 'Annual Day', date: '2024-12-10', type: 'event' },
-          ].slice(0, limit).map((item) => (
-            <a href={`/gallery?category=${item.type}`} class="group block">
-              <div class="bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-hover transition-all duration-300 hover:-translate-y-1">
-                <div class="relative aspect-[16/10] overflow-hidden bg-gray-200">
-                  <div class="absolute inset-0 flex items-center justify-center text-gray-400">
-                    <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      {(display.length > 0 ? display : fallbackItems).map((item, i) => {
+        const date = "date" in item ? item.date : "";
+        const name = "festivalname" in item ? item.festivalname : item.name;
+        const type = "celebration_type" in item ? item.celebration_type : (item as any).type;
+        const img = "get_image_url" in item ? getImageUrl(item.get_image_url) : null;
+        return (
+          <a href={`/gallery?category=${type}`} class="group block">
+            <article class="bg-[var(--color-paper-raised)] rounded-xl overflow-hidden shadow-md transition-[transform,box-shadow] duration-[var(--dur-base)] hover:shadow-lg hover:-translate-y-1">
+              <div class="relative aspect-[16/10] overflow-hidden bg-[var(--color-paper-surface-2)]">
+                {img ? (
+                  <img
+                    src={img}
+                    alt={name}
+                    class="w-full h-full object-cover transition-transform duration-[var(--dur-slow)] group-hover:scale-[1.03]"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div class="absolute inset-0 flex items-center justify-center text-[var(--color-ink-muted)]">
+                    <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                      <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <div class="absolute top-4 left-4 bg-gold-500 text-navy-500 text-xs font-semibold px-3 py-1 rounded-full">
-                    {formatDate(item.date)}
-                  </div>
-                </div>
-                <div class="p-5">
-                  <h3 class="text-xl font-heading font-semibold text-navy-600 group-hover:text-gold-600 transition-colors">
-                    {item.name}
-                  </h3>
-                </div>
+                )}
+                <time class="absolute top-3 left-3 bg-[var(--color-accent)] text-[var(--color-paper)] text-xs font-semibold px-3 py-1 rounded-full">
+                  {typeof date === "string" ? formatDate(date) : date}
+                </time>
               </div>
-            </a>
-          ))}
-        </>
-      )}
+              <div class="p-5">
+                <h3 class="font-[var(--font-display)] text-xl font-semibold text-[var(--color-paper)] group-hover:text-[var(--color-accent)] transition-colors duration-[var(--dur-fast)]">
+                  {name}
+                </h3>
+              </div>
+            </article>
+          </a>
+        );
+      })}
     </div>
 
-    <div class="text-center mt-10">
+    <div class="text-center mt-10 md:mt-14">
       <Button variant="outline" href="/gallery">
         View All Celebrations
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
       </Button>
     </div>

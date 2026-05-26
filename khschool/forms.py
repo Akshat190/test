@@ -6,28 +6,28 @@ from .models import Celebration, CelebrationPhoto, CarouselImage, Gallery, Galle
 class CelebrationForm(forms.ModelForm):
     class Meta:
         model = Celebration
-        fields = "__all__"
+        fields = ['festivalname', 'description', 'celebration_type', 'image', 'date', 'is_featured']
 
 
 class CelebrationPhotoForm(forms.ModelForm):
     class Meta:
         model = CelebrationPhoto
-        fields = "__all__"
+        fields = ['celebration', 'photo', 'caption', 'order']
 
 
 class CarouselImageForm(forms.ModelForm):
     class Meta:
         model = CarouselImage
-        fields = "__all__"
+        fields = ['title', 'subtitle', 'image', 'button_text', 'button_link', 'order', 'is_active']
 
 
 class GalleryForm(forms.ModelForm):
     class Meta:
         model = Gallery
-        fields = "__all__"
+        fields = ['name', 'description', 'category', 'thumbnail', 'date_created', 'is_featured']
 
 
 class GalleryImageForm(forms.ModelForm):
     class Meta:
         model = GalleryImage
-        fields = "__all__"
+        fields = ['gallery', 'title', 'image', 'caption', 'description', 'date_added', 'order']

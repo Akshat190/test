@@ -1,0 +1,22 @@
+{
+  "project": "Kapadia High School — frontend",
+  "framework": "Astro 6 + Tailwind v4",
+  "date": "2026-05-22",
+  "findings": [
+    {"id": "F1", "detail": "Existing navy #003264 / gold #D4AF37 brand palette", "status": "preserved"},
+    {"id": "F2", "detail": "Cormorant Garamond (display) + Outfit (sans) fonts", "status": "preserved"},
+    {"id": "F3", "detail": "No motion/animation library detected", "status": "noted"},
+    {"id": "F4", "detail": "CSS custom properties partially used; many inline hex values remain", "status": "migrated"},
+    {"id": "F5", "detail": "14 static pages, Astro static output", "status": "confirmed"},
+    {"id": "F6", "detail": "Django API for dynamic content; fallback data in constants", "status": "preserved"},
+    {"id": "F7", "detail": "No existing Hallmark tokens or theme system", "status": "created"},
+    {"id": "F8", "detail": "Tailwind v4 @theme layer available", "status": "leveraged"}
+  ],
+  "token_coverage": {
+    "color": "all components use var(--color-*)",
+    "font": "all components use var(--font-*)",
+    "space": "all spacing uses var(--space-*) or Tailwind pt-based utilities",
+    "motion": "all durations use var(--dur-*), easings use var(--ease-*)",
+    "shadow": "all shadows reference var(--shadow-*) or Tailwind shadow classes"
+  }
+}

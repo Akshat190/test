@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status, permissions
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.conf import settings
@@ -8,6 +9,7 @@ import logging
 
 from .models import (
     Celebration, Gallery, Campus, CarouselImage, Role, UserProfile,
+    ContactSubmission,
 )
 import os
 from .serializers import (
@@ -67,8 +69,13 @@ class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAdminUser]
 
 
+class ContactRateThrottle(AnonRateThrottle):
+    scope = 'contact'
+
+
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
+@throttle_classes([ContactRateThrottle])
 def contact_form(request):
     name = request.data.get('name', '').strip()
     email = request.data.get('email', '').strip()
@@ -88,10 +95,16 @@ def contact_form(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    logger.debug(
-        f"Contact form submission: name={name}, email={email}, phone={phone}, "
-        f"subject={subject}, message={message}"
+    ContactSubmission.objects.create(
+        name=name,
+        email=email,
+        phone=phone,
+        subject=subject,
+        message=message,
     )
+
+    masked_email = email[0] + '***@' + email.split('@')[-1] if '@' in email else 'invalid'
+    logger.info(f"Contact API submission: name={name}, email={masked_email}, subject={subject}")
 
     return Response({'success': True, 'message': 'Thank you for your message!'})
 

@@ -12,18 +12,30 @@ interface Props {
 const { title, subtitle, centered = true, light = false, class: className } = Astro.props;
 ---
 
-<div class={cn(centered && "text-center", "max-w-3xl mx-auto mb-12", className)}>
+<div class={cn("max-w-3xl mx-auto mb-12 md:mb-16", centered && "text-center", className)}>
   <h2
     class={cn(
-      "text-3xl md:text-4xl font-heading font-bold relative inline-block",
-      light ? "text-white" : "text-navy-800",
+      "overflow-wrap-anywhere",
+      light ? "text-[var(--color-ink-on-paper)]" : "text-[var(--color-paper)]",
     )}
   >
     {title}
-    <span class="block h-1 bg-gold-500 rounded-full mt-3 mx-auto" style="width: 60px" />
   </h2>
+  <div
+    class={cn(
+      "h-[var(--rule-base)] bg-[var(--color-accent)] rounded-full mt-3",
+      centered ? "mx-auto" : "ml-0",
+    )}
+    style="width: 3rem"
+  />
   {subtitle && (
-    <p class={cn("mt-4 text-lg leading-relaxed", light ? "text-gray-200" : "text-gray-600")}>
+    <p
+      class={cn(
+        "mt-4 text-base md:text-xl leading-relaxed max-w-2xl",
+        centered && "mx-auto",
+        light ? "text-[var(--color-ink-on-paper-2)]" : "text-[var(--color-ink-2)]",
+      )}
+    >
       {subtitle}
     </p>
   )}
