@@ -240,18 +240,60 @@
   .about-image-container {
     margin-bottom: 30px;
   }
+  
+  .about-home-section {
+    padding: 40px 0;
+  }
+  
+  .gallery-home-section {
+    padding: 40px 0;
+  }
 }
 
 @media (max-width: 576px) {
   .section-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
   
   .about-home-section {
-    padding: 20px 0; /* Reduced from 40px to 20px */
+    padding: 20px 0;
+  }
+  
+  .gallery-home-section {
+    padding: 20px 0;
+  }
+  
+  .about-content h3 {
+    font-size: 1.4rem;
+  }
+  
+  .about-content p {
+    font-size: 0.95rem;
   }
   
   .gallery-img-container {
     height: 200px;
+  }
+  
+  .gallery-card-body h5 {
+    font-size: 1.1rem;
+  }
+  
+  .gallery-card:hover {
+    transform: none;
+  }
+  
+  .gallery-card:hover .gallery-img-container img {
+    transform: none;
+  }
+} 
+
+/* Touch device improvements */
+@media (hover: none) and (pointer: coarse) {
+  .gallery-overlay { opacity: 1; }
+  .gallery-card:hover { transform: none; }
+  .gallery-card:hover .gallery-img-container img { transform: none; }
+  .gallery-link {
+    width: 44px; height: 44px; line-height: 44px; font-size: 1.1rem;
   }
 }

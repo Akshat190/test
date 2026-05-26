@@ -133,14 +133,39 @@
   .celebration-img-container {
     height: 180px;
   }
+  
+  .celebration-card:hover {
+    transform: none;
+  }
+  .celebration-card:hover .celebration-img {
+    transform: none;
+  }
 }
 
 @media (max-width: 576px) {
+  .celebrations-section {
+    padding: 20px 0;
+  }
+  
   .celebrations-title {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
   
   .celebrations-subtitle {
-    font-size: 1rem;
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+  }
+  
+  .celebration-img-container {
+    height: 180px;
+  }
+  
+  .celebration-name {
+    font-size: 1.1rem;
+  }
+  
+  .view-all-btn {
+    padding: 10px 20px;
+    font-size: 0.85rem;
   }
 }
