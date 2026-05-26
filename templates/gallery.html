@@ -100,14 +100,16 @@
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="gallery-item">
                 <div class="gallery-image-container">
-                  <img src="{{ celebration.get_image_url }}" alt="{{ celebration.festivalname }}" class="gallery-image" loading="lazy">
+                  {% with img_url=celebration.get_image_url %}
+                  <img src="{% if img_url %}{{ img_url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}" alt="{{ celebration.festivalname }}" class="gallery-image" loading="lazy">
                   <div class="gallery-overlay">
                     <div class="gallery-info">
                       <h3>{{ celebration.festivalname }}</h3>
                       <div class="gallery-actions">
-                        <a href="{{ celebration.get_image_url }}" class="gallery-zoom" target="_blank">
+                        <a href="{% if img_url %}{{ img_url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}" class="gallery-zoom" target="_blank">
                           <i class="fa fa-search-plus"></i>
                         </a>
+                        {% endwith %}
                         {% if celebration.photo_count > 0 %}
                           <a href="#" class="gallery-more" data-bs-toggle="modal" data-bs-target="#celebrationModal{{ celebration.id }}">
                             <i class="fa fa-plus"></i>
@@ -137,7 +139,9 @@
                       <div class="row g-2 gallery-modal-grid" id="gridCelebration{{ celebration.id }}">
                         <div class="col-6 col-md-4 col-lg-3">
                           <div class="modal-thumb-wrap" onclick="openLightbox('celebration{{ celebration.id }}', 0)">
-                            <img src="{{ celebration.get_image_url }}" alt="{{ celebration.festivalname }}" class="modal-thumb-img" loading="lazy">
+                            {% with img_url=celebration.get_image_url %}
+                            <img src="{% if img_url %}{{ img_url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}" alt="{{ celebration.festivalname }}" class="modal-thumb-img" loading="lazy">
+                            {% endwith %}
                           </div>
                         </div>
                         {% for photo in celebration.additional_photos %}

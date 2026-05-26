@@ -62,7 +62,9 @@
             <a href="{% url 'gallery' %}?category={{ celebration.celebration_type }}" class="text-decoration-none">
               <div class="celebration-card">
                 <div class="celebration-img-container">
-                  <img src="{{ celebration.get_image_url }}" alt="{{ celebration.festivalname }}" class="celebration-img">
+                  {% with img_url=celebration.get_image_url %}
+                    <img src="{% if img_url %}{{ img_url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}" alt="{{ celebration.festivalname }}" class="celebration-img">
+                  {% endwith %}
                   <div class="celebration-date">{{ celebration.date|date:"d M Y" }}</div>
                 </div>
                 <div class="celebration-content">
