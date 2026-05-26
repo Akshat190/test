@@ -140,13 +140,13 @@
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="gallery-card">
               <div class="gallery-img-container">
-                <img src="{{ image.get_image_url }}" alt="{{ gallery.title }}" class="img-fluid">
+                <img src="{{ image.get_image_url }}" alt="{{ gallery.name }}" class="img-fluid">
                 <div class="gallery-overlay">
                   <a href="{% url 'gallery' %}" class="gallery-link"><i class="fa fa-search-plus"></i></a>
                 </div>
               </div>
               <div class="gallery-card-body">
-                <h5>{{ gallery.title }}</h5>
+                <h5>{{ gallery.name }}</h5>
               </div>
             </div>
           </div>
