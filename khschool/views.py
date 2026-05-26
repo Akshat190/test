@@ -84,7 +84,7 @@ def gallery(request):
             galleries = []
     
     celebrations = []
-    if not galleries and 'khschool_celebration' in tables:
+    if 'khschool_celebration' in tables:
         try:
             celebrations = Celebration.objects.all().order_by('-date')
             for celebration in celebrations:
