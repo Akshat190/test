@@ -1,8 +1,10 @@
 /* Footer system — single source. Positioning in sticky-footer.css. */
 .footer {
-  background: linear-gradient(180deg, var(--primary-navy, #003264) 0%, var(--primary-navy-dark, #002244) 100%);
+  background:
+    radial-gradient(900px 320px at 15% 0%, rgba(212, 175, 55, 0.12), transparent 60%),
+    linear-gradient(180deg, var(--primary-navy, #003264) 0%, var(--primary-navy-dark, #002244) 100%);
   color: #fff;
-  padding: 56px 0 24px;
+  padding: 56px 0 0;
   margin-top: 0;
   position: relative;
   overflow: hidden;
@@ -23,20 +25,44 @@
   color: #D4AF37;
   margin-bottom: 18px;
   letter-spacing: 0.5px;
+  padding-bottom: 10px;
+  position: relative;
+}
+.footer h4::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 36px;
+  height: 2px;
+  background: #D4AF37;
+  border-radius: 2px;
+  opacity: 0.7;
+}
+.footer-logo { display: inline-block; margin-bottom: 16px; max-width: 100%; }
+.footer-logo img {
+  display: block;
+  height: 56px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
 }
 .footer-links, .footer-contact { list-style: none; padding: 0; margin: 0; }
 .footer-links li { margin-bottom: 10px; }
 .footer-links li a {
   color: rgba(255, 255, 255, 0.82);
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
   display: inline-flex;
   align-items: center;
   gap: 10px;
   font-size: 0.95rem;
-  transition: color 0.25s ease, padding 0.25s ease;
+  transition: color 0.25s ease, padding 0.25s ease, text-decoration-color 0.25s ease;
 }
-.footer-links li a i { font-size: 10px; color: #D4AF37; }
-.footer-links li a:hover { color: #D4AF37; padding-left: 6px; }
+.footer-links li a i { font-size: 10px; color: #D4AF37; transition: transform 0.25s ease; }
+.footer-links li a:hover { color: #D4AF37; padding-left: 6px; text-decoration-color: #D4AF37; }
+.footer-links li a:hover i { transform: translateX(4px); }
 .footer-contact li {
   display: flex;
   align-items: flex-start;
@@ -51,11 +77,37 @@
 .footer-contact a:hover { color: #D4AF37; }
 .footer-bottom {
   margin-top: 36px;
-  padding-top: 20px;
+  padding: 20px 0 calc(20px + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid rgba(255, 255, 255, 0.12);
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
 }
-.footer-bottom p { color: rgba(255, 255, 255, 0.6); font-size: 0.85rem; margin: 0; }
+.footer-copy { color: rgba(255, 255, 255, 0.6); font-size: 0.85rem; margin: 0; }
+.footer-meta { display: flex; align-items: center; gap: 18px; }
+.footer-meta a {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+.footer-meta a:hover { color: #D4AF37; }
+.footer-top {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  background: rgba(255, 255, 255, 0.06);
+  color: #E8C547;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+.footer-top:hover { background: #D4AF37; color: #003264; transform: translateY(-3px); }
 .social-links { margin-top: 18px; display: flex; gap: 10px; }
 .social-links a {
   display: inline-flex;
@@ -64,17 +116,75 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(4px);
   color: #fff;
-  transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
+  transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
   text-decoration: none;
 }
 .social-links a:hover {
   background: #D4AF37;
+  border-color: #D4AF37;
   color: #003264;
   transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+}
+.social-links a:focus-visible,
+.footer-links a:focus-visible,
+.footer-meta a:focus-visible,
+.footer-top:focus-visible {
+  outline: 2px solid #E8C547;
+  outline-offset: 3px;
 }
 .school-details { color: rgba(255, 255, 255, 0.82); line-height: 1.7; font-size: 0.95rem; }
 @media (max-width: 767.98px) {
-  .footer { padding: 40px 0 20px; text-align: left; }
+  .footer { padding: 44px 0 0; }
+  .footer .row.g-4 { --bs-gutter-y: 0; }
+
+  /* Stacked cards with soft dividers */
+  .footer .row.g-4 > div[class*="col-"] {
+    padding-top: 26px;
+    padding-bottom: 26px;
+  }
+  .footer .row.g-4 > div[class*="col-"] + div[class*="col-"] {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Centered brand block */
+  .footer-brand { text-align: center; }
+  .footer-logo img { height: 48px; max-width: 170px; margin: 0 auto; }
+  .school-details { font-size: 0.9rem; max-width: 34ch; margin: 0 auto; }
+  .social-links { justify-content: center; margin-top: 20px; }
+  .social-links a { width: 48px; height: 48px; font-size: 1.05rem; }
+
+  /* Centered section headings + links */
+  .footer h4 { text-align: center; font-size: 1.15rem; }
+  .footer h4::after { left: 50%; transform: translateX(-50%); }
+  .footer-links li a { justify-content: center; width: 100%; }
+  .footer-links li a:hover { padding-left: 0; }
+  .footer-contact { max-width: 340px; margin: 0 auto; }
+  .footer-contact a { overflow-wrap: anywhere; }
+
+  /* Bottom bar stacks cleanly */
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 14px;
+    margin-top: 8px;
+  }
+  .footer-meta { flex-wrap: wrap; justify-content: center; gap: 8px 20px; }
+  .footer-meta .footer-top { width: 48px; height: 48px; order: -1; margin-bottom: 4px; }
+}
+@media (max-width: 575.98px) {
+  .footer h4 { font-size: 1.1rem; }
+  .footer-links li a { font-size: 0.95rem; min-height: 44px; }
+  .footer-contact { font-size: 0.85rem; }
+  .school-details { font-size: 0.85rem; }
+  .footer-copy { font-size: 0.8rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-links li a, .footer-links li a i, .social-links a, .footer-top,
+  .footer-meta a { transition: none; }
+  .social-links a:hover, .footer-top:hover { transform: none; }
 }

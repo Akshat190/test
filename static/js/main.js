@@ -41,6 +41,12 @@
     btn.addEventListener('click', function () {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+    // Footer "back to top" buttons share the same behaviour.
+    document.querySelectorAll('[data-scroll-top]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
   }
 
   // Map tabs on the contact page. Works with data attributes;

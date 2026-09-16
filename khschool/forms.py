@@ -45,6 +45,31 @@ class CarouselImageForm(forms.ModelForm):
     class Meta:
         model = CarouselImage
         fields = ['title', 'subtitle', 'image', 'button_text', 'button_link', 'order', 'is_active']
+        help_texts = {
+            'image': 'Landscape banner, ideally 1920x800px or larger (minimum 1200x500px). Small images will look blurry on the homepage hero.',
+        }
+
+    def clean_image(self):
+        from PIL import Image as PILImage
+        from django.core.exceptions import ValidationError
+
+        image = self.cleaned_data.get('image')
+        # On edit forms without a new upload, image is the existing FieldFile.
+        if not image or not hasattr(image, 'read'):
+            return image
+        try:
+            image.seek(0)
+            with PILImage.open(image) as img:
+                width, height = img.size
+            image.seek(0)
+        except Exception:
+            raise ValidationError('Could not read this image. Please upload a valid JPG, PNG or WebP file.')
+        if width < 1200 or height < 500:
+            raise ValidationError(
+                f'This image is only {width}x{height}px — too small for the homepage hero and it will look '
+                'blurry/invisible. Please upload a landscape banner at least 1200x500px (ideally 1920x800px).'
+            )
+        return image
 
 
 class GalleryForm(forms.ModelForm):

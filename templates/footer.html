@@ -4,12 +4,14 @@
     <div class="row g-4">
       <div class="col-lg-4 col-md-6">
         <div class="footer-brand">
-          <h4>Kapadia High School</h4>
+          <a href="{% url 'home' %}" class="footer-logo" aria-label="Kapadia High School — home">
+            <img src="{% static 'image/khes.svg' %}" alt="Kapadia High School" width="180" height="60" loading="lazy">
+          </a>
           <p class="school-details">Classes from K-12 (Science, Commerce &amp; Humanities Stream). Excellent infrastructure, sound organisational support and ample opportunity for students.</p>
           <div class="social-links">
-            <a href="{% url 'home' %}" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="{% url 'home' %}" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.instagram.com/_tirth._.shah_" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/kapadiahighschool" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/kapadiahighschool" aria-label="X (Twitter)" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+            <a href="https://www.instagram.com/kapadiahighschool" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
             <a href="https://chat.whatsapp.com/DjRwLEhzaqy5BjutusOsl6" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
           </div>
         </div>
@@ -52,7 +54,13 @@
     </div>
 
     <div class="footer-bottom">
-      <p>&copy; {% now "Y" %} Kapadia High School. All Rights Reserved.</p>
+      <p class="footer-copy">&copy; {% now "Y" %} Kapadia High School. All Rights Reserved.</p>
+      <div class="footer-meta">
+        <a href="https://forms.gle/sDftg7osPaxvGKAD8" target="_blank" rel="noopener">Admissions</a>
+        <a href="{% url 'contact' %}">Contact</a>
+        <a href="{% url 'gallery' %}">Gallery</a>
+        <button type="button" class="footer-top" data-scroll-top aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+      </div>
     </div>
   </div>
 </footer>

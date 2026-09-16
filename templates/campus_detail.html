@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ info.name }} Campus - Kapadia High School{% endblock %}
+
+{% block page_css %}
+<link href="{% static 'css/campus.css' %}" rel="stylesheet" type="text/css">
+{% endblock page_css %}
+
+{% block content %}
+<!-- Campus hero -->
+<section class="campus-hero">
+  {% if info.photo_url %}
+    <img src="{{ info.photo_url }}" alt="{{ info.name }} Campus" class="campus-hero-img" loading="eager" fetchpriority="high">
+  {% else %}
+    <img src="{% static info.hero_image %}" alt="{{ info.name }} Campus" class="campus-hero-img" loading="eager" fetchpriority="high" onerror="this.onerror=null;this.src='{% static 'images/placeholder.jpg' %}';">
+  {% endif %}
+  <div class="campus-hero-scrim" aria-hidden="true"></div>
+  <div class="container campus-hero-content">
+    <h1 class="campus-hero-title">{{ info.name }}</h1>
+    <div class="campus-hero-meta">
+      {% if info.board %}
+        <span class="campus-badge">{{ info.board }}</span>
+      {% endif %}
+      <span class="campus-chip"><i class="far fa-clock me-1"></i>{{ info.timings }}</span>
+    </div>
+  </div>
+</section>
+
+<div class="container campus-body">
+  <!-- Info cards -->
+  <section class="campus-info" aria-label="Campus information">
+    <div class="row g-3">
+      {% if info.board %}
+      <div class="col-md-4">
+        <div class="info-card">
+          <i class="fas fa-graduation-cap info-icon"></i>
+          <h3>Board</h3>
+          <p>{{ info.board }}</p>
+        </div>
+      </div>
+      {% endif %}
+      {% if info.affiliation_number %}
+      <div class="col-md-4">
+        <div class="info-card">
+          <i class="fas fa-certificate info-icon"></i>
+          <h3>{{ info.affiliation_label }}</h3>
+          <p>{{ info.affiliation_number }}</p>
+        </div>
+      </div>
+      {% endif %}
+      <div class="col-md-4">
+        <div class="info-card">
+          <i class="far fa-clock info-icon"></i>
+          <h3>Timings</h3>
+          <p>{{ info.timings }}</p>
+        </div>
+      </div>
+      {% if info.address %}
+      <div class="col-md-4">
+        <div class="info-card">
+          <i class="fas fa-map-marker-alt info-icon"></i>
+          <h3>Address</h3>
+          <p>{{ info.address }}</p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Facilities -->
+  <section class="campus-facilities" aria-label="Campus facilities">
+    <h2 class="section-title">Campus Facilities</h2>
+    <div class="section-underline"></div>
+    <div class="row g-3">
+      <div class="col-md-4"><a href="#" class="facility-btn">Smart Boards</a></div>
+      <div class="col-md-4"><a href="#" class="facility-btn">Playground</a></div>
+      <div class="col-md-4"><a href="#" class="facility-btn">Library</a></div>
+      <div class="col-md-4"><a href="#" class="facility-btn">Art Room</a></div>
+      <div class="col-md-4"><a href="#" class="facility-btn">Music Room</a></div>
+      <div class="col-md-4"><a href="#" class="facility-btn">Curated Labs</a></div>
+      <div class="col-md-4"><a href="#" class="facility-btn">Transportation</a></div>
+      <div class="col-md-4"><a href="#" class="facility-btn">Medical Room</a></div>
+      <div class="col-md-4"><a href="#" class="facility-btn">Green Campus</a></div>
+    </div>
+  </section>
+
+  <!-- Documents -->
+  <section class="campus-docs" aria-label="Campus documents">
+    <h2 class="section-title">Mandatory Disclosures</h2>
+    <div class="section-underline"></div>
+    <div class="document-grid">
+      {% if campus and campus.documents.exists %}
+        {% for doc in campus.documents.all %}
+          <div class="doc-card">
+            <a href="{{ doc.file.url }}" target="_blank" rel="noopener" class="doc-link">
+              <i class="fas fa-file-pdf"></i>
+              <span>{{ doc.title }}</span>
+            </a>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="doc-card"><a href="{% static 'documents/1. Affiliation Letter 2026 to 2031.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Affiliation Letter 2026-2031</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/2. TRUST REGISTRATION CERTIFICATE.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Trust Registration Certificate</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/3. NOC CERTIFICATE-CBSE.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>NOC Certificate - CBSE</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/4. RECOGNITION CERTIFICATE-1-5 & 6-8.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Recognition Certificate (1-5 &amp; 6-8)</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/Building Safety Certificate.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Building Safety Certificate</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/fire-safety.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Fire Safety Certificate</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/Self Certificate (1).pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Self Certificate</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/8. Water, Health and Sanitation Certificate.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Water, Health &amp; Sanitation</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/9 fee structure.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Fee Structure</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/List of PTA.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>List of PTA</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/List of SMC.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>List of SMC</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/Results.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Board Results</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/academic_planner.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Academic Planner</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/Tentative Annual Academic Calendar.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Annual Academic Calendar</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/TENTATIVE HOLIDAY LIST & IMPORTANT EVENTS 2025-26.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Holiday List &amp; Events 2025-26</span></a></div>
+        <div class="doc-card"><a href="{% static 'documents/Appendix IX.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Mandatory Disclosure - Appendix IX</span></a></div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="campus-cta">
+    <h2>Visit the {{ info.name }} Campus</h2>
+    <p>Admissions are open. Get in touch or explore the campus on the map.</p>
+    <div class="campus-cta-actions">
+      <a href="https://forms.gle/sDftg7osPaxvGKAD8" class="btn admission-btn" target="_blank" rel="noopener"><i class="fas fa-graduation-cap me-2"></i>Admission Open</a>
+      <a href="{% url 'contact' %}" class="view-all-btn">Contact Us</a>
+    </div>
+  </section>
+</div>
+{% endblock content %}

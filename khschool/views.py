@@ -175,24 +175,89 @@ def _get_campus(slug):
         return None
 
 
+# Fallback content per campus, used when no Campus DB row exists.
+# Keys mirror the old per-campus templates so behaviour is unchanged.
+CAMPUS_DEFAULTS = {
+    'chandkheda': {
+        'name': 'Chandkheda', 'board': 'GSEB',
+        'timings': '8:00 am to 2:00 pm (Monday-Saturday)',
+        'hero_image': 'image/campus_chandkheda.jpg',
+    },
+    'chattral': {
+        'name': 'Chhatral', 'board': 'CBSE', 'affiliation_number': '430302',
+        'timings': '8:00 am to 2:00 pm (Monday-Saturday)',
+        'hero_image': 'image/campus_chhatral.jpg',
+    },
+    'iffco': {
+        'name': 'IFFCO Township', 'board': 'GSEB',
+        'timings': '8:00 am to 2:00 pm (Monday-Saturday)',
+        'hero_image': 'image/campus_iffco.jpg',
+    },
+    'kadi': {
+        'name': 'Kadi', 'board': 'GSEB',
+        'timings': '8:00 am to 2:00 pm (Monday-Saturday)',
+        'hero_image': 'image/blur.png',
+    },
+    'shela': {
+        'name': 'Shela',
+        'affiliation_label': 'Contact Number', 'affiliation_number': '6356000941/42',
+        'timings': '8:00 am to 2:00 pm (Monday-Saturday)',
+        'address': 'Nr. Anand Elegance, Nr. Mahadev Elegance, VIP Road, Shela, Ahmedabad - 380057',
+        'hero_image': 'image/blur.png',
+    },
+}
+
+
+def _campus_page(request, slug):
+    """Render the shared campus template for any branch.
+
+    All fallbacks are resolved here in Python so the template only
+    ever touches plain strings — no nested ``default`` lookups.
+    """
+    defaults = CAMPUS_DEFAULTS[slug]
+    campus = _get_campus(slug)
+
+    def _field(name):
+        value = getattr(campus, name, '') if campus else ''
+        if isinstance(value, str):
+            value = value.strip()
+        return value or defaults.get(name, '')
+
+    info = {
+        'name': _field('name') or defaults['name'],
+        'board': _field('board') or defaults.get('board', ''),
+        'timings': _field('timings') or defaults.get('timings', ''),
+        'affiliation_label': defaults.get('affiliation_label', 'Affiliation Number'),
+        'affiliation_number': _field('affiliation_number') or defaults.get('affiliation_number', ''),
+        'address': defaults.get('address', ''),
+        'hero_image': defaults['hero_image'],
+        'photo_url': campus.get_photo_url() if campus else None,
+    }
+    return render(request, 'campus_detail.html', {
+        'campus': campus,
+        'info': info,
+        'campus_slug': slug,
+    })
+
+
 def chandkheda(request):
-    return render(request, 'chandkheda.html', {'campus': _get_campus('chandkheda')})
+    return _campus_page(request, 'chandkheda')
 
 
 def chattral(request):
-    return render(request, 'chattral.html', {'campus': _get_campus('chattral')})
+    return _campus_page(request, 'chattral')
 
 
 def iffco(request):
-    return render(request, 'iffco.html', {'campus': _get_campus('iffco')})
+    return _campus_page(request, 'iffco')
 
 
 def kadi(request):
-    return render(request, 'kadi.html', {'campus': _get_campus('kadi')})
+    return _campus_page(request, 'kadi')
 
 
 def shela(request):
-    return render(request, 'shela.html', {'campus': _get_campus('shela')})
+    return _campus_page(request, 'shela')
 
 
 def success_stories(request):
