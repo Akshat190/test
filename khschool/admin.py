@@ -53,15 +53,26 @@ class RoleAdmin(admin.ModelAdmin):
     list_filter = ('level',)
     ordering = ['-level']
 
+    def _can_manage_roles(self, request):
+        if request.user.is_superuser:
+            return True
+        role = get_user_role(request.user)
+        return bool(role and role.can_manage_roles)
+
     def has_add_permission(self, request):
-        return False
+        return self._can_manage_roles(request)
 
     def has_change_permission(self, request, obj=None):
-        role = get_user_role(request.user)
-        return request.user.is_superuser or (role and role.can_manage_roles)
+        return self._can_manage_roles(request)
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return self._can_manage_roles(request)
+
+    def has_view_permission(self, request, obj=None):
+        return self._can_manage_roles(request)
+
+    def has_module_permission(self, request):
+        return self._can_manage_roles(request)
 
 
 # ─── UserProfile Admin ─────────────────────────────────────────
