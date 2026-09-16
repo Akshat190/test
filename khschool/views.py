@@ -138,39 +138,25 @@ def gallery(request):
 
 
 def contact(request):
-    if request.method == 'POST':
-        name = request.POST.get('name', '').strip()
-        email = request.POST.get('email', '').strip()
-        phone = request.POST.get('phone', '').strip()
-        subject = request.POST.get('subject', '').strip()
-        message = request.POST.get('message', '').strip()
-        
-        # Basic validation
-        if not all([name, email, subject, message]):
-            return render(request, 'contact.html', {
-                'error': 'Please fill in all required fields.',
-                'form_data': request.POST
-            })
-        
-        if '@' not in email or '.' not in email.split('@')[-1]:
-            return render(request, 'contact.html', {
-                'error': 'Please enter a valid email address.',
-                'form_data': request.POST
-            })
-        
-        ContactSubmission.objects.create(
-            name=name,
-            email=email,
-            phone=phone,
-            subject=subject,
-            message=message,
-        )
+    from .forms import ContactForm
 
-        masked_email = email[0] + '***@' + email.split('@')[-1] if '@' in email else 'invalid'
-        logger.info(f"Contact form submitted: name={name}, email={masked_email}, subject={subject}")
-        return render(request, 'contact.html', {'success': True})
-    
-    return render(request, 'contact.html')
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            submission = form.save()
+            logger.info(
+                "Contact form submitted: name=%s, email=%s***, subject=%s",
+                submission.name,
+                (submission.email[:1] if submission.email else '?'),
+                submission.subject,
+            )
+            return render(request, 'contact.html', {'form': ContactForm(), 'success': True})
+        return render(request, 'contact.html', {
+            'form': form,
+            'error': 'Please correct the errors below.',
+        })
+
+    return render(request, 'contact.html', {'form': ContactForm()})
 
 
 def brief(request):

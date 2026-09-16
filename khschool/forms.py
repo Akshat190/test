@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Celebration, CelebrationPhoto, CarouselImage, Gallery, GalleryImage
+from .models import Celebration, CelebrationPhoto, CarouselImage, Gallery, GalleryImage, ContactSubmission
 
 
 class MultipleFileInput(forms.FileInput):
@@ -62,3 +62,16 @@ class GalleryImageForm(forms.ModelForm):
     class Meta:
         model = GalleryImage
         fields = ['gallery', 'title', 'image', 'caption', 'description', 'date_added', 'order']
+
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = ContactSubmission
+        fields = ['name', 'email', 'phone', 'subject', 'message']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'id': 'name', 'placeholder': 'Enter your full name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'id': 'email', 'placeholder': 'Enter your email address'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'id': 'phone', 'placeholder': 'Enter your phone number'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control', 'id': 'subject', 'placeholder': 'What is this regarding?'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'id': 'message', 'rows': 5, 'placeholder': 'Type your message here...'}),
+        }

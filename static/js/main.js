@@ -1,213 +1,97 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Bootstrap carousel
+/**
+ * Kapadia High School - main site script.
+ * - Sticky footer is handled purely by CSS (flex + min-vh-100). No JS needed.
+ * - Bootstrap dropdowns/collapse use native Bootstrap JS. No custom overrides.
+ */
+(function () {
+  'use strict';
+
+  function initCarousel() {
     var carousel = document.querySelector('#homeCarousel');
-    if (carousel) {
-        new bootstrap.Carousel(carousel, {
-            interval: 5000,
-            wrap: true,
-            keyboard: true
-        });
+    if (!carousel) return;
+    // data-bs-ride="carousel" already auto-starts it; only init if needed
+    // and only if Bootstrap actually loaded (CDN/adblock safe).
+    if (typeof window.bootstrap === 'undefined' || !window.bootstrap.Carousel) return;
+    try {
+      if (window.bootstrap.Carousel.getInstance) {
+        if (window.bootstrap.Carousel.getInstance(carousel)) return;
+      }
+      // eslint-disable-next-line no-new
+      new window.bootstrap.Carousel(carousel, {
+        interval: 5000,
+        wrap: true,
+        keyboard: true
+      });
+    } catch (err) {
+      // Never break the rest of the page because of the carousel.
+      if (window.console && console.warn) console.warn('Carousel init skipped:', err);
     }
-    // Function to adjust footer position
-    function adjustFooter() {
-        const body = document.body;
-        const main = document.querySelector('main');
-        const footer = document.querySelector('.footer');
-        
-        if (!footer || !main) return;
-        
-        // Ensure the body has the necessary classes for flexbox layout
-        if (!body.classList.contains('d-flex')) {
-            body.style.display = 'flex';
-            body.style.flexDirection = 'column';
-            body.style.minHeight = '100vh';
-        }
-        
-        // Ensure main content grows to fill available space
-        main.style.flex = '1 0 auto';
-        
-        // For pages with minimal content, add a minimum height to main
-        const windowHeight = window.innerHeight;
-        const contentHeight = document.body.scrollHeight;
-        
-        // If content is less than viewport, ensure main fills available space
-        if (contentHeight < windowHeight) {
-            const headerHeight = document.querySelector('header')?.offsetHeight || 0;
-            const footerHeight = footer.offsetHeight || 0;
-            const carouselHeight = document.querySelector('#homeCarousel')?.offsetHeight || 0;
-            
-            // Calculate minimum height needed
-            const minHeight = windowHeight - headerHeight - footerHeight - carouselHeight;
-            
-            if (minHeight > 0) {
-                main.style.minHeight = `${minHeight}px`;
-            }
-        }
-    }
-    
-    // Call the function on initial load
-    adjustFooter();
-    
-    // Call on resize
-    window.addEventListener('resize', function() {
-        adjustFooter();
-    });
+  }
 
-    // Call after the page is fully loaded with a slight delay
-    window.addEventListener('load', function() {
-        // Initial adjustment
-        adjustFooter();
-        
-        // Delayed adjustment to account for any dynamic content
-        setTimeout(function() {
-            adjustFooter();
-        }, 500);
+  function initScrollToTop() {
+    var btn = document.getElementById('scrollToTop');
+    if (!btn) return;
+    var onScroll = function () {
+      var y = window.scrollY || document.documentElement.scrollTop || 0;
+      if (y > 300) btn.classList.add('visible');
+      else btn.classList.remove('visible');
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    btn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+  }
 
-    // Create a MutationObserver to watch for DOM changes
-    const observer = new MutationObserver(function(mutations) {
-        // Delay the adjustment slightly to allow DOM to settle
-        setTimeout(function() {
-            adjustFooter();
-        }, 300);
+  // Map tabs on the contact page. Works with data attributes;
+  // window.showMap is kept for backwards-compat with old inline onclick.
+  function showMap(mapId) {
+    var iframes = document.querySelectorAll('.map-container iframe');
+    if (!iframes.length) return;
+    var target = mapId ? document.getElementById(mapId) : null;
+    if (!target) return;
+    iframes.forEach(function (iframe) {
+      iframe.style.display = 'none';
     });
+    target.style.display = 'block';
+    var buttons = document.querySelectorAll('.map-tab-btn');
+    buttons.forEach(function (btn) {
+      var isActive = btn.getAttribute('data-map-target') === mapId;
+      btn.classList.toggle('active', isActive);
+      if (isActive) btn.setAttribute('aria-selected', 'true');
+      else btn.removeAttribute('aria-selected');
+    });
+  }
 
-    // Start observing the document with the configured parameters
-    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
-
-    // Wait for images to load before final adjustment
-    window.addEventListener('load', function() {
-        const images = document.querySelectorAll('img');
-        let loadedImages = 0;
-        
-        if (images.length === 0) {
-            adjustFooter();
-            return;
+  function initMapTabs() {
+    var buttons = document.querySelectorAll('.map-tab-btn');
+    if (!buttons.length) return;
+    buttons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        var mapId = button.getAttribute('data-map-target');
+        // Fallback for any legacy inline onclick="showMap('map1')"
+        if (!mapId) {
+          var inline = button.getAttribute('onclick') || '';
+          var m = inline.match(/'([^']+)'/);
+          if (m) mapId = m[1];
         }
-        
-        images.forEach(function(img) {
-            if (img.complete) {
-                loadedImages++;
-                if (loadedImages === images.length) {
-                    adjustFooter();
-                }
-            } else {
-                img.addEventListener('load', function() {
-                    loadedImages++;
-                    if (loadedImages === images.length) {
-                        adjustFooter();
-                    }
-                });
-                
-                img.addEventListener('error', function() {
-                    loadedImages++;
-                    if (loadedImages === images.length) {
-                        adjustFooter();
-                    }
-                });
-            }
-        });
+        if (mapId) showMap(mapId);
+      });
     });
-    
-    // Add a periodic check and adjustment after DOMContentLoaded for 5 seconds
-    document.addEventListener('DOMContentLoaded', function() {
-        let checkCount = 0;
-        const maxChecks = 10; // 10 checks at 500ms intervals = 5 seconds
-        
-        const intervalId = setInterval(function() {
-            adjustFooter();
-            checkCount++;
-            
-            if (checkCount >= maxChecks) {
-                clearInterval(intervalId);
-            }
-        }, 500);
-    });
-    
-    // Fix for navbar dropdown issues
-    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-    
-    // Close all other dropdowns when one is opened
-    dropdownToggles.forEach(toggle => {
-        toggle.addEventListener('click', function(e) {
-            // Prevent default behavior
-            e.preventDefault();
-            
-            // Get the parent dropdown item
-            const parentDropdown = this.closest('.dropdown');
-            
-            // Check if this dropdown is already open
-            const isOpen = parentDropdown.classList.contains('show');
-            
-            // Close all dropdowns
-            document.querySelectorAll('.dropdown').forEach(dropdown => {
-                dropdown.classList.remove('show');
-                const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-                if (dropdownMenu) {
-                    dropdownMenu.classList.remove('show');
-                }
-            });
-            
-            // If the clicked dropdown wasn't open, open it
-            if (!isOpen) {
-                parentDropdown.classList.add('show');
-                const dropdownMenu = parentDropdown.querySelector('.dropdown-menu');
-                if (dropdownMenu) {
-                    dropdownMenu.classList.add('show');
-                }
-            }
-        });
-    });
-    
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.dropdown')) {
-            document.querySelectorAll('.dropdown').forEach(dropdown => {
-                dropdown.classList.remove('show');
-                const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-                if (dropdownMenu) {
-                    dropdownMenu.classList.remove('show');
-                }
-            });
-        }
-    });
-    
-    // Map functionality for contact page
-    if (document.querySelector('.map-tab-btn')) {
-        const mapButtons = document.querySelectorAll('.map-tab-btn');
-        
-        // Add click event listeners to map buttons
-        mapButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const mapId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
-                showMap(mapId);
-            });
-        });
-        
-        // Initialize the first map (map1) by default
-        showMap('map1');
-    }
-});
+    // Default to first tab if none marked active.
+    var active = document.querySelector('.map-tab-btn.active');
+    var firstId = active
+      ? active.getAttribute('data-map-target')
+      : buttons[0].getAttribute('data-map-target');
+    if (firstId) showMap(firstId);
+  }
 
-// Function to show selected map
-function showMap(mapId) {
-    // Hide all maps
-    document.querySelectorAll('.map-container iframe').forEach(function(iframe) {
-        iframe.style.display = 'none';
-    });
-    
-    // Show selected map
-    document.getElementById(mapId).style.display = 'block';
-    
-    // Update active button
-    document.querySelectorAll('.map-tab-btn').forEach(function(btn) {
-        btn.classList.remove('active');
-    });
-    
-    // Find the button that triggered this and add active class
-    document.querySelectorAll('.map-tab-btn').forEach(function(btn) {
-        if (btn.getAttribute('onclick').includes(mapId)) {
-            btn.classList.add('active');
-        }
-    });
-}
+  // Expose for any remaining inline handlers.
+  window.showMap = showMap;
+
+  document.addEventListener('DOMContentLoaded', function () {
+    initCarousel();
+    initScrollToTop();
+    initMapTabs();
+  });
+})();
