@@ -4,6 +4,8 @@ from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.contrib.auth.models import User
 
+from .image_utils import CompressedImageMixin
+
 
 class Role(models.Model):
     """Hierarchy-based roles for campus management access control."""
@@ -85,7 +87,9 @@ class ContactSubmission(models.Model):
         return f"{self.name} - {self.subject}"
 
 
-class Celebration(models.Model):
+class Celebration(CompressedImageMixin, models.Model):
+    COMPRESS_FIELDS = ['image']
+
     CELEBRATION_TYPES = [
         ('festival', 'Festival'),
         ('event', 'School Event'),
@@ -130,7 +134,9 @@ class Celebration(models.Model):
         return self.image.url if self.image else None
 
 
-class CelebrationPhoto(models.Model):
+class CelebrationPhoto(CompressedImageMixin, models.Model):
+    COMPRESS_FIELDS = ['photo']
+
     celebration = models.ForeignKey(Celebration, on_delete=models.CASCADE)
     photo = models.ImageField(
         upload_to='festival/gallery/',
@@ -153,7 +159,9 @@ class CelebrationPhoto(models.Model):
     def get_photo_url(self):
         return self.photo.url if self.photo else None
 
-class Gallery(models.Model):
+class Gallery(CompressedImageMixin, models.Model):
+    COMPRESS_FIELDS = ['thumbnail']
+
     CATEGORY_CHOICES = [
         ('festival', 'Festival'),
         ('event', 'School Event'),
@@ -201,7 +209,9 @@ class Gallery(models.Model):
         return None
 
 
-class GalleryImage(models.Model):
+class GalleryImage(CompressedImageMixin, models.Model):
+    COMPRESS_FIELDS = ['image']
+
     gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True, verbose_name='Title')
     image = models.ImageField(
@@ -230,7 +240,9 @@ class GalleryImage(models.Model):
         return self.image.url if self.image else None
 
 
-class Campus(models.Model):
+class Campus(CompressedImageMixin, models.Model):
+    COMPRESS_FIELDS = ['photo']
+
     slug = models.SlugField(unique=True, help_text='URL-friendly identifier, e.g., chattral, chandkheda')
     name = models.CharField(max_length=100, verbose_name='Campus Name')
     board = models.CharField(max_length=20, blank=True, verbose_name='Board')
@@ -282,7 +294,9 @@ class CampusDocument(models.Model):
         return self.file.url if self.file else None
 
 
-class CarouselImage(models.Model):
+class CarouselImage(CompressedImageMixin, models.Model):
+    COMPRESS_FIELDS = ['image']
+
     URL_CHOICES = [
         ('/', 'Home'),
         ('/aboutSchool/', 'About School'),

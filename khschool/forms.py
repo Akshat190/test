@@ -7,6 +7,12 @@ class MultipleFileInput(forms.FileInput):
     allow_multiple_selected = True
 
 
+# Must stay below nginx client_max_body_size and Django's
+# FILE_UPLOAD_MAX_MEMORY_SIZE so oversized files fail here with a
+# friendly message instead of a bare 413/400.
+MAX_BULK_FILE_MB = 30
+
+
 class MultipleFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('widget', MultipleFileInput(attrs={'multiple': True}))
@@ -20,8 +26,22 @@ class MultipleFileField(forms.FileField):
         return [data]
 
     def validate(self, value):
+        from django.core.exceptions import ValidationError
+
         for each in value:
             super().validate(each)
+            content_type = getattr(each, 'content_type', '') or ''
+            if not content_type.startswith('image/'):
+                raise ValidationError(
+                    f"'{getattr(each, 'name', 'file')}' is not an image. "
+                    'Please select JPG, PNG or WebP photos only.'
+                )
+            size_mb = (each.size or 0) / (1024 * 1024)
+            if size_mb > MAX_BULK_FILE_MB:
+                raise ValidationError(
+                    f"'{each.name}' is {size_mb:.1f} MB — over the {MAX_BULK_FILE_MB} MB per-photo limit. "
+                    'Please resize it (1920px wide is plenty) and try again.'
+                )
 
 
 class CelebrationForm(forms.ModelForm):

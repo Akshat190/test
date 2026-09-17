@@ -223,9 +223,14 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 86400
 SESSION_SAVE_EVERY_REQUEST = True
 
-# File upload limits
-FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
-DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+# File upload limits (env-overridable; bulk photo uploads need headroom —
+# files are auto-compressed on save, so these are transfer caps, not
+# storage sizes). nginx client_max_body_size must allow at least the
+# DATA value or uploads 413 before reaching Django.
+FILE_UPLOAD_MAX_MEMORY_SIZE = int(os.environ.get(
+    'FILE_UPLOAD_MAX_MEMORY_SIZE', str(30 * 1024 * 1024)))
+DATA_UPLOAD_MAX_MEMORY_SIZE = int(os.environ.get(
+    'DATA_UPLOAD_MAX_MEMORY_SIZE', str(150 * 1024 * 1024)))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

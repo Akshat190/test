@@ -203,7 +203,7 @@ CAMPUS_DEFAULTS = {
         'affiliation_label': 'Contact Number', 'affiliation_number': '6356000941/42',
         'timings': '8:00 am to 2:00 pm (Monday-Saturday)',
         'address': 'Nr. Anand Elegance, Nr. Mahadev Elegance, VIP Road, Shela, Ahmedabad - 380057',
-        'hero_image': 'image/blur.png',
+        'hero_image': 'image/Shela-school-image.jpeg',
     },
 }
 
