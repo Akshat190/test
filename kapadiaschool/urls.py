@@ -21,7 +21,6 @@ sitemaps = {
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
-    path('api/', include('khschool.api_urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt, name='robots_txt'),
     path('', include('khschool.urls')),
@@ -34,7 +33,18 @@ urlpatterns += [
     path('metrics/', staff_member_required(exports.ExportToDjangoView), name='prometheus-metrics'),
 ]
 
+# Dev helper: serves /media/ only when DEBUG=True (no-op otherwise).
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Production-safe media serving: Django never serves user uploads itself
+# when DEBUG=False, and this VPS runs gunicorn without an nginx media
+# alias — so serve MEDIA_ROOT explicitly in both modes.
+# (For high traffic, move this to nginx / object storage instead.)
+from django.views.static import serve as _media_serve
+from django.urls import re_path as _re_path
+urlpatterns += [
+    _re_path(r'^media/(?P<path>.*)$', _media_serve, {'document_root': settings.MEDIA_ROOT}),
+]
 
 # Custom error handlers
 handler404 = 'khschool.views.handler404'

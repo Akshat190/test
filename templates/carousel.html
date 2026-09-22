@@ -112,68 +112,28 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Preload all carousel images to prevent delayed loading
-    function preloadCarouselImages() {
-      var carouselImages = document.querySelectorAll('.carousel-image');
-      var preloadDiv = document.createElement('div');
-      preloadDiv.className = 'preload-carousel-images';
-      document.body.appendChild(preloadDiv);
-      
-      carouselImages.forEach(function(img) {
-        var imgSrc = img.getAttribute('src');
-        if (imgSrc) {
-          var preloadImg = new Image();
-          preloadImg.src = imgSrc;
-          preloadDiv.appendChild(preloadImg);
-        }
-      });
-    }
-    
-    // Call preload function
-    preloadCarouselImages();
-    
-    // Initialize carousel with proper options
     var carousel = document.querySelector('#homeCarousel');
-    var carouselInstance = new bootstrap.Carousel(carousel, {
-      interval: 5000,  // Auto-slide every 5 seconds
-      wrap: true,       // Loop back to first slide
-      keyboard: true,   // Allow keyboard navigation
-      pause: false      // Don't pause on hover
-    });
-    
-    // Optimize image loading
-    var carouselImages = document.querySelectorAll('.carousel-image');
-    carouselImages.forEach(function(img) {
-      // Add loading="eager" to prioritize loading
-      img.setAttribute('loading', 'eager');
-      
-      // Add a placeholder background color while loading
-      img.style.backgroundColor = '#003264';
-      
-      // Apply styles immediately instead of waiting for onload
-      img.style.position = 'absolute';
-      img.style.top = '50%';
-      img.style.left = '50%';
-      img.style.transform = 'translate(-50%, -50%)';
-      img.style.minWidth = '100%';
-      img.style.minHeight = '100%';
-      img.style.width = 'auto';
-      img.style.height = 'auto';
-      img.style.objectFit = 'cover';
-      
-      // Handle image loading
-      img.onload = function() {
-        // Just update opacity when loaded
-        this.style.opacity = '1';
-      };
-      
-      // Handle loading errors
-      img.onerror = function() {
-        // If image fails to load, replace with placeholder
-        if (!img.src.includes('placeholder.jpg')) {
-          img.src = '{% static "images/placeholder.jpg" %}';
-        }
-      };
+    if (!carousel) return;
+    // main.js already initialises the carousel; this is a safe fallback only.
+    if (typeof window.bootstrap === 'undefined' || !window.bootstrap.Carousel) return;
+    try {
+      if (window.bootstrap.Carousel.getInstance && window.bootstrap.Carousel.getInstance(carousel)) return;
+      new window.bootstrap.Carousel(carousel, {
+        interval: 5000,
+        wrap: true,
+        keyboard: true
+      });
+    } catch (err) {
+      if (window.console && console.warn) console.warn('Carousel fallback init skipped:', err);
+    }
+
+    // Graceful image fallback only; layout stays in CSS.
+    var placeholder = '{% static "images/placeholder.jpg" %}';
+    document.querySelectorAll('.carousel-image').forEach(function(img) {
+      img.addEventListener('error', function handler() {
+        img.removeEventListener('error', handler);
+        if (img.src.indexOf('placeholder.jpg') === -1) img.src = placeholder;
+      });
     });
   });
 </script>

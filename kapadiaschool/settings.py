@@ -29,13 +29,6 @@ if not SECRET_KEY:
         "SECRET_KEY environment variable is not set. "
         "Generate one with: python -c \"from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())\""
     )
-if SECRET_KEY and 'CHANGE_ME' in SECRET_KEY:
-    import warnings
-    warnings.warn(
-        "SECRET_KEY contains 'CHANGE_ME' — this is insecure. "
-        "Generate a real key for production.",
-        RuntimeWarning,
-    )
 
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
@@ -58,9 +51,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
-    'rest_framework',
-    'corsheaders',
-    'django_filters',
     'khschool',
 ]
 
@@ -70,7 +60,6 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -131,6 +120,19 @@ STORAGES = {
     },
 }
 
+try:
+    import argon2
+    PASSWORD_HASHERS = [
+        'django.contrib.auth.hashers.Argon2PasswordHasher',
+        'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+        'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    ]
+except ImportError:
+    PASSWORD_HASHERS = [
+        'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+        'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    ]
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -152,19 +154,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-try:
-    import argon2
-    PASSWORD_HASHERS = [
-        'django.contrib.auth.hashers.Argon2PasswordHasher',
-        'django.contrib.auth.hashers.PBKDF2PasswordHasher',
-        'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
-    ]
-except ImportError:
-    PASSWORD_HASHERS = [
-        'django.contrib.auth.hashers.PBKDF2PasswordHasher',
-        'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
-    ]
-
 # Security Headers
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
@@ -177,8 +166,6 @@ CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False').lower() == 't
 SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '0'))
 SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False').lower() == 'true'
 SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', 'False').lower() == 'true'
-
-# Trust X-Forwarded-Proto from nginx reverse proxy
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Admin URL obfuscation - change in urls.py too
@@ -208,46 +195,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.environ.get('STATIC_ROOT', os.path.join(BASE_DIR, 'staticfiles'))
 
 
-# CORS settings — restrict in production
-# Set CORS_ALLOW_ALL_ORIGINS=True only during development.
-# In production, set CORS_ALLOW_ALL_ORIGINS=False and list origins in CORS_ALLOWED_ORIGINS.
-CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'False').lower() == 'true'
-CORS_ALLOWED_ORIGINS = [o.strip() for o in os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',') if o.strip()]
-CORS_ALLOW_CREDENTIALS = True
-
-# DRF settings
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-    ],
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.OrderingFilter',
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20,
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle',
-    ],
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/hour',
-        'user': '1000/hour',
-        'contact': '5/hour',
-    },
-}
-
-# Cache settings — uses LocMemCache for dev; set REDIS_URL for multi-worker production
-# (Redis is required when running multiple Gunicorn workers/containers
-# to ensure throttling, sessions, and cache work correctly across processes)
+# Cache settings — set REDIS_URL for multi-worker production
 REDIS_URL = os.environ.get('REDIS_URL')
 if REDIS_URL:
     CACHES = {
@@ -275,9 +223,14 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 86400
 SESSION_SAVE_EVERY_REQUEST = True
 
-# File upload limits
-FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
-DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+# File upload limits (env-overridable; bulk photo uploads need headroom —
+# files are auto-compressed on save, so these are transfer caps, not
+# storage sizes). nginx client_max_body_size must allow at least the
+# DATA value or uploads 413 before reaching Django.
+FILE_UPLOAD_MAX_MEMORY_SIZE = int(os.environ.get(
+    'FILE_UPLOAD_MAX_MEMORY_SIZE', str(30 * 1024 * 1024)))
+DATA_UPLOAD_MAX_MEMORY_SIZE = int(os.environ.get(
+    'DATA_UPLOAD_MAX_MEMORY_SIZE', str(150 * 1024 * 1024)))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -285,9 +238,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# Logging Configuration
-# File logging is auto-disabled when running in Docker/containerized environments
-# (logs should go to stdout/stderr for container log collectors).
+# Logging Configuration — file handler auto-disabled in Docker/containerized env
 _use_file_logging = not os.environ.get('DISABLE_FILE_LOGGING', '').lower() in ('true', '1')
 
 LOGGING = {

@@ -38,10 +38,18 @@ body {
   flex-direction: column;
   font-family: 'Outfit', 'Segoe UI', sans-serif;
   background: var(--bg-cream);
+  color: var(--text-dark);
+  line-height: 1.7;
   position: relative;
   overflow-x: hidden;
   height: 100%;
   overflow-y: scroll;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 /* Scroll to top button */
@@ -91,51 +99,7 @@ h4,
   font-family: 'Roboto', sans-serif;
 }
 
-/* Navbar Styles - Enhanced */
-.navbar {
-  background: linear-gradient(135deg, var(--primary-navy) 0%, var(--primary-navy-dark) 100%);
-  border-bottom: none;
-  box-shadow: 0 2px 20px rgba(0,50,100,0.15);
-}
-
-.navbar-brand img {
-  max-height: 60px;
-}
-
-.nav-link {
-  color: rgba(255,255,255,0.9) !important;
-  margin-right: 20px;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  transition: var(--transition-smooth);
-  position: relative;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: var(--accent-gold);
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
-}
-
-.nav-link:hover {
-  color: var(--accent-gold) !important;
-}
-
-.nav-link:hover::after {
-  width: 60%;
-}
-
-.my-custom-class {
-  font-size: 1.5em;
-  color: #fff;
-}
+/* Navbar + header owned by header.css. Footer owned by footer.css. */
 
 /* Base Carousel Styles - specific styling in carousel.css */
 /* These styles are overridden by carousel.css for the homepage carousel */
@@ -183,89 +147,7 @@ h4,
 }
 
 
-/* Footer Styles - Enhanced */
-.footer {
-  background: linear-gradient(180deg, var(--primary-navy) 0%, var(--primary-navy-dark) 100%) !important;
-  color: #fff;
-  padding: 60px 0 30px;
-  margin-top: 0;
-  border-top: none;
-  position: relative;
-  overflow: hidden;
-}
-
-.footer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light), var(--accent-gold));
-}
-
-.footer h4 {
-  color: var(--accent-gold);
-  margin-bottom: 25px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.4rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-.footer ul {
-  font-weight: 400;
-  list-style: none;
-  padding: 0;
-}
-
-.footer ul li {
-  font-weight: 400;
-  margin-bottom: 12px;
-  transition: var(--transition-smooth);
-}
-
-.footer ul li a {
-  color: rgba(255,255,255,0.8);
-  text-decoration: none;
-  transition: var(--transition-smooth);
-  font-weight: 400;
-  position: relative;
-  padding-left: 0;
-}
-
-.footer ul li a:hover {
-  color: var(--accent-gold);
-  font-weight: 400;
-  padding-left: 8px;
-}
-
-.footer .social-links a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  margin: 0 8px 15px 0;
-  color: #fff;
-  font-size: 18px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.1);
-  transition: var(--transition-smooth);
-}
-
-.footer .social-links a:hover {
-  background: var(--accent-gold);
-  color: var(--primary-navy);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(212,175,55,0.4);
-}
-
-.footer .school-details {
-  margin-bottom: 20px;
-  line-height: 1.8;
-  color: rgba(255,255,255,0.85);
-}
+/* Footer styles live in footer.css. */
 
 /* Button Styles - Enhanced */
 .btn-primary {
@@ -311,10 +193,6 @@ h4,
 
 /* Responsive Adjustments */
 @media (max-width: 767.98px) {
-  .navbar .navbar-collapse {
-    background-color: #003264;
-  }
-
   .carousel-container:not(#homeCarousel .carousel-container) {
     height: auto;
   }
@@ -323,14 +201,46 @@ h4,
     height: auto;
   }
 
-  .footer {
-    text-align: center;
-  }
-
   .footer-col {
     margin-bottom: 20px;
   }
 }
+
+/* Touch-friendly improvements for all devices */
+@media (hover: none) and (pointer: coarse) {
+  .gallery-overlay { opacity: 1; }
+  .gallery-zoom, .gallery-more { 
+    width: 50px; height: 50px; line-height: 50px; 
+    font-size: 1.3rem; 
+  }
+  .celebration-card:hover { transform: none; }
+  .gallery-item:hover { transform: none; }
+  .gallery-item:hover .gallery-image { transform: none; }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .scroll-to-top { bottom: 20px; right: 20px; width: 44px; height: 44px; }
+}
+@media (hover: none) and (pointer: coarse) and (max-width: 576px) {
+  .gallery-zoom, .gallery-more { width: 44px; height: 44px; line-height: 44px; font-size: 1.1rem; }
+}
+
+/* Mobile-first padding for sections */
+@media (max-width: 576px) {
+  .container { padding-left: 16px; padding-right: 16px; }
+  body { font-size: 15px; }
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.3rem; }
+  .view-all-btn, .btn-primary { padding: 12px 24px; font-size: 0.9rem; }
+}
+
+/* Touch target size minimum — scoped to nav/interactive controls only */
+.site-header .nav-link, .site-header .dropdown-item,
+.site-drawer .drawer-link, .gallery-category {
+  min-height: 44px;
+}
+.site-header .nav-link, .site-header .dropdown-item { display: inline-flex; align-items: center; }
+.gallery-category { min-height: 44px; justify-content: center; }
+.btn-close { min-height: 44px; min-width: 44px; }
 /*******Contact us ********/
 .btn-group {
   display: flex;

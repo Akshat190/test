@@ -4,6 +4,8 @@ from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.contrib.auth.models import User
 
+from .image_utils import CompressedImageMixin
+
 
 class Role(models.Model):
     """Hierarchy-based roles for campus management access control."""
@@ -67,7 +69,27 @@ class UserProfile(models.Model):
         return self.role.is_super_admin if self.role else False
 
 
-class Celebration(models.Model):
+class ContactSubmission(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15, blank=True)
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    is_read = models.BooleanField(default=False, db_index=True)
+
+    class Meta:
+        verbose_name = 'Contact Submission'
+        verbose_name_plural = 'Contact Submissions'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.name} - {self.subject}"
+
+
+class Celebration(CompressedImageMixin, models.Model):
+    COMPRESS_FIELDS = ['image']
+
     CELEBRATION_TYPES = [
         ('festival', 'Festival'),
         ('event', 'School Event'),
@@ -80,6 +102,10 @@ class Celebration(models.Model):
     festivalname = models.CharField(max_length=255, verbose_name='Celebration Name')
     description = models.TextField(blank=True, verbose_name='Description')
     celebration_type = models.CharField(max_length=20, choices=CELEBRATION_TYPES, default='festival', verbose_name='Type')
+    campus = models.ForeignKey(
+        'Campus', on_delete=models.SET_NULL, null=True, blank=True,
+        verbose_name='Campus', related_name='celebrations'
+    )
     image = models.ImageField(
         upload_to='festival/images/',
         verbose_name='Main Image',
@@ -89,10 +115,6 @@ class Celebration(models.Model):
     )
     date = models.DateTimeField(verbose_name='Date', db_index=True)
     is_featured = models.BooleanField(default=False, verbose_name='Feature on Homepage', db_index=True)
-    campus = models.ForeignKey(
-        'Campus', on_delete=models.SET_NULL, null=True, blank=True,
-        verbose_name='Campus', db_index=True,
-    )
     
     class Meta:
         verbose_name = 'Celebration'
@@ -112,7 +134,9 @@ class Celebration(models.Model):
         return self.image.url if self.image else None
 
 
-class CelebrationPhoto(models.Model):
+class CelebrationPhoto(CompressedImageMixin, models.Model):
+    COMPRESS_FIELDS = ['photo']
+
     celebration = models.ForeignKey(Celebration, on_delete=models.CASCADE)
     photo = models.ImageField(
         upload_to='festival/gallery/',
@@ -135,7 +159,9 @@ class CelebrationPhoto(models.Model):
     def get_photo_url(self):
         return self.photo.url if self.photo else None
 
-class Gallery(models.Model):
+class Gallery(CompressedImageMixin, models.Model):
+    COMPRESS_FIELDS = ['thumbnail']
+
     CATEGORY_CHOICES = [
         ('festival', 'Festival'),
         ('event', 'School Event'),
@@ -183,7 +209,9 @@ class Gallery(models.Model):
         return None
 
 
-class GalleryImage(models.Model):
+class GalleryImage(CompressedImageMixin, models.Model):
+    COMPRESS_FIELDS = ['image']
+
     gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True, verbose_name='Title')
     image = models.ImageField(
@@ -212,7 +240,9 @@ class GalleryImage(models.Model):
         return self.image.url if self.image else None
 
 
-class Campus(models.Model):
+class Campus(CompressedImageMixin, models.Model):
+    COMPRESS_FIELDS = ['photo']
+
     slug = models.SlugField(unique=True, help_text='URL-friendly identifier, e.g., chattral, chandkheda')
     name = models.CharField(max_length=100, verbose_name='Campus Name')
     board = models.CharField(max_length=20, blank=True, verbose_name='Board')
@@ -264,7 +294,9 @@ class CampusDocument(models.Model):
         return self.file.url if self.file else None
 
 
-class CarouselImage(models.Model):
+class CarouselImage(CompressedImageMixin, models.Model):
+    COMPRESS_FIELDS = ['image']
+
     URL_CHOICES = [
         ('/', 'Home'),
         ('/aboutSchool/', 'About School'),
@@ -301,21 +333,3 @@ class CarouselImage(models.Model):
 
     def get_image_url(self):
         return self.image.url if self.image else None
-
-
-class ContactSubmission(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    phone = models.CharField(max_length=15, blank=True)
-    subject = models.CharField(max_length=200)
-    message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    is_read = models.BooleanField(default=False, db_index=True)
-
-    class Meta:
-        verbose_name = 'Contact Submission'
-        verbose_name_plural = 'Contact Submissions'
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return f"{self.name} - {self.subject}"

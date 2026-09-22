@@ -1,0 +1,4 @@
+# Keep Unix line endings on files that run on the VPS.
+*.sh text eol=lf
+nginx/*.conf text eol=lf
+*.py text eol=lf

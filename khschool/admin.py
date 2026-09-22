@@ -53,15 +53,26 @@ class RoleAdmin(admin.ModelAdmin):
     list_filter = ('level',)
     ordering = ['-level']
 
+    def _can_manage_roles(self, request):
+        if request.user.is_superuser:
+            return True
+        role = get_user_role(request.user)
+        return bool(role and role.can_manage_roles)
+
     def has_add_permission(self, request):
-        return False
+        return self._can_manage_roles(request)
 
     def has_change_permission(self, request, obj=None):
-        role = get_user_role(request.user)
-        return request.user.is_superuser or (role and role.can_manage_roles)
+        return self._can_manage_roles(request)
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return self._can_manage_roles(request)
+
+    def has_view_permission(self, request, obj=None):
+        return self._can_manage_roles(request)
+
+    def has_module_permission(self, request):
+        return self._can_manage_roles(request)
 
 
 # ─── UserProfile Admin ─────────────────────────────────────────
@@ -230,7 +241,7 @@ class CampusDocumentAdmin(admin.ModelAdmin):
 class CelebrationPhotoInline(admin.TabularInline):
     model = CelebrationPhoto
     form = CelebrationPhotoForm
-    extra = 3
+    extra = 0
     fields = ('photo', 'photo_url', 'caption', 'order')
     readonly_fields = ('photo_url',)
 
@@ -252,8 +263,8 @@ class CelebrationPhotoInline(admin.TabularInline):
 @admin.register(Celebration)
 class CelebrationAdmin(admin.ModelAdmin):
     form = CelebrationForm
-    list_display = ('festivalname', 'celebration_type', 'date', 'photo_count_display', 'preview_image')
-    list_filter = ('date', 'celebration_type', 'is_featured')
+    list_display = ('festivalname', 'celebration_type', 'campus', 'date', 'photo_count_display', 'preview_image')
+    list_filter = ('date', 'celebration_type', 'campus', 'is_featured')
     search_fields = ('festivalname', 'description')
     date_hierarchy = 'date'
     ordering = ('-date',)
@@ -283,11 +294,22 @@ class CelebrationAdmin(admin.ModelAdmin):
             return '-'
         return obj.get_image_url()
 
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        files = form.cleaned_data.get('bulk_photos') or request.FILES.getlist('bulk_photos')
+        for f in files:
+            CelebrationPhoto.objects.create(
+                celebration=obj,
+                photo=f,
+                caption='',
+                order=0
+            )
+
     def get_fields(self, request, obj=None):
         if request.user.is_superuser or is_admin_or_higher(request.user):
-            return ['festivalname', 'description', 'celebration_type', 'image', 'date', 'is_featured']
+            return ['festivalname', 'description', 'celebration_type', 'campus', 'image', 'date', 'is_featured', 'bulk_photos']
         if is_photo_editor(request.user):
-            return ['festivalname', 'image', 'celebration_type', 'date', 'is_featured']
+            return ['festivalname', 'image', 'celebration_type', 'date', 'is_featured', 'bulk_photos']
         return ['festivalname']
 
     def get_readonly_fields(self, request, obj=None):
@@ -369,7 +391,7 @@ class CelebrationPhotoAdmin(admin.ModelAdmin):
 class GalleryImageInline(admin.TabularInline):
     model = GalleryImage
     form = GalleryImageForm
-    extra = 3
+    extra = 0
     fields = ('image', 'image_url', 'title', 'caption', 'order')
     readonly_fields = ('image_url',)
 
@@ -422,11 +444,23 @@ class GalleryAdmin(admin.ModelAdmin):
             return '-'
         return obj.get_thumbnail_url()
 
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        files = form.cleaned_data.get('bulk_images') or request.FILES.getlist('bulk_images')
+        for f in files:
+            GalleryImage.objects.create(
+                gallery=obj,
+                image=f,
+                title='',
+                caption='',
+                order=0
+            )
+
     def get_fields(self, request, obj=None):
         if request.user.is_superuser or is_admin_or_higher(request.user):
-            return ['name', 'description', 'category', 'thumbnail', 'date_created', 'is_featured']
+            return ['name', 'description', 'category', 'thumbnail', 'date_created', 'is_featured', 'bulk_images']
         if is_photo_editor(request.user):
-            return ['name', 'thumbnail', 'category', 'description', 'is_featured']
+            return ['name', 'thumbnail', 'category', 'description', 'is_featured', 'bulk_images']
         return ['name']
 
     def get_readonly_fields(self, request, obj=None):

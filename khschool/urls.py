@@ -21,4 +21,6 @@ urlpatterns = [
     path('testimonials/', views.testimonials, name='testimonials'),
     path('achievements/', views.achievements, name='achievements'),
     path('health/', views.health_check, name='health_check'),
+    # JSON API for the Astro frontend (proxied via nginx /api/).
+    path('api/contact/', views.api_contact, name='api_contact'),
 ]
