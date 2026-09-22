@@ -23,4 +23,8 @@ urlpatterns = [
     path('health/', views.health_check, name='health_check'),
     # JSON API for the Astro frontend (proxied via nginx /api/).
     path('api/contact/', views.api_contact, name='api_contact'),
+    path('api/carousel/', views.api_carousel, name='api_carousel'),
+    path('api/celebrations/', views.api_celebrations, name='api_celebrations'),
+    path('api/galleries/', views.api_galleries, name='api_galleries'),
+    path('api/campuses/', views.api_campuses, name='api_campuses'),
 ]

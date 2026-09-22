@@ -347,6 +347,77 @@ def api_contact(request):
     )
 
 
+# --- Read-only JSON list APIs for the Astro frontend (SSG fetch at build) ---
+# Shapes mirror the Django model helpers the Astro components already read
+# (get_image_url, thumbnail_url, campus.slug, ...). Public data, GET only.
+
+def _api_list(request, allowed=('GET',)):
+    if request.method not in allowed:
+        return JsonResponse({'results': [], 'error': 'GET only.'}, status=405)
+    return None
+
+
+def api_carousel(request):
+    denied = _api_list(request)
+    if denied:
+        return denied
+    items = CarouselImage.objects.filter(is_active=True).order_by('order')[:20]
+    return JsonResponse({'results': [
+        {'id': c.id, 'title': c.title, 'subtitle': c.subtitle,
+         'get_image_url': c.get_image_url(), 'button_text': c.button_text,
+         'button_link': c.button_link}
+        for c in items
+    ]})
+
+
+def api_celebrations(request):
+    denied = _api_list(request)
+    if denied:
+        return denied
+    qs = Celebration.objects.select_related('campus').order_by('-date')[:200]
+    return JsonResponse({'results': [
+        {'id': c.id, 'festivalname': c.festivalname, 'description': c.description,
+         'date': c.date.isoformat() if c.date else None,
+         'celebration_type': c.celebration_type,
+         'campus': {'slug': c.campus.slug, 'name': c.campus.name} if c.campus else None,
+         'get_image_url': c.get_image_url(), 'photo_count': c.photo_count()}
+        for c in qs
+    ]})
+
+
+def api_galleries(request):
+    denied = _api_list(request)
+    if denied:
+        return denied
+    qs = Gallery.objects.prefetch_related('galleryimage_set').order_by('-date_created')
+    if request.GET.get('featured') == '1':
+        qs = qs.filter(is_featured=True)
+    qs = qs[:200]
+    return JsonResponse({'results': [
+        {'id': g.id, 'name': g.name, 'description': g.description,
+         'category': g.category, 'thumbnail_url': g.get_thumbnail_url(),
+         'image_count': g.image_count(),
+         'images': [{'get_image_url': i.get_image_url(), 'caption': i.caption,
+                      'title': i.title} for i in g.galleryimage_set.all()]}
+        for g in qs
+    ]})
+
+
+def api_campuses(request):
+    denied = _api_list(request)
+    if denied:
+        return denied
+    qs = Campus.objects.filter(is_active=True).prefetch_related('documents').order_by('name')
+    return JsonResponse({'results': [
+        {'slug': c.slug, 'name': c.name, 'board': c.board,
+         'affiliation_number': c.affiliation_number, 'timings': c.timings,
+         'get_photo_url': c.get_photo_url(),
+         'documents': [{'title': d.title, 'get_file_url': d.get_file_url()}
+                        for d in c.documents.all()]}
+        for c in qs
+    ]})
+
+
 def handler404(request, exception):
     return render(request, 'errors/404.html', status=404)
 

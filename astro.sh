@@ -48,6 +48,7 @@ if ! command -v node &>/dev/null; then
 fi
 cd "$FRONTEND_DIR"
 npm ci
+export PUBLIC_API_BASE="${PUBLIC_API_BASE:-http://127.0.0.1:8000}"
 npm run build
 cd "$PROJECT_DIR"
 if [ ! -f "$DIST_DIR/index.html" ]; then
