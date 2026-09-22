@@ -36,4 +36,4 @@ export const getCarouselImages = () => get("/api/carousel/");
 export const getCelebrations = () => get("/api/celebrations/");
 export const getCampuses = () => get("/api/campuses/");
 export const getGalleries = (featured = false) =>
-  get(featured ? "/api/galleries/?featured=1" : "/api/galleries/");
+  get(featured ? "/api/galleries/?is_featured=true" : "/api/galleries/");

@@ -85,3 +85,24 @@ class SiteMapTests(TestCase):
         response = self.client.get('/robots.txt')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Disallow')
+
+
+class PublicApiTests(TestCase):
+    # Guards the Astro contract: these routes must exist with these shapes.
+    def test_list_endpoints(self):
+        for path in ['/api/carousel/', '/api/celebrations/', '/api/galleries/', '/api/campuses/']:
+            response = self.client.get(path, HTTP_ACCEPT='application/json')
+            self.assertEqual(response.status_code, 200, path)
+            self.assertIn('results', response.json(), path)
+
+    def test_gallery_featured_filter(self):
+        response = self.client.get('/api/galleries/?is_featured=true', HTTP_ACCEPT='application/json')
+        self.assertEqual(response.status_code, 200)
+
+    def test_api_contact(self):
+        import json
+        payload = {'name': 'T', 'email': 't@example.com', 'subject': 's', 'message': 'hello there'}
+        response = self.client.post('/api/contact/', data=json.dumps(payload), content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json().get('success'))
+
