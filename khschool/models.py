@@ -73,6 +73,11 @@ class ContactSubmission(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(max_length=15, blank=True)
+    campus = models.ForeignKey(
+        'Campus', on_delete=models.SET_NULL, null=True, blank=True,
+        verbose_name='Campus', related_name='contact_submissions',
+        help_text='Which campus this enquiry is about (optional).'
+    )
     subject = models.CharField(max_length=200)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)

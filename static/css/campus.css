@@ -180,13 +180,52 @@
 }
 .campus-cta h2 { color: #fff; font-size: 2rem; margin-bottom: 10px; }
 .campus-cta p { color: rgba(255, 255, 255, 0.8); margin-bottom: 24px; }
-.campus-cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-.campus-cta .view-all-btn {
+.campus-cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+/* CTA buttons — dedicated classes so they no longer inherit the navbar's
+   .admission-btn / global .view-all-btn sizing. */
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 14px 32px;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition: transform 0.25s ease, box-shadow 0.25s ease,
+              background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+.cta-btn i { font-size: 0.95em; }
+.cta-btn:focus-visible { outline: 3px solid #E8C547; outline-offset: 3px; }
+.cta-btn-primary {
+  background: linear-gradient(135deg, #D4AF37 0%, #E8C547 100%);
+  color: #003264;
+  box-shadow: 0 8px 22px rgba(212, 175, 55, 0.28);
+}
+.cta-btn-primary:hover {
+  background: #fff;
+  color: #003264;
+  border-color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(255, 255, 255, 0.25);
+}
+.cta-btn-ghost {
   background: transparent;
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.55);
 }
-.campus-cta .view-all-btn:hover { border-color: #D4AF37; color: #D4AF37; }
+.cta-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #E8C547;
+  color: #E8C547;
+  transform: translateY(-3px);
+}
 
 @media (max-width: 768px) {
   .campus-hero { aspect-ratio: 4 / 3; min-height: 300px; }
@@ -200,6 +239,9 @@
   .campus-hero-title { font-size: 1.8rem; }
   .campus-hero-content { padding-bottom: 28px; }
   .info-card p { font-size: 1rem; }
+  .campus-cta { padding: 36px 20px; }
+  .campus-cta-actions { flex-direction: column; }
+  .cta-btn { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

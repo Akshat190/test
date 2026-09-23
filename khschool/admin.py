@@ -1,13 +1,15 @@
 from django.contrib import admin
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.db.models import Max
 from khschool.models import (
     Celebration, CarouselImage, CelebrationPhoto, Gallery, GalleryImage,
     Campus, CampusDocument, Role, UserProfile, ContactSubmission,
 )
 from khschool.forms import (
     CelebrationForm, CelebrationPhotoForm, CarouselImageForm,
-    GalleryForm, GalleryImageForm
+    CampusForm, GalleryForm, GalleryImageForm, title_from_filename,
 )
 
 
@@ -42,6 +44,15 @@ def is_admin_or_higher(user):
         return True
     role = get_user_role(user)
     return role and (role.can_manage_users or role.is_super_admin)
+
+
+def can_import_documents(user):
+    """Admins, Super Admins and Document Editors may bulk-import documents."""
+    return (
+        user.is_superuser
+        or bool(is_admin_or_higher(user))
+        or bool(is_document_editor(user))
+    )
 
 
 # ─── Role Admin ────────────────────────────────────────────────
@@ -138,6 +149,7 @@ class CampusDocumentInline(admin.TabularInline):
 
 @admin.register(Campus)
 class CampusAdmin(admin.ModelAdmin):
+    form = CampusForm
     list_display = ('name', 'slug', 'board', 'is_active', 'has_photo', 'document_count')
     list_filter = ('is_active', 'board')
     search_fields = ('name', 'slug', 'board', 'affiliation_number')
@@ -148,9 +160,12 @@ class CampusAdmin(admin.ModelAdmin):
 
     def get_fields(self, request, obj=None):
         if request.user.is_superuser or is_admin_or_higher(request.user):
-            return ['slug', 'name', 'board', 'affiliation_number', 'timings', 'photo', 'is_active']
+            return ['slug', 'name', 'board', 'affiliation_number', 'timings',
+                    'photo', 'is_active', 'bulk_documents']
         if is_photo_editor(request.user):
             return ['name', 'photo']
+        if is_document_editor(request.user):
+            return ['name', 'bulk_documents']
         return ['name']
 
     def get_readonly_fields(self, request, obj=None):
@@ -158,7 +173,36 @@ class CampusAdmin(admin.ModelAdmin):
             return []
         if is_photo_editor(request.user):
             return ['name']
+        if is_document_editor(request.user):
+            return ['name']
         return ['slug', 'name', 'board', 'affiliation_number', 'timings', 'photo', 'is_active']
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+
+        files = form.cleaned_data.get('bulk_documents') or []
+        if not files:
+            return
+        if not can_import_documents(request.user):
+            return
+
+        next_order = (obj.documents.aggregate(m=Max('order'))['m'] or 0) + 1
+        created = 0
+        for f in files:
+            CampusDocument.objects.create(
+                campus=obj,
+                title=title_from_filename(getattr(f, 'name', '')),
+                file=f,
+                order=next_order,
+            )
+            next_order += 1
+            created += 1
+        if created:
+            self.message_user(
+                request,
+                f"Imported {created} document{'s' if created != 1 else ''}.",
+                messages.SUCCESS,
+            )
 
     def get_inline_instances(self, request, obj=None):
         inlines = []
@@ -580,10 +624,10 @@ class CarouselImageAdmin(admin.ModelAdmin):
 
 @admin.register(ContactSubmission)
 class ContactSubmissionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'subject', 'created_at', 'is_read')
-    list_filter = ('is_read', 'created_at')
+    list_display = ('name', 'email', 'campus', 'subject', 'created_at', 'is_read')
+    list_filter = ('is_read', 'campus', 'created_at')
     search_fields = ('name', 'email', 'subject', 'message')
-    readonly_fields = ('name', 'email', 'phone', 'subject', 'message', 'created_at')
+    readonly_fields = ('name', 'email', 'phone', 'campus', 'subject', 'message', 'created_at')
     list_editable = ('is_read',)
     date_hierarchy = 'created_at'
     ordering = ['-created_at']

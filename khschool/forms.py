@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Celebration, CelebrationPhoto, CarouselImage, Gallery, GalleryImage, ContactSubmission
+from .models import Celebration, CelebrationPhoto, CarouselImage, Campus, Gallery, GalleryImage, ContactSubmission
 
 
 class MultipleFileInput(forms.FileInput):
@@ -42,6 +42,55 @@ class MultipleFileField(forms.FileField):
                     f"'{each.name}' is {size_mb:.1f} MB — over the {MAX_BULK_FILE_MB} MB per-photo limit. "
                     'Please resize it (1920px wide is plenty) and try again.'
                 )
+
+
+class MultipleDocumentField(forms.FileField):
+    """Multiple PDF upload used by the Campus "bulk import documents" field."""
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('widget', MultipleFileInput(attrs={
+            'multiple': True, 'accept': 'application/pdf,.pdf',
+        }))
+        super().__init__(*args, **kwargs)
+
+    def to_python(self, data):
+        if not data:
+            return []
+        if isinstance(data, list):
+            return data
+        return [data]
+
+    def validate(self, value):
+        from django.core.exceptions import ValidationError
+
+        for each in value:
+            super().validate(each)
+            name = (getattr(each, 'name', '') or '')
+            content_type = (getattr(each, 'content_type', '') or '').lower()
+            if not (name.lower().endswith('.pdf') or content_type == 'application/pdf'):
+                raise ValidationError(
+                    f"'{name or 'file'}' is not a PDF. Please upload PDF documents only."
+                )
+            size_mb = (each.size or 0) / (1024 * 1024)
+            if size_mb > MAX_BULK_FILE_MB:
+                raise ValidationError(
+                    f"'{name}' is {size_mb:.1f} MB — over the {MAX_BULK_FILE_MB} MB per-file limit."
+                )
+
+
+def title_from_filename(filename):
+    """Derive a readable document title from an uploaded PDF filename.
+
+    '3. NOC CERTIFICATE-CBSE.pdf' -> 'NOC CERTIFICATE CBSE'
+    """
+    import os
+    import re
+
+    base = os.path.splitext(os.path.basename(filename or ''))[0]
+    base = re.sub(r'^[\d]+\s*[.)\-_]*\s*', '', base)   # strip leading "1. " / "3) "
+    base = base.replace('_', ' ').replace('-', ' ')
+    base = re.sub(r'\s+', ' ', base).strip()
+    return base[:200] or 'Document'
 
 
 class CelebrationForm(forms.ModelForm):
@@ -92,6 +141,18 @@ class CarouselImageForm(forms.ModelForm):
         return image
 
 
+class CampusForm(forms.ModelForm):
+    bulk_documents = MultipleDocumentField(
+        required=False,
+        label='Bulk import documents (PDF only — Ctrl+click to select multiple)',
+        help_text='Titles are taken from the filenames. You can rename them afterwards in the list below.',
+    )
+
+    class Meta:
+        model = Campus
+        fields = ['slug', 'name', 'board', 'affiliation_number', 'timings', 'photo', 'is_active']
+
+
 class GalleryForm(forms.ModelForm):
     bulk_images = MultipleFileField(
         required=False,
@@ -110,9 +171,17 @@ class GalleryImageForm(forms.ModelForm):
 
 
 class ContactForm(forms.ModelForm):
+    campus = forms.ModelChoiceField(
+        queryset=Campus.objects.none(),
+        required=False,
+        label='Campus',
+        empty_label='Select a campus (optional)',
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'campus'}),
+    )
+
     class Meta:
         model = ContactSubmission
-        fields = ['name', 'email', 'phone', 'subject', 'message']
+        fields = ['name', 'email', 'phone', 'campus', 'subject', 'message']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'id': 'name', 'placeholder': 'Enter your full name'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'id': 'email', 'placeholder': 'Enter your email address'}),
@@ -120,3 +189,10 @@ class ContactForm(forms.ModelForm):
             'subject': forms.TextInput(attrs={'class': 'form-control', 'id': 'subject', 'placeholder': 'What is this regarding?'}),
             'message': forms.Textarea(attrs={'class': 'form-control', 'id': 'message', 'rows': 5, 'placeholder': 'Type your message here...'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Populated per-request so newly added/renamed campuses show up.
+        self.fields['campus'].queryset = Campus.objects.filter(
+            is_active=True
+        ).order_by('name')

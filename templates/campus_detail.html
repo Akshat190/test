@@ -85,48 +85,36 @@
     </div>
   </section>
 
-  <!-- Documents -->
+  <!-- Documents — backend-driven only: section is hidden unless this
+       campus actually has documents uploaded in the admin. -->
+  {% if campus and campus.documents.exists %}
   <section class="campus-docs" aria-label="Campus documents">
     <h2 class="section-title">Mandatory Disclosures</h2>
     <div class="section-underline"></div>
     <div class="document-grid">
-      {% if campus and campus.documents.exists %}
-        {% for doc in campus.documents.all %}
-          <div class="doc-card">
-            <a href="{{ doc.file.url }}" target="_blank" rel="noopener" class="doc-link">
-              <i class="fas fa-file-pdf"></i>
-              <span>{{ doc.title }}</span>
-            </a>
-          </div>
-        {% endfor %}
-      {% else %}
-        <div class="doc-card"><a href="{% static 'documents/1. Affiliation Letter 2026 to 2031.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Affiliation Letter 2026-2031</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/2. TRUST REGISTRATION CERTIFICATE.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Trust Registration Certificate</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/3. NOC CERTIFICATE-CBSE.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>NOC Certificate - CBSE</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/4. RECOGNITION CERTIFICATE-1-5 & 6-8.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Recognition Certificate (1-5 &amp; 6-8)</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/Building Safety Certificate.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Building Safety Certificate</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/fire-safety.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Fire Safety Certificate</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/Self Certificate (1).pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Self Certificate</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/8. Water, Health and Sanitation Certificate.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Water, Health &amp; Sanitation</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/9 fee structure.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Fee Structure</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/List of PTA.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>List of PTA</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/List of SMC.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>List of SMC</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/Results.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Board Results</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/academic_planner.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Academic Planner</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/Tentative Annual Academic Calendar.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Annual Academic Calendar</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/TENTATIVE HOLIDAY LIST & IMPORTANT EVENTS 2025-26.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Holiday List &amp; Events 2025-26</span></a></div>
-        <div class="doc-card"><a href="{% static 'documents/Appendix IX.pdf' %}" target="_blank" rel="noopener" class="doc-link"><i class="fas fa-file-pdf"></i><span>Mandatory Disclosure - Appendix IX</span></a></div>
-      {% endif %}
+      {% for doc in campus.documents.all %}
+        <div class="doc-card">
+          <a href="{{ doc.file.url }}" target="_blank" rel="noopener" class="doc-link">
+            <i class="fas fa-file-pdf"></i>
+            <span>{{ doc.title }}</span>
+          </a>
+        </div>
+      {% endfor %}
     </div>
   </section>
+  {% endif %}
 
   <!-- CTA -->
   <section class="campus-cta">
     <h2>Visit the {{ info.name }} Campus</h2>
     <p>Admissions are open. Get in touch or explore the campus on the map.</p>
     <div class="campus-cta-actions">
-      <a href="https://forms.gle/sDftg7osPaxvGKAD8" class="btn admission-btn" target="_blank" rel="noopener"><i class="fas fa-graduation-cap me-2"></i>Admission Open</a>
-      <a href="{% url 'contact' %}" class="view-all-btn">Contact Us</a>
+      <a href="https://forms.gle/sDftg7osPaxvGKAD8" class="cta-btn cta-btn-primary" target="_blank" rel="noopener">
+        <i class="fas fa-graduation-cap" aria-hidden="true"></i>Admission Open
+      </a>
+      <a href="{% url 'contact' %}" class="cta-btn cta-btn-ghost">
+        <i class="fas fa-envelope" aria-hidden="true"></i>Contact Us
+      </a>
     </div>
   </section>
 </div>

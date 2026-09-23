@@ -107,6 +107,12 @@
             </div>
 
             <div class="form-group">
+              <label for="campus">Campus</label>
+              {{ form.campus }}
+              {% if form.campus.errors %}<div class="text-danger small">{{ form.campus.errors|join:", " }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
               <label for="subject">Subject</label>
               {{ form.subject }}
               {% if form.subject.errors %}<div class="text-danger small">{{ form.subject.errors|join:", " }}</div>{% endif %}
