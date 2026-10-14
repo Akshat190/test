@@ -2,6 +2,40 @@
 {% load static %}
 
 {% block title %}{{ info.name }} Campus - Kapadia High School{% endblock %}
+{% block meta_description %}Kapadia High School's {{ info.name }} campus{% if info.board %}, {{ info.board }} affiliated{% endif %}{% if info.timings %}. School timings {{ info.timings }}{% endif %}. Admissions and campus information.{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "School",
+    "@id": "https://kapadiahighschool.com/{{ campus_slug }}/#campus",
+    "name": "Kapadia High School, {{ info.name }} Campus",
+    "url": "https://kapadiahighschool.com/{{ campus_slug }}/",
+    "parentOrganization": {"@id": "https://kapadiahighschool.com/#organization"},
+    {% if info.board %}"department": {"@type": "EducationalOrganization", "name": "{{ info.board }}"},{% endif %}
+    "address": {
+        "@type": "PostalAddress",
+        {% if info.address %}"streetAddress": "{{ info.address|escapejs }}",{% endif %}
+        "addressLocality": "{{ info.name|escapejs }}",
+        "addressRegion": "Gujarat",
+        "addressCountry": "IN"
+    }{% if info.affiliation_number %},
+    "identifier": "{{ info.affiliation_number|escapejs }}"{% endif %}{% if info.photo_url %},
+    "image": "https://kapadiahighschool.com{{ info.photo_url }}"{% endif %}
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://kapadiahighschool.com/"},
+        {"@type": "ListItem", "position": 2, "name": "{{ info.name|escapejs }} Campus", "item": "https://kapadiahighschool.com/{{ campus_slug }}/"}
+    ]
+}
+</script>
+{% endblock structured_data %}
 
 {% block page_css %}
 <link href="{% static 'css/campus.css' %}" rel="stylesheet" type="text/css">
@@ -68,24 +102,25 @@
     </div>
   </section>
 
-  <!-- Facilities -->
+  <!-- Facilities: labels, not links. These tiles have no per-campus
+       destination and no behaviour, so they must not be anchors (R-26). -->
   <section class="campus-facilities" aria-label="Campus facilities">
     <h2 class="section-title">Campus Facilities</h2>
     <div class="section-underline"></div>
     <div class="row g-3">
-      <div class="col-md-4"><a href="#" class="facility-btn">Smart Boards</a></div>
-      <div class="col-md-4"><a href="#" class="facility-btn">Playground</a></div>
-      <div class="col-md-4"><a href="#" class="facility-btn">Library</a></div>
-      <div class="col-md-4"><a href="#" class="facility-btn">Art Room</a></div>
-      <div class="col-md-4"><a href="#" class="facility-btn">Music Room</a></div>
-      <div class="col-md-4"><a href="#" class="facility-btn">Curated Labs</a></div>
-      <div class="col-md-4"><a href="#" class="facility-btn">Transportation</a></div>
-      <div class="col-md-4"><a href="#" class="facility-btn">Medical Room</a></div>
-      <div class="col-md-4"><a href="#" class="facility-btn">Green Campus</a></div>
+      <div class="col-md-4"><span class="facility-btn">Smart Boards</span></div>
+      <div class="col-md-4"><span class="facility-btn">Playground</span></div>
+      <div class="col-md-4"><span class="facility-btn">Library</span></div>
+      <div class="col-md-4"><span class="facility-btn">Art Room</span></div>
+      <div class="col-md-4"><span class="facility-btn">Music Room</span></div>
+      <div class="col-md-4"><span class="facility-btn">Curated Labs</span></div>
+      <div class="col-md-4"><span class="facility-btn">Transportation</span></div>
+      <div class="col-md-4"><span class="facility-btn">Medical Room</span></div>
+      <div class="col-md-4"><span class="facility-btn">Green Campus</span></div>
     </div>
   </section>
 
-  <!-- Documents — backend-driven only: section is hidden unless this
+  <!-- Documents: backend-driven only, section is hidden unless this
        campus actually has documents uploaded in the admin. -->
   {% if campus and campus.documents.exists %}
   <section class="campus-docs" aria-label="Campus documents">

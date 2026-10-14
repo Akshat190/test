@@ -9,14 +9,10 @@ from django.contrib.sitemaps.views import sitemap
 from khschool.sitemap_views import (
     robots_txt,
     StaticViewSitemap,
-    CelebrationSitemap,
-    GallerySitemap,
 )
 
 sitemaps = {
     'static': StaticViewSitemap,
-    'celebrations': CelebrationSitemap,
-    'galleries': GallerySitemap,
 }
 
 urlpatterns = [

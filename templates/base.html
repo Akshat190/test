@@ -28,7 +28,6 @@
     
     <!-- Meta tags for SEO and performance -->
     <meta name="description" content="{% block meta_description %}Kapadia High School - Excellence in Education Since 1956. A co-educational English medium school in Gujarat, India.{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}Kapadia High School, CBSE School, GSEB School, Gujarat, Education, Best School{% endblock %}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="theme-color" content="#003264">
     <meta name="robots" content="index, follow">
@@ -40,25 +39,29 @@
     <meta property="og:description" content="{% block og_description %}Excellence in Education Since 1956{% endblock %}">
     <meta property="og:url" content="https://kapadiahighschool.com{{ request.path }}">
     <meta property="og:site_name" content="Kapadia High School">
-    <meta property="og:image" content="{% block og_image %}https://kapadiahighschool.com/static/images/placeholder.jpg{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}https://kapadiahighschool.com/static/image/og-default.jpg{% endblock %}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:locale" content="en_IN">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{% block twitter_title %}Kapadia High School{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}Excellence in Education Since 1956{% endblock %}">
-    <meta name="twitter:image" content="{% block twitter_image %}https://kapadiahighschool.com/static/images/placeholder.jpg{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}https://kapadiahighschool.com/static/image/og-default.jpg{% endblock %}">
     
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "EducationalOrganization",
+        "@type": "School",
+        "@id": "https://kapadiahighschool.com/#organization",
         "name": "Kapadia High School",
         "alternateName": "KHS",
-        "description": "Excellence in Education Since 1956",
+        "description": "Co-educational English medium school founded in 1956, with five campuses across Gujarat offering CBSE and GSEB education from K-12.",
         "url": "https://kapadiahighschool.com",
-        "logo": "https://kapadiahighschool.com/static/images/favicon/khes.png",
+        "logo": "https://kapadiahighschool.com/static/image/khes.png",
+        "image": "https://kapadiahighschool.com/static/image/khs.jpeg",
         "foundingDate": "1956",
         "address": {
             "@type": "PostalAddress",
@@ -68,17 +71,24 @@
             "postalCode": "382721",
             "addressCountry": "IN"
         },
+        "telephone": "+91-6354368335",
+        "email": "info@kapadiahighschool.com",
         "contactPoint": {
             "@type": "ContactPoint",
             "telephone": "+91-6354368335",
             "contactType": "admissions",
-            "email": "info@kapadiahighschool.com"
+            "email": "info@kapadiahighschool.com",
+            "areaServed": "IN",
+            "availableLanguage": ["en", "hi", "gu"]
         },
         "sameAs": [
-            "https://www.instagram.com/kapadiahighschool"
+            "https://www.instagram.com/kapadiahighschool",
+            "https://www.facebook.com/kapadiahighschool",
+            "https://x.com/kapadiahighschool"
         ]
     }
     </script>
+    {% block structured_data %}{% endblock structured_data %}
     
     <!-- Favicon (only files that exist under static/images/favicon/) -->
     <link rel="apple-touch-icon" href="{% static 'images/favicon/khes.png' %}">

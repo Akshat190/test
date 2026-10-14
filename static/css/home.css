@@ -15,22 +15,7 @@
   background: linear-gradient(90deg, transparent, rgba(0,50,100,0.1), transparent);
 }
 
-.section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 3rem;
-  font-weight: 600;
-  color: #1a1a2e;
-  margin-bottom: 15px;
-  letter-spacing: -0.02em;
-}
-
-.title-underline {
-  height: 4px;
-  width: 80px;
-  background: linear-gradient(90deg, #D4AF37, #E8C547);
-  margin: 0 auto 25px;
-  border-radius: 2px;
-}
+/* .section-title and .title-underline are defined once in base.css. */
 
 .section-description {
   font-size: 1.2rem;
@@ -50,7 +35,7 @@
   padding: 20px;
 }
 
-.about-content h3 {
+.about-content h2 {
   font-family: 'Cormorant Garamond', serif;
   font-size: 2rem;
   font-weight: 600;
@@ -219,7 +204,7 @@
     font-size: 2.2rem;
   }
   
-  .about-content h3 {
+  .about-content h2 {
     font-size: 1.6rem;
   }
 }
@@ -263,7 +248,7 @@
     padding: 20px 0;
   }
   
-  .about-content h3 {
+  .about-content h2 {
     font-size: 1.4rem;
   }
   

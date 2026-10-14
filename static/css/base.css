@@ -233,7 +233,81 @@ h4,
   .view-all-btn, .btn-primary { padding: 12px 24px; font-size: 0.9rem; }
 }
 
-/* Touch target size minimum — scoped to nav/interactive controls only */
+/* Keyboard focus: a two-tone ring, so the indicator is visible on both the
+   white page and the navy header/footer (R-32).
+   Inner #002244 ring = 12.6:1 on white; outer #D4AF37 ring = 7.6:1 on navy.
+   Gold alone on white is only 2.10:1 and would fail, so it never stands alone. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #D4AF37;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px #002244;
+  border-radius: 2px;
+}
+
+/* Shared section typography. One source of truth so every page heading
+   looks like it belongs to the same school. Before this, pages defined
+   .section-title independently at 2.2/2.5/3rem, weights 600/700, three
+   greys, and some inherited the sans body face instead of the display
+   serif. Gold underline is #D4AF37 (the crest colour); facilities.css
+   was using Bootstrap blue #007bff, which belonged to no palette. */
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.9rem, 1.15rem + 2.1vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: #1a1a2e;
+  margin-bottom: 15px;
+}
+
+/* Both underline class names render identically. They were competing
+   variants: gradient vs flat, 60px vs 80px, two different golds. */
+.title-underline,
+.section-underline {
+  height: 4px;
+  width: 80px;
+  max-width: 40%;
+  background: #D4AF37;
+  margin: 0 auto 25px;
+  border-radius: 2px;
+}
+
+/* Initial-based avatar. Where no real portrait has been supplied, the
+   page shows the person's initials rather than a stock face or a
+   third-party placeholder service (which had gone dead, leaving broken
+   images on the testimonials, leadership and alumni pages). */
+.avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: #003264;
+  color: #D4AF37;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+/* Portrait card slot (leadership) fills the image area instead of a circle. */
+.avatar-initials--tall {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  border-radius: 0;
+  font-size: 4rem;
+}
+
+/* Touch target size minimum - scoped to nav/interactive controls only */
 .site-header .nav-link, .site-header .dropdown-item,
 .site-drawer .drawer-link, .gallery-category {
   min-height: 44px;

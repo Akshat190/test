@@ -16,7 +16,7 @@
   left: 0;
   width: 100%;
   height: 5px;
-  background-color: #F4C430;
+  background-color: #D4AF37;
 }
 
 .activities-header .page-title {
@@ -30,12 +30,8 @@
   font-weight: 300;
 }
 
-.title-underline {
-  height: 4px;
-  width: 80px;
-  background-color: #F4C430;
-  margin: 0 auto 25px;
-}
+/* .title-underline is defined once in base.css (gold #D4AF37).
+   This was a second gold, #F4C430, so underlines varied by page. */
 
 /* Introduction Section Styles */
 .intro-section {
@@ -80,19 +76,7 @@
   background-color: #ffffff;
 }
 
-.section-title {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #003264;
-  margin-bottom: 15px;
-}
-
-.section-underline {
-  height: 4px;
-  width: 60px;
-  background-color: #F4C430;
-  margin: 0 auto 25px;
-}
+/* .section-title and .section-underline are defined once in base.css. */
 
 .section-description {
   font-size: 1.1rem;
@@ -159,10 +143,11 @@
 }
 
 .activity-underline {
-  height: 3px;
-  width: 50px;
-  background-color: #F4C430;
-  margin: 0 auto 15px;
+  height: 4px;
+  width: 80px;
+  background-color: #D4AF37;
+  margin: 0 auto 25px;
+  border-radius: 2px;
 }
 
 .activity-info p {

@@ -64,30 +64,34 @@
           </div>
         </div>
       {% empty %}
-        <!-- Default carousel items if no images in database -->
+        {% comment %}
+          Fallback slides shown only while no carousel images are uploaded in
+          the admin. Placeholder art is labelled as such rather than passed off
+          as a photo of the school (R-38). Every button resolves to a real page.
+        {% endcomment %}
         <div class="carousel-item active">
           <div class="carousel-image-container">
-            <img src="{% static 'images/placeholder.jpg' %}" class="carousel-image" alt="School Campus" loading="eager">
+            <img src="{% static 'images/placeholder.jpg' %}" class="carousel-image" alt="Placeholder image: a campus photograph has not been uploaded yet" loading="eager">
           </div>
           <div class="carousel-caption">
             <h2>Welcome to Kapadia High School</h2>
             <p>Nurturing Excellence Since 1956</p>
-            <a href="{% url 'aboutSchool' %}" class="btn carousel-btn">Learn More</a>
+            <a href="{% url 'aboutSchool' %}" class="btn carousel-btn">About Our School</a>
           </div>
         </div>
         <div class="carousel-item">
           <div class="carousel-image-container">
-            <img src="{% static 'images/placeholder.jpg' %}" class="carousel-image" alt="Students" loading="eager">
+            <img src="{% static 'images/placeholder.jpg' %}" class="carousel-image" alt="Placeholder image: a classroom photograph has not been uploaded yet" loading="eager">
           </div>
           <div class="carousel-caption">
             <h2>Excellence in Education</h2>
             <p>Developing Future Leaders</p>
-            <a href="#" class="btn carousel-btn">Our Programs</a>
+            <a href="{% url 'facilities' %}" class="btn carousel-btn">View Facilities</a>
           </div>
         </div>
         <div class="carousel-item">
           <div class="carousel-image-container">
-            <img src="{% static 'images/placeholder.jpg' %}" class="carousel-image" alt="School Activities" loading="eager">
+            <img src="{% static 'images/placeholder.jpg' %}" class="carousel-image" alt="Placeholder image: a school activities photograph has not been uploaded yet" loading="eager">
           </div>
           <div class="carousel-caption">
             <h2>Holistic Development</h2>

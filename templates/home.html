@@ -1,6 +1,25 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Kapadia High School | CBSE &amp; GSEB School in Kalol, Gujarat{% endblock %}
+{% block meta_description %}Kapadia High School, founded 1956, is a co-educational English medium school with five campuses across Gujarat offering CBSE and GSEB education from K-12.{% endblock %}
+{% block og_title %}Kapadia High School | CBSE &amp; GSEB School in Kalol, Gujarat{% endblock %}
+{% block og_description %}Founded 1956. Five campuses across Gujarat offering CBSE and GSEB education from K-12.{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Kapadia High School",
+    "alternateName": "KHS",
+    "url": "https://kapadiahighschool.com/",
+    "publisher": {"@id": "https://kapadiahighschool.com/#organization"},
+    "inLanguage": "en-IN"
+}
+</script>
+{% endblock structured_data %}
+
 {% block page_css %}
 <link href="{% static 'css/home.css' %}" rel="stylesheet">
 <link href="{% static 'css/celebrations.css' %}" rel="stylesheet">
@@ -18,7 +37,7 @@
   <div class="container">
     <div class="row">
       <div class="col-12 text-center mb-4">
-        <h2 class="section-title">About Our School</h2>
+        <h1 class="section-title">Kapadia High School</h1>
         <div class="title-underline"></div>
       </div>
     </div>
@@ -27,16 +46,16 @@
         <div class="about-image-container">
           <img class="img-fluid" loading="lazy"
             src="{% static 'images/placeholder.jpg' %}"
-            alt="Students">
+            alt="Placeholder image: a photograph of the school has not been uploaded yet">
         </div>
       </div>
       <div class="col-12 col-lg-6">
         <div class="about-content">
-          <h3>Excellence in Education Since 1956</h3>
+          <h2>Excellence in Education Since 1956</h2>
           <div class="content-underline"></div>
           <p>Kapadia High School was founded in 1956, starting with a modest group of students eager to learn. Over the years, our institution has grown into a vibrant educational center, nurturing a diverse array of students who shine brightly both locally and internationally.</p>
           <p>Situated in the heart of the community, Kapadia High School is a co-educational English medium school dedicated to fostering academic excellence and personal growth in a supportive environment.</p>
-          <a href="{% url 'aboutSchool' %}" class="view-all-btn mt-3">Learn More</a>
+          <a href="{% url 'aboutSchool' %}" class="view-all-btn mt-3">About Our School</a>
         </div>
       </div>
     </div>

@@ -59,21 +59,12 @@
 
 .campus-body { padding-top: 48px; padding-bottom: 24px; }
 
-/* Section headings */
+/* Section headings: size, weight, colour and typeface come from base.css.
+   Only the centring is campus-specific. */
 .campus-facilities .section-title,
 .campus-docs .section-title {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #1a1a2e;
   text-align: center;
   margin-bottom: 10px;
-}
-.section-underline {
-  height: 4px;
-  width: 80px;
-  background: #D4AF37;
-  margin: 0 auto 32px;
-  border-radius: 2px;
 }
 
 /* Info cards */
@@ -131,11 +122,12 @@
   text-align: center;
   transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
+/* Static tile, not a link: no hover lift, so nothing implies it is clickable. */
 .facility-btn:hover {
-  border-color: #D4AF37;
+  border-color: rgba(0, 50, 100, 0.14);
   color: #003264;
-  transform: translateY(-4px);
-  box-shadow: 0 10px 24px rgba(0, 50, 100, 0.12);
+  transform: none;
+  box-shadow: none;
 }
 
 /* Documents */
@@ -230,8 +222,7 @@
 @media (max-width: 768px) {
   .campus-hero { aspect-ratio: 4 / 3; min-height: 300px; }
   .campus-hero-title { font-size: 2.2rem; }
-  .campus-facilities .section-title,
-  .campus-docs .section-title { font-size: 1.7rem; }
+  /* .section-title needs no size override here: base.css scales it with clamp(). */
   .campus-cta h2 { font-size: 1.5rem; }
 }
 

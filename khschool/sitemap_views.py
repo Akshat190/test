@@ -1,7 +1,6 @@
 from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.sitemaps import Sitemap
-from .models import Celebration, Gallery
 
 
 class StaticViewSitemap(Sitemap):
@@ -34,26 +33,12 @@ class StaticViewSitemap(Sitemap):
         return reverse(item)
 
 
-class CelebrationSitemap(Sitemap):
-    changefreq = 'monthly'
-    priority = 0.6
-
-    def items(self):
-        return Celebration.objects.all()
-
-    def lastmod(self, obj):
-        return obj.date
-
-
-class GallerySitemap(Sitemap):
-    changefreq = 'weekly'
-    priority = 0.6
-
-    def items(self):
-        return Gallery.objects.all()
-
-    def lastmod(self, obj):
-        return obj.date_created
+# Celebrations and galleries have no standalone detail URLs on this site:
+# they render inline on the home and gallery pages. An earlier version
+# listed them as sitemap entries and called obj.get_absolute_url(), which
+# neither model defines, so /sitemap.xml returned HTTP 500 on any site
+# with content. The pages that actually display them are already covered
+# by StaticViewSitemap above.
 
 
 def robots_txt(request):

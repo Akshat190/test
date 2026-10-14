@@ -15,12 +15,8 @@
     font-size: 2.5rem;
 }
 
-.title-underline {
-    height: 3px;
-    width: 80px;
-    background-color: #007bff;
-    margin: 0 auto 20px;
-}
+/* .title-underline is defined once in base.css (gold #D4AF37).
+   This was Bootstrap blue #007bff, which belonged to no palette here. */
 
 .facilities-header .lead {
     color: #6c757d;
@@ -60,19 +56,8 @@
     background-color: #f8f9fa;
 }
 
-.section-title {
-    color: #343a40;
-    font-weight: 700;
-    margin-bottom: 15px;
-    font-size: 2.2rem;
-}
-
-.section-underline {
-    height: 3px;
-    width: 60px;
-    background-color: #007bff;
-    margin: 0 auto 20px;
-}
+/* .section-title and .section-underline are defined once in base.css.
+   The blue #007bff underline here belonged to no palette in this brand. */
 
 .section-description {
     color: #6c757d;
@@ -99,7 +84,7 @@
 .facility-icon {
     width: 70px;
     height: 70px;
-    background-color: #007bff;
+    background-color: #003264;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -306,7 +291,7 @@
 .other-facility .facility-icon {
     width: 60px;
     height: 60px;
-    background-color: #007bff;
+    background-color: #003264;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -366,7 +351,7 @@
 
 .btn-primary.tour-btn {
     background-color: #fff;
-    color: #007bff;
+    color: #003264;
     border: none;
 }
 
@@ -383,7 +368,7 @@
 
 .btn-outline-primary.tour-btn:hover {
     background-color: #fff;
-    color: #007bff;
+    color: #003264;
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }

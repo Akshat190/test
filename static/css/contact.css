@@ -41,19 +41,7 @@
     padding: 80px 0 50px;
 }
 
-.section-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #374151;
-    margin-bottom: 15px;
-}
-
-.section-underline {
-    height: 4px;
-    width: 80px;
-    background-color: #F4C430;
-    margin: 0 auto 25px;
-}
+/* .section-title and .section-underline are defined once in base.css. */
 
 .section-description {
     font-size: 1.2rem;
@@ -170,10 +158,12 @@
     transition: all 0.3s ease;
 }
 
+/* Navy ring: #4DA8DA on white is only 2.65:1 and fails the 3:1 bar. */
 .form-control:focus {
-    border-color: #4DA8DA;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(77, 168, 218, 0.2);
+    border-color: #003264;
+    outline: 2px solid #003264;
+    outline-offset: 2px;
+    box-shadow: none;
 }
 
 .btn-submit {

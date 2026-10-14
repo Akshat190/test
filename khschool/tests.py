@@ -81,6 +81,21 @@ class SiteMapTests(TestCase):
         response = self.client.get('/sitemap.xml')
         self.assertEqual(response.status_code, 200)
 
+    def test_sitemap_with_content(self):
+        """Regression: /sitemap.xml used to 500 once any Celebration or
+        Gallery existed, because the sitemap called get_absolute_url()
+        which neither model defines. An empty test DB hid it, so this
+        test deliberately creates content first."""
+        from django.utils import timezone
+        from .models import Celebration, Gallery
+        Celebration.objects.create(festivalname='Sitemap Regression',
+                                   date=timezone.now())
+        Gallery.objects.create(name='Sitemap Regression Gallery',
+                               category='event')
+        response = self.client.get('/sitemap.xml')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<loc>')
+
     def test_robots_txt(self):
         response = self.client.get('/robots.txt')
         self.assertEqual(response.status_code, 200)

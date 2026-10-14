@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}School Gallery - Kapadia High School{% endblock %}
+{% block meta_description %}Photo galleries and celebration albums from Kapadia High School: festivals, sports days, cultural events and campus life across our five campuses.{% endblock %}
+
 {% block content %}
   <div class="gallery-header">
     <div class="container">
@@ -102,7 +105,7 @@
                   {% endwith %}
                 </div>
                 <div class="gallery-caption">
-                  <p>{{ celebration.festivalname }} — {{ celebration.date|date:"d M Y" }}</p>
+                  <p>{{ celebration.festivalname }} <span class="gallery-caption-date">{{ celebration.date|date:"d M Y" }}</span></p>
                 </div>
                 <script type="application/json" class="album-photos">{"title": "{{ celebration.festivalname|escapejs }}", "photos": [{% with img_url=celebration.get_image_url %}{% if img_url or celebration.photo_count > 0 %}{% if img_url %}{"src": "{{ img_url|escapejs }}", "alt": "{{ celebration.festivalname|escapejs }}"}{% if celebration.photo_count > 0 %},{% endif %}{% endif %}{% for photo in celebration.additional_photos %}{"src": "{{ photo.get_photo_url|escapejs }}", "alt": "{{ photo.caption|default:celebration.festivalname|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}{% else %}{"src": "{% static 'images/placeholder.jpg' %}", "alt": "{{ celebration.festivalname|escapejs }}"}{% endif %}{% endwith %}]}</script>
               </div>
@@ -161,6 +164,8 @@
   }
   .gallery-caption { padding: 10px 15px; color: #4B5563; font-size: 0.9rem; border-top: 1px solid #E5E7EB; }
   .gallery-caption p { margin: 0; }
+  .gallery-caption-date { color: #6B7280; font-size: 0.85rem; }
+  .gallery-caption-date::before { content: "· "; }
   .filter-empty { text-align: center; padding: 30px 20px; color: #6B7280; font-size: 1.05rem; }
   .section-title { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 600; color: #1a1a2e; margin-bottom: 15px; }
   .section-description { font-size: 1.1rem; color: #4B5563; max-width: 700px; margin: 0 auto 40px; }
