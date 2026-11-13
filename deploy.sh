@@ -34,7 +34,7 @@ echo "  OK"
 echo "[5/7] Restarting new Django..."
 sudo systemctl restart khs-new.service
 for i in $(seq 1 30); do
-  curl -fsS -o /dev/null http://127.0.0.1:8001/health/ && break
+  curl -fsS -o /dev/null http://127.0.0.1:8001/health/ 2>/dev/null && break
   sleep 1
 done
 curl -fsS -o /dev/null http://127.0.0.1:8001/health/ || { echo "  FAILED: Django not healthy on 8001"; exit 1; }
