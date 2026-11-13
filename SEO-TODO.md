@@ -19,7 +19,8 @@ Baseline audit: 2026-11-13. 19 indexable URLs, all 200, self-canonical, one H1 e
 - [x] Campus pages now 354–379 words (were 169–182)
 - [ ] Deeper local copy (landmarks, transport routes, founding year per campus,
       student numbers) — needs facts from the school, cannot be invented
-- [ ] Campus disclosure documents uploaded in admin (page renders an empty state today)
+- [x] Campus disclosure documents registered (16 CBSE PDFs on Chhatral) —
+      campus pages and `/disclosures/` now list them
 
 ## Phase 3 — images and speed — DONE except content
 
