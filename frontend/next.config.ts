@@ -5,6 +5,7 @@ import type { NextConfig } from 'next';
 const DJANGO = (process.env.DJANGO_URL ?? 'http://127.0.0.1:8000').replace(/\/$/, '');
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   trailingSlash: true,
   turbopack: { root: process.cwd() },
   // Images, PDFs and CSS-referenced assets stay owned by Django/nginx. In dev

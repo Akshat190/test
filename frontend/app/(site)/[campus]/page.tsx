@@ -11,6 +11,9 @@ import '@/css/campus.css';
 
 export const dynamicParams = false;
 
+// JSON.stringify leaves `<` intact, which lets a `</script>` in DB text break out.
+const jsonLd = (data: unknown) => JSON.stringify(data).replace(/</g, '\\u003c');
+
 export function generateStaticParams() {
   return CAMPUS_SLUGS.map((campus) => ({ campus }));
 }
@@ -66,8 +69,8 @@ export default async function CampusPage({ params }: { params: Promise<{ campus:
 
   return (
     <PageShell>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(campusSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(campusSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }} />
 
       <section className={`campus-hero ${info.photo_url || info.hero_image ? '' : 'campus-hero-no-image'}`.trim()}>
         {(info.photo_url || info.hero_image) && (
