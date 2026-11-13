@@ -124,6 +124,15 @@ class FormValidationTests(TestCase):
 
 
 class ModelTests(TestCase):
+    def setUp(self):
+        import tempfile
+        from django.test import override_settings
+
+        self._media = tempfile.mkdtemp()
+        self._override = override_settings(MEDIA_ROOT=self._media)
+        self._override.enable()
+        self.addCleanup(self._override.disable)
+
     def test_gallery_image_creates_a_grid_thumbnail(self):
         from io import BytesIO
         from PIL import Image
