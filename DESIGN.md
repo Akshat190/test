@@ -150,6 +150,10 @@ staff using the admin on older hardware:
 Hover transitions 150–300ms ease-out. Focus transitions 100ms. Nothing else moves on its
 own. `@media (prefers-reduced-motion: reduce)` disables transitions entirely.
 
+**Exception:** the homepage carousel may advance every 6 seconds, because it is the page's
+primary content. It pauses on hover and focus, has a visible pause/play control, and does
+not start under `prefers-reduced-motion`.
+
 ## Component rules
 
 - **Cards** are for items of genuinely equal weight (a gallery of albums, a grid of campuses).
@@ -160,3 +164,29 @@ own. `@media (prefers-reduced-motion: reduce)` disables transitions entirely.
 - **No dead controls.** If an element has no destination and no behaviour, it does not render.
   A tile that cannot be clicked is a label, not a link (R-26).
 - **Every navigation item resolves** to a real page. Nothing points to `#` (R-24).
+
+---
+
+## Polish pass decisions (Next.js, 2026)
+
+These refine the rules above without changing the palette, type or dials.
+
+- **One gold.** `#D4AF37` everywhere. `#F4C430` is retired, including date badges,
+  page-title icons and old hover states. `#4DA8DA` (Bootstrap blue) is gone.
+- **Sentence case.** Buttons, labels and section headings use sentence case with
+  normal tracking. No uppercase-with-tracking labels and no uppercase CTAs.
+- **No autoplay.** The homepage carousel is manual: arrows, dots and keyboard,
+  no timer. This matches MOTION 1.
+- **Icons identify, not decorate.** No icon before a page title. Icons remain only
+  where they name a contact method, campus fact or document type, at one size and
+  colour.
+- **Left-aligned section headers.** Centered headings are reserved for short page
+  heroes. Section underlines start at the left edge.
+- **Quiet hover.** Hover changes border, surface or colour. No lift, scale, glow
+  or coloured shadow.
+- **One accent per screen.** Gold marks the primary action and the section rule.
+  Everything else is navy, ink or cream.
+- **Real evidence.** Missing content renders an honest empty state, not fake
+  dates, names or placeholder stock art. Campus photography is the visual.
+- **Framework.** No Bootstrap. `frontend/css/ui.css` carries the grid, utilities
+  and component geometry; nav, carousel and modal behaviour is React state.

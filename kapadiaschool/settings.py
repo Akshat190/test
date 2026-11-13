@@ -190,6 +190,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
+    # Single copy of the stylesheets, also imported by the Next.js app.
+    ('css', BASE_DIR / 'frontend' / 'css'),
 ]
 
 STATIC_ROOT = os.environ.get('STATIC_ROOT', os.path.join(BASE_DIR, 'staticfiles'))

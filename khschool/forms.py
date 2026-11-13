@@ -150,7 +150,7 @@ class CampusForm(forms.ModelForm):
 
     class Meta:
         model = Campus
-        fields = ['slug', 'name', 'board', 'affiliation_number', 'timings', 'photo', 'is_active']
+        fields = ['slug', 'name', 'board', 'affiliation_number', 'timings', 'address', 'photo', 'is_active']
 
 
 class GalleryForm(forms.ModelForm):

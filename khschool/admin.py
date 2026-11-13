@@ -113,16 +113,7 @@ class UserAdmin(BaseUserAdmin):
         return qs.filter(id=request.user.id)
 
     def save_formset(self, request, form, formset, change):
-        instances = formset.save(commit=False)
-        for instance in instances:
-            if isinstance(instance, UserProfile):
-                UserProfile.objects.get_or_create(
-                    user=instance.user,
-                    defaults={'role': instance.role}
-                )
-            else:
-                instance.save()
-        formset.save_m2m()
+        super().save_formset(request, form, formset, change)
 
 
 admin.site.unregister(User)
@@ -161,7 +152,7 @@ class CampusAdmin(admin.ModelAdmin):
     def get_fields(self, request, obj=None):
         if request.user.is_superuser or is_admin_or_higher(request.user):
             return ['slug', 'name', 'board', 'affiliation_number', 'timings',
-                    'photo', 'is_active', 'bulk_documents']
+                    'address', 'photo', 'is_active', 'bulk_documents']
         if is_photo_editor(request.user):
             return ['name', 'photo']
         if is_document_editor(request.user):
@@ -175,7 +166,7 @@ class CampusAdmin(admin.ModelAdmin):
             return ['name']
         if is_document_editor(request.user):
             return ['name']
-        return ['slug', 'name', 'board', 'affiliation_number', 'timings', 'photo', 'is_active']
+        return ['slug', 'name', 'board', 'affiliation_number', 'timings', 'address', 'photo', 'is_active']
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)

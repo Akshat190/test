@@ -1,0 +1,515 @@
+/* Team Page Styles - Enhanced with Faculty Data */
+
+/* Page Header Styles */
+.team-header {
+    background: linear-gradient(135deg, #003264 0%, #002244 100%);
+    color: #ffffff;
+    padding: 60px 0;
+    border-bottom: 5px solid #D4AF37;
+}
+
+.page-title {
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 2.5rem;
+}
+
+.title-underline {
+    height: 3px;
+    width: 80px;
+    background-color: #D4AF37;
+    margin: 0 auto 20px;
+}
+
+.team-header .lead {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Introduction Section Styles */
+.intro-section {
+    padding: 20px 0 50px;
+}
+
+.intro-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.intro-content p {
+    color: #495057;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+/* Team Section Styles */
+.team-section {
+    padding: 60px 0;
+}
+
+.leadership-section {
+    background-color: #f8f9fa;
+}
+
+.faculty-section {
+    background-color: #ffffff;
+}
+
+.support-section {
+    background-color: #f8f9fa;
+}
+
+.section-title {
+    color: #003264;
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 2.2rem;
+}
+
+.section-underline {
+    height: 3px;
+    width: 60px;
+    background-color: #D4AF37;
+    margin: 0 auto 20px;
+}
+
+.section-description {
+    color: #6c757d;
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Team Card Styles */
+.team-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-card:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.team-image {
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.team-image img {
+    width: 100%;
+    transition: transform 0.5s ease;
+}
+
+.team-card:hover .team-image img {
+}
+
+.team-info {
+    padding: 25px 20px;
+}
+
+.team-info h3 {
+    color: #003264;
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.team-position {
+    color: #D4AF37;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.team-underline {
+    height: 2px;
+    width: 50px;
+    background-color: #dee2e6;
+    margin-bottom: 15px;
+}
+
+.team-info p {
+    color: #495057;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.team-contact {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.team-contact .icon {
+    color: #D4AF37;
+    margin-right: 5px;
+}
+
+/* Department Card Styles */
+.department-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.department-card:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.department-header {
+    background-color: #003264;
+    color: #ffffff;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.department-icon {
+    width: 50px;
+    height: 50px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: #003264;
+    font-size: 1.5rem;
+}
+
+.department-header h3 {
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.department-content {
+    padding: 20px;
+}
+
+/* Team List Styles */
+.team-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.team-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.team-item:last-child {
+    border-bottom: none;
+}
+
+.team-name {
+    display: block;
+    color: #003264;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.team-role {
+    display: block;
+    color: #D4AF37;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+}
+
+.team-qualification {
+    display: block;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* Join Section Styles */
+.join-section {
+    background-color: #003264;
+    color: #fff;
+    padding: 50px 0;
+    margin-top: 40px;
+}
+
+.join-section h2 {
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.join-section p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 0;
+    opacity: 0.9;
+}
+
+.join-btn {
+    background-color: #D4AF37;
+    color: #003264;
+    border: none;
+    padding: 12px 30px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.join-btn:hover {
+    background-color: #e5b52b;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991px) {
+    .team-image {
+        margin-bottom: 20px;
+    }
+    
+    .join-section {
+        text-align: center;
+    }
+    
+    .join-btn {
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .team-card {
+        margin-bottom: 30px;
+    }
+    
+    .team-info h3 {
+        font-size: 1.3rem;
+    }
+    
+    .department-header h3 {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .team-header {
+        padding: 40px 0;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+    }
+    
+    .intro-content {
+        padding: 20px;
+    }
+    
+    .team-card, .department-card {
+        padding: 15px;
+    }
+    
+    .department-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .department-icon .icon {
+        font-size: 1.2rem;
+    }
+}
+
+/* ============================================
+   FACULTY DIRECTORY STYLES (New Section)
+   ============================================ */
+
+/* Filter Buttons */
+.faculty-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+.faculty-filter-btn {
+    background: transparent;
+    border: 2px solid var(--primary-navy, #003264);
+    color: var(--primary-navy, #003264);
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.faculty-filter-btn:hover,
+.faculty-filter-btn.active {
+    background: var(--primary-navy, #003264);
+    color: #fff;
+}
+
+/* Faculty Card Enhanced */
+.faculty-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 50, 100, 0.08);
+    overflow: hidden;
+    height: 100%;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(0, 50, 100, 0.06);
+}
+
+.faculty-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 50, 100, 0.15);
+    border-color: rgba(212, 175, 55, 0.3);
+}
+
+.faculty-card-header {
+    background: linear-gradient(135deg, #003264 0%, #002244 100%);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.faculty-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #D4AF37 0%, #E8C547 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 2.5rem;
+    color: #003264;
+    font-weight: 600;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+}
+
+.faculty-branch-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(212, 175, 55, 0.9);
+    color: #003264;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.faculty-card-body {
+    padding: 20px;
+}
+
+.faculty-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.faculty-designation {
+    text-align: center;
+    color: #D4AF37;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+
+.faculty-details {
+    display: grid;
+    gap: 10px;
+}
+
+.faculty-detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.faculty-detail-item .icon {
+    color: #D4AF37;
+    margin-top: 3px;
+    width: 16px;
+}
+
+.faculty-detail-item span {
+    flex: 1;
+}
+
+.faculty-achievements {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.achievement-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+      letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.achievement-text {
+    font-size: 0.85rem;
+    color: #1a1a2e;
+    line-height: 1.5;
+}
+
+/* Department Section Header */
+.dept-section-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    background: linear-gradient(135deg, #003264 0%, #002244 100%);
+    border-radius: 16px;
+    color: #fff;
+}
+
+.dept-section-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.dept-section-header .dept-count {
+    color: #D4AF37;
+    font-size: 0.9rem;
+}
+
+/* Faculty Grid */
+.faculty-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+}

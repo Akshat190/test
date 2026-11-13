@@ -46,7 +46,7 @@
 <section class="campus-hero">
   {% if info.photo_url %}
     <img src="{{ info.photo_url }}" alt="{{ info.name }} Campus" class="campus-hero-img" loading="eager" fetchpriority="high">
-  {% else %}
+  {% elif info.hero_image %}
     <img src="{% static info.hero_image %}" alt="{{ info.name }} Campus" class="campus-hero-img" loading="eager" fetchpriority="high" onerror="this.onerror=null;this.src='{% static 'images/placeholder.jpg' %}';">
   {% endif %}
   <div class="campus-hero-scrim" aria-hidden="true"></div>

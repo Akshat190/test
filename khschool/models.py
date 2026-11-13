@@ -253,6 +253,7 @@ class Campus(CompressedImageMixin, models.Model):
     board = models.CharField(max_length=20, blank=True, verbose_name='Board')
     affiliation_number = models.CharField(max_length=50, blank=True, verbose_name='Affiliation Number')
     timings = models.CharField(max_length=100, blank=True, verbose_name='Timings')
+    address = models.CharField(max_length=255, blank=True, verbose_name='Address')
     photo = models.ImageField(
         upload_to='campus/photos/',
         blank=True,
@@ -312,6 +313,7 @@ class CarouselImage(CompressedImageMixin, models.Model):
         ('/chattral/', 'Chattral Campus'),
         ('/iffco/', 'IFFCO Campus'),
         ('/kadi/', 'Kadi Campus'),
+        ('/shela/', 'Shela Campus'),
         ('#', 'No Link (Stay on Page)'),
     ]
     

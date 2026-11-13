@@ -1,7 +1,9 @@
+import json
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import UserProfile, ContactSubmission
+from django.utils import timezone
+from .models import UserProfile, ContactSubmission, Campus, Celebration, Gallery, CarouselImage
 
 
 class BasicViewTests(TestCase):
@@ -100,3 +102,102 @@ class SiteMapTests(TestCase):
         response = self.client.get('/robots.txt')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Disallow')
+
+
+class ApiTests(TestCase):
+    """The Next.js frontend reads these four lists and posts the contact form."""
+
+    def setUp(self):
+        self.campus = Campus.objects.create(
+            slug='chattral', name='Chhatral', board='CBSE',
+            affiliation_number='430302', timings='8:00 am to 2:00 pm',
+        )
+        self.gallery = Gallery.objects.create(name='Sports Day', category='sports')
+        self.celebration = Celebration.objects.create(
+            festivalname='Diwali', date=timezone.now(), campus=self.campus,
+        )
+        CarouselImage.objects.create(title='Slide', order=1)
+
+    def test_list_endpoints_return_json_arrays(self):
+        for path in ('/api/carousel/', '/api/celebrations/', '/api/galleries/', '/api/campuses/'):
+            response = self.client.get(path)
+            self.assertEqual(response.status_code, 200, path)
+            self.assertIsInstance(response.json(), list, path)
+
+    def test_content_shapes(self):
+        celebration = self.client.get('/api/celebrations/').json()[0]
+        self.assertEqual(celebration['festivalname'], 'Diwali')
+        self.assertEqual(celebration['campus']['slug'], 'chattral')
+        self.assertEqual(celebration['photo_count'], 0)
+
+        gallery = self.client.get('/api/galleries/').json()[0]
+        self.assertEqual(gallery['name'], 'Sports Day')
+        self.assertEqual(gallery['image_count'], 0)
+
+        campus = self.client.get('/api/campuses/').json()[0]
+        self.assertEqual(campus['slug'], 'chattral')
+        self.assertEqual(campus['documents'], [])
+
+    def test_contact_post_saves_and_links_campus(self):
+        response = self.client.post(
+            '/api/contact/',
+            data=json.dumps({
+                'name': 'Test Parent',
+                'email': 'parent@example.com',
+                'phone': '1234567890',
+                'campus': self.campus.id,
+                'subject': 'Admission',
+                'message': 'Please share the fee structure.',
+            }),
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 200)
+        submission = ContactSubmission.objects.get()
+        self.assertEqual(submission.campus, self.campus)
+
+    def test_contact_post_rejects_incomplete_payload(self):
+        response = self.client.post(
+            '/api/contact/',
+            data=json.dumps({'name': '', 'email': 'bad'}),
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 400)
+        errors = response.json()['errors']
+        self.assertIn('email', errors)
+        self.assertIn('message', errors)
+        self.assertEqual(ContactSubmission.objects.count(), 0)
+
+    def test_campus_detail_merges_admin_fields_and_defaults(self):
+        response = self.client.get('/api/campus/chattral/')
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data['board'], 'CBSE')
+        self.assertEqual(data['affiliation_number'], '430302')
+        self.assertEqual(data['documents'], [])
+
+        fallback = self.client.get('/api/campus/shela/').json()
+        self.assertEqual(fallback['name'], 'Shela')
+        self.assertEqual(fallback['affiliation_label'], 'Contact number')
+        self.assertEqual(fallback['hero_image'], 'image/Shela-school-image.jpeg')
+        self.assertIn('Anand Elegance', fallback['address'])
+
+        self.assertEqual(self.client.get('/api/campus/unknown/').status_code, 404)
+
+    def test_campus_address_from_admin(self):
+        self.campus.address = 'Station Road, Chhatral'
+        self.campus.save()
+        detail = self.client.get('/api/campus/chattral/').json()
+        self.assertEqual(detail['address'], 'Station Road, Chhatral')
+        listed = self.client.get('/api/campuses/').json()[0]
+        self.assertEqual(listed['address'], 'Station Road, Chhatral')
+
+    def test_config_lists_category_and_type_choices(self):
+        data = self.client.get('/api/config/').json()
+        categories = [item['value'] for item in data['gallery_categories']]
+        types = [item['value'] for item in data['celebration_types']]
+        self.assertIn('sports', categories)
+        self.assertIn('festival', types)
+        self.assertEqual(len(categories), len(Gallery.CATEGORY_CHOICES))
+
+    def test_contact_get_is_not_allowed(self):
+        self.assertEqual(self.client.get('/api/contact/').status_code, 405)
