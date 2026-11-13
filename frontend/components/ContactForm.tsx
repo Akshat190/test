@@ -21,6 +21,7 @@ export default function ContactForm({ campuses }: { campuses: Campus[] }) {
     campus: '',
     subject: '',
     message: '',
+    website: '',
   });
   const [errors, setErrors] = useState<Errors>({});
   const [success, setSuccess] = useState(false);
@@ -50,7 +51,7 @@ export default function ContactForm({ campuses }: { campuses: Campus[] }) {
       }
 
       setSuccess(true);
-      setValues({ name: '', email: '', phone: '', campus: '', subject: '', message: '' });
+      setValues({ name: '', email: '', phone: '', campus: '', subject: '', message: '', website: '' });
     } catch {
       setErrors({ __all__: ['Could not send your message. Please try again.'] });
     } finally {
@@ -82,6 +83,20 @@ export default function ContactForm({ campuses }: { campuses: Campus[] }) {
       </div>
 
       <form className="contact-form" method="post" action="/contact/" onSubmit={onSubmit} noValidate>
+        {/* Honeypot: hidden from people, bots fill it and the server drops the message. */}
+        <div className="hp-field" aria-hidden="true">
+          <label htmlFor="website">Website</label>
+          <input
+            id="website"
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={values.website}
+            onChange={set('website')}
+          />
+        </div>
+
         {REQUIRED.map((input) => (
           <div key={input.field} className="form-group">
             <label htmlFor={input.field}>

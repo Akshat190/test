@@ -240,6 +240,25 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = int(os.environ.get(
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# Email — configured only when EMAIL_HOST is set. The contact form still saves
+# without it, and notifications.py logs a warning instead of failing.
+EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
+if EMAIL_HOST:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+    EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
+    EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'False').lower() == 'true'
+    EMAIL_TIMEOUT = int(os.environ.get('EMAIL_TIMEOUT', '10'))
+
+DEFAULT_FROM_EMAIL = os.environ.get(
+    'DEFAULT_FROM_EMAIL', 'Kapadia High School <website@kapadiahighschool.com>'
+)
+# Where new website enquiries are sent. Blank disables notifications.
+CONTACT_NOTIFY_EMAIL = os.environ.get('CONTACT_NOTIFY_EMAIL', '')
+
+
 # Logging Configuration — file handler auto-disabled in Docker/containerized env
 _use_file_logging = not os.environ.get('DISABLE_FILE_LOGGING', '').lower() in ('true', '1')
 
@@ -283,8 +302,10 @@ if _use_file_logging:
     _os.makedirs(_log_dir, exist_ok=True)
     LOGGING['handlers']['file'] = {
         'level': 'WARNING',
-        'class': 'logging.FileHandler',
+        'class': 'logging.handlers.RotatingFileHandler',
         'filename': _os.path.join(_log_dir, 'django.log'),
+        'maxBytes': 5 * 1024 * 1024,
+        'backupCount': 3,
         'formatter': 'verbose',
     }
     for _logger in LOGGING['loggers'].values():

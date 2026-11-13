@@ -37,6 +37,7 @@ export default function Footer() {
               <li><Link href="/success-stories/"><Icon name="chevron-right" /> Success Stories</Link></li>
               <li><Link href="/institutional-goals/"><Icon name="chevron-right" /> Institutional Goals</Link></li>
               <li><Link href="/brief/"><Icon name="chevron-right" /> Executive Brief</Link></li>
+              <li><Link href="/disclosures/"><Icon name="chevron-right" /> Mandatory Disclosure</Link></li>
               <li><Link href="/gallery/"><Icon name="chevron-right" /> Gallery</Link></li>
             </ul>
           </div>

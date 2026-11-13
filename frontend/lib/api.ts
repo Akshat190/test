@@ -6,6 +6,7 @@ import type {
   Gallery,
   SiteConfig,
 } from './types';
+import { CAMPUS_SLUGS } from './campus';
 
 // Django owns content and uploads; this is the same origin in production and
 // 127.0.0.1:8000 in local dev. Revalidate matches the old 15-minute page cache.
@@ -30,7 +31,14 @@ async function getList<T>(path: string): Promise<T[]> {
 export const getCarousel = () => getList<CarouselImage>('/api/carousel/');
 export const getCelebrations = () => getList<Celebration>('/api/celebrations/');
 export const getGalleries = () => getList<Gallery>('/api/galleries/');
-export const getCampuses = () => getList<Campus>('/api/campuses/');
+// The campuses list returns display slugs ("IFFCO-Township"); routes are lowercase.
+const canonicalSlug = (slug: string) =>
+  CAMPUS_SLUGS.find((known) => slug.toLowerCase().startsWith(known)) ?? slug.toLowerCase();
+
+export const getCampuses = async (): Promise<Campus[]> => {
+  const campuses = await getList<Campus>('/api/campuses/');
+  return campuses.map((campus) => ({ ...campus, slug: canonicalSlug(campus.slug) }));
+};
 
 export async function getConfig(): Promise<SiteConfig> {
   try {

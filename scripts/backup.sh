@@ -1,34 +1,24 @@
 #!/bin/bash
-# Backup script for Kapadia High School Website
-# Run this daily via cron: 0 2 * * * /home/deploy/test/scripts/backup.sh
+# Manual backup: database dump + media archive.
+# Usage: sudo ./scripts/backup.sh   (no cron; run it whenever you want a copy)
+set -euo pipefail
 
-set -e
+PROJECT_DIR="/home/deploy/new-codebase"
+DEST="/home/deploy/backups/daily"
+STAMP="$(date +%Y%m%d-%H%M)"
 
-BACKUP_DIR="/home/deploy/backups"
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-DB_NAME="kapadiaschool_db"
-DB_USER="kapadiaschool_user"
-RETENTION_DAYS=7
+mkdir -p "$DEST" || { echo "ERROR: cannot create $DEST — run with sudo" >&2; exit 1; }
 
-# Create backup directory
-mkdir -p "$BACKUP_DIR/db"
-mkdir -p "$BACKUP_DIR/media"
+DATABASE_URL="$(grep -E '^DATABASE_URL=' "$PROJECT_DIR/.env" | cut -d= -f2- | tr -d '"')"
+if [ -z "$DATABASE_URL" ]; then
+  echo "ERROR: DATABASE_URL not found in $PROJECT_DIR/.env" >&2
+  exit 1
+fi
 
-echo "Starting backup at $(date)"
+echo "[$(date -Is)] database dump"
+pg_dump "$DATABASE_URL" | gzip > "$DEST/db-$STAMP.sql.gz"
 
-# Database backup
-echo "Backing up database..."
-pg_dump -h 127.0.0.1 -p 5433 -U "$DB_USER" -d "$DB_NAME" -Fc > "$BACKUP_DIR/db/${DB_NAME}_${TIMESTAMP}.dump"
+echo "[$(date -Is)] media archive"
+tar czf "$DEST/gallery-$STAMP.tar.gz" -C /home/deploy/test gallery
 
-# Media files backup
-echo "Backing up media files..."
-tar -czf "$BACKUP_DIR/media/media_${TIMESTAMP}.tar.gz" -C /home/deploy/test gallery/
-
-# Clean old backups (keep last 7 days)
-echo "Cleaning old backups..."
-find "$BACKUP_DIR/db" -name "*.dump" -mtime +$RETENTION_DAYS -delete
-find "$BACKUP_DIR/media" -name "*.tar.gz" -mtime +$RETENTION_DAYS -delete
-
-echo "Backup completed at $(date)"
-echo "Database: $BACKUP_DIR/db/${DB_NAME}_${TIMESTAMP}.dump"
-echo "Media: $BACKUP_DIR/media/media_${TIMESTAMP}.tar.gz"
+echo "[$(date -Is)] done: $(du -sh "$DEST" | cut -f1) in $DEST"

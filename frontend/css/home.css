@@ -1,4 +1,4 @@
-.campus-strip-section {
+﻿.campus-strip-section {
   background: #fff;
   padding: 64px 0;
 }
@@ -294,3 +294,4 @@
 @media (hover: none) and (pointer: coarse) {
   .gallery-overlay { opacity: 1; background: linear-gradient(to top, rgba(0, 34, 68, 0.7), transparent 55%); align-items: flex-end; justify-content: flex-end; padding: 12px; }
 }
+

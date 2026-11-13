@@ -1,8 +1,11 @@
+import csv
+
 from django.contrib import admin
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.db.models import Max
+from django.http import HttpResponse
 from khschool.models import (
     Celebration, CarouselImage, CelebrationPhoto, Gallery, GalleryImage,
     Campus, CampusDocument, Role, UserProfile, ContactSubmission,
@@ -622,6 +625,38 @@ class ContactSubmissionAdmin(admin.ModelAdmin):
     list_editable = ('is_read',)
     date_hierarchy = 'created_at'
     ordering = ['-created_at']
+    list_per_page = 50
+    actions = ['mark_read', 'mark_unread', 'export_csv']
+
+    @admin.action(description='Mark selected enquiries as read')
+    def mark_read(self, request, queryset):
+        updated = queryset.update(is_read=True)
+        self.message_user(request, f'{updated} enquiry(s) marked as read.')
+
+    @admin.action(description='Mark selected enquiries as unread')
+    def mark_unread(self, request, queryset):
+        updated = queryset.update(is_read=False)
+        self.message_user(request, f'{updated} enquiry(s) marked as unread.')
+
+    @admin.action(description='Export selected enquiries as CSV')
+    def export_csv(self, request, queryset):
+        rows = queryset.select_related('campus').order_by('-created_at')
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="enquiries.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['Received', 'Name', 'Email', 'Phone', 'Campus', 'Subject', 'Message', 'Read'])
+        for enquiry in rows:
+            writer.writerow([
+                enquiry.created_at.strftime('%Y-%m-%d %H:%M'),
+                enquiry.name,
+                enquiry.email,
+                enquiry.phone,
+                enquiry.campus.name if enquiry.campus else '',
+                enquiry.subject,
+                enquiry.message,
+                'yes' if enquiry.is_read else 'no',
+            ])
+        return response
 
     def has_add_permission(self, request):
         return False

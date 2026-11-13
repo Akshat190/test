@@ -12,6 +12,9 @@ export default function SmartImage({ className = '', onLoad, onError, ...props }
     if (ref.current?.complete) setLoaded(true);
   }, []);
 
+  // An empty src makes the browser re-download the current page.
+  if (!props.src) return null;
+
   return (
     <img
       ref={ref}

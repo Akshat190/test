@@ -206,7 +206,8 @@ export default function GalleryScripts() {
       <button type="button" className="lightbox-close" data-lightbox-close aria-label="Close photo viewer">&times;</button>
       <button type="button" className="lightbox-nav lightbox-prev" data-lightbox-prev aria-label="Previous photo">&#10094;</button>
       <figure className="lightbox-figure">
-        <img className="lightbox-img" id="lightboxImg" src="" alt="" />
+        {/* src is set by the lightbox script when a photo opens */}
+        <img className="lightbox-img" id="lightboxImg" alt="" />
         <figcaption className="lightbox-meta">
           <span className="lightbox-counter" id="lightboxCounter"></span>
           <span className="lightbox-caption" id="lightboxCaption"></span>

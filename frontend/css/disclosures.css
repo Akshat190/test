@@ -1,0 +1,100 @@
+/* Mandatory disclosure page — grouped per campus. */
+
+.disclosures-body { padding: 56px 0 72px; }
+.disclosures-intro { max-width: 70ch; color: #4a5568; margin-bottom: 34px; }
+
+.disclosure-group {
+  background: #fff;
+  border: 1px solid rgba(0, 50, 100, 0.1);
+  border-radius: 12px;
+  padding: 24px 24px 18px;
+  margin-bottom: 22px;
+}
+.disclosure-group-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.disclosure-group-head h2 {
+  font-size: 1.35rem;
+  color: #003264;
+  margin: 0;
+}
+.disclosure-board {
+  background: rgba(212, 175, 55, 0.16);
+  color: #6d5514;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 999px;
+  padding: 2px 11px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.disclosure-campus-link {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #003264;
+  text-decoration: none;
+}
+.disclosure-campus-link .icon { width: 15px; height: 15px; }
+.disclosure-campus-link:hover { color: #8a6d1f; }
+.disclosure-meta { margin: 10px 0 0; font-size: 0.86rem; color: #5a6474; }
+
+.disclosure-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 6px;
+  display: grid;
+  gap: 8px;
+}
+.disclosure-list li > a,
+.disclosure-missing {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 8px 14px;
+  border: 1px solid rgba(0, 50, 100, 0.1);
+  border-radius: 8px;
+  text-decoration: none;
+  color: #22303f;
+  font-size: 0.94rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.disclosure-list li > a:hover {
+  border-color: #D4AF37;
+  background: rgba(212, 175, 55, 0.07);
+}
+.disclosure-list .icon { width: 18px; height: 18px; color: #b23a48; flex-shrink: 0; }
+.disclosure-open {
+  margin-left: auto;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #003264;
+}
+.disclosure-missing { color: #6b7280; }
+.disclosure-missing .disclosure-open { color: #9aa1ab; }
+
+.disclosures-empty {
+  max-width: 60ch;
+  background: #fff;
+  border: 1px dashed rgba(0, 50, 100, 0.2);
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+}
+.disclosures-empty .icon { width: 34px; height: 34px; color: #b23a48; }
+.disclosures-empty h2 { font-size: 1.3rem; margin: 12px 0 8px; color: #003264; }
+.disclosures-empty p { margin: 0; color: #4a5568; }
+
+@media (max-width: 767.98px) {
+  .disclosures-body { padding: 36px 0 52px; }
+  .disclosure-group { padding: 18px 16px 12px; }
+  .disclosure-campus-link { margin-left: 0; }
+}

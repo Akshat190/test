@@ -5,6 +5,7 @@ const PATHS = [
   'aboutSchool',
   'gallery',
   'contact',
+  'disclosures',
   'brief',
   'chandkheda',
   'chattral',

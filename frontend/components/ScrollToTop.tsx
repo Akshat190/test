@@ -27,8 +27,19 @@ export default function ScrollToTop() {
   }, []);
 
   return (
-    <button id="scrollToTop" className="scroll-to-top" aria-label="Scroll to top">
-      <Icon name="arrow-up" />
-    </button>
+    <>
+      <div className="quick-contact">
+        <a className="quick-contact-btn quick-contact-call" href="tel:+916354368335" aria-label="Call the school office">
+          <Icon name="phone" />
+        </a>
+        <a className="quick-contact-btn quick-contact-wa" href="https://wa.me/916354368335" target="_blank" rel="noopener" aria-label="Message the school on WhatsApp">
+          <Icon name="message-circle" />
+        </a>
+      </div>
+
+      <button id="scrollToTop" className="scroll-to-top" aria-label="Scroll to top">
+        <Icon name="arrow-up" />
+      </button>
+    </>
   );
 }

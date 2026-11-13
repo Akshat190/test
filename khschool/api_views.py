@@ -12,6 +12,7 @@ from django.views.decorators.http import require_GET, require_POST
 
 from .campuses import CAMPUS_DEFAULTS, campus_info
 from .forms import ContactForm
+from .notifications import notify_new_enquiry
 from .models import (
     Campus,
     CarouselImage,
@@ -187,6 +188,10 @@ def contact(request):
         payload = {}
 
     form = ContactForm(payload)
+    # Honeypot: bots fill the hidden field. Pretend it worked, save nothing.
+    if form.is_valid() and form.cleaned_data.get('website'):
+        logger.info('Contact API honeypot tripped from %s', request.META.get('REMOTE_ADDR'))
+        return JsonResponse({'ok': True})
     if not form.is_valid():
         return JsonResponse({
             'errors': {
@@ -202,4 +207,5 @@ def contact(request):
         form.instance.email[:1] if form.instance.email else '?',
         form.instance.subject,
     )
+    notify_new_enquiry(form.instance)
     return JsonResponse({'ok': True})

@@ -135,6 +135,7 @@ export default function Header() {
               <li key={link.href} className="nav-item"><a className="drawer-link" href={link.href}>{link.label}</a></li>
             ))}
             <li className="nav-item"><Link className="drawer-link" href="/gallery/">Gallery</Link></li>
+            <li className="nav-item"><Link className="drawer-link" href="/disclosures/">Mandatory Disclosure</Link></li>
             <li className="nav-item"><Link className="drawer-link" href="/contact/">Contact</Link></li>
           </ul>
           <a href="https://forms.gle/sDftg7osPaxvGKAD8" className="btn admission-btn w-100 mt-3" target="_blank" rel="noopener">

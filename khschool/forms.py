@@ -171,6 +171,9 @@ class GalleryImageForm(forms.ModelForm):
 
 
 class ContactForm(forms.ModelForm):
+    # Hidden from people; bots fill every field they find.
+    website = forms.CharField(required=False, widget=forms.HiddenInput)
+
     campus = forms.ModelChoiceField(
         queryset=Campus.objects.none(),
         required=False,
