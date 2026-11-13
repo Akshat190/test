@@ -9,6 +9,8 @@ type PageMeta = {
   path: string;
   ogTitle?: string;
   ogDescription?: string;
+  /** Absolute or site-relative image; defaults to the shared OG card. */
+  image?: string;
 };
 
 // Mirrors base.html: page-specific title/description, shared OG defaults.
@@ -18,8 +20,12 @@ export function pageMetadata({
   path,
   ogTitle = title,
   ogDescription = description,
+  image,
 }: PageMeta): Metadata {
   const url = `${SITE}${path}`;
+  const ogImage = image
+    ? (image.startsWith('http') ? image : `${SITE}${image}`)
+    : OG_IMAGE;
   return {
     title,
     description,
@@ -31,13 +37,13 @@ export function pageMetadata({
       url,
       siteName: 'Kapadia High School',
       locale: 'en_IN',
-      images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
+      images: [{ url: ogImage, width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
       title: ogTitle,
       description: ogDescription,
-      images: [OG_IMAGE],
+      images: [ogImage],
     },
     robots: { index: true, follow: true },
   };

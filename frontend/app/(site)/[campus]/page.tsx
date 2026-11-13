@@ -30,6 +30,8 @@ export async function generateMetadata({ params }: { params: Promise<{ campus: s
     title: `${info.name} Campus${board} | Kapadia High School, ${city}`,
     description,
     path: `/${slug}/`,
+    // Only a real uploaded campus photo; the static fallbacks are too small for a 1200x630 card.
+    ...(info.photo_url ? { image: info.photo_url } : {}),
   });
 }
 
@@ -223,6 +225,14 @@ export default async function CampusPage({ params }: { params: Promise<{ campus:
             ))}
           </div>
         </section>
+
+        <nav className="campus-links" aria-label="Related pages">
+          <Link href="/facilities/">Facilities</Link>
+          <Link href="/activities/">Activities</Link>
+          <Link href="/aboutSchool/">About the school</Link>
+          <Link href="/disclosures/">Mandatory disclosure</Link>
+          <Link href="/contact/">Contact the office</Link>
+        </nav>
 
         {info.documents.length > 0 && (
           <section className="campus-docs" aria-label="Campus documents">
