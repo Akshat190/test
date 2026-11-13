@@ -4,7 +4,7 @@
 set -e
 
 PROJECT_DIR="/home/deploy/new-codebase"
-VENV_DIR="/home/deploy/test/venv"
+VENV_DIR="$PROJECT_DIR/venv"
 BRANCH="new-codebase"
 
 echo "========================================"
@@ -33,7 +33,12 @@ echo "  OK"
 
 echo "[5/7] Restarting new Django..."
 sudo systemctl restart khs-new.service
-sleep 2
+for i in $(seq 1 30); do
+  curl -fsS -o /dev/null http://127.0.0.1:8001/health/ && break
+  sleep 1
+done
+curl -fsS -o /dev/null http://127.0.0.1:8001/health/ || { echo "  FAILED: Django not healthy on 8001"; exit 1; }
+echo "  OK"
 
 echo "[6/7] Building Next..."
 cd "$PROJECT_DIR/frontend"
