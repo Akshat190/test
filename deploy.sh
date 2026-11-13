@@ -1,66 +1,51 @@
 #!/bin/bash
-# deploy.sh - One-command deploy for Kapadia High School
+# deploy.sh - deploy the new-codebase worktree
 # Usage: ./deploy.sh
 set -e
 
-PROJECT_DIR="/home/deploy/test"
-LOGS_DIR="$PROJECT_DIR/logs"
-VENV_DIR="$PROJECT_DIR/venv"
+PROJECT_DIR="/home/deploy/new-codebase"
+VENV_DIR="/home/deploy/test/venv"
+BRANCH="new-codebase"
 
 echo "========================================"
-echo "  Kapadia High School - Deploy"
+echo "  Kapadia High School - new-codebase deploy"
 echo "========================================"
 
 cd "$PROJECT_DIR"
 
-# -- 1. Pull latest code --
-echo "[1/6] Pulling latest code..."
+echo "[1/7] Pulling $BRANCH..."
 git fetch origin
-git checkout development
-git pull origin development
+git pull --ff-only origin "$BRANCH"
 echo "  OK $(git rev-parse --short HEAD)"
 
-# -- 2. Ensure logs directory exists --
-echo "[2/6] Ensuring logs directory..."
-mkdir -p "$LOGS_DIR"
-touch "$LOGS_DIR/django.log"
-
-# -- 3. Install Python dependencies --
-echo "[3/6] Installing dependencies..."
+echo "[2/7] Installing Python dependencies..."
 source "$VENV_DIR/bin/activate"
-pip install --upgrade pip -q
 pip install -r requirements.txt -q
 echo "  OK"
 
-# -- 4. Run migrations --
-echo "[4/6] Running migrations..."
-python manage.py migrate
+echo "[3/7] Migrating..."
+python manage.py migrate --noinput
 echo "  OK"
 
-# -- 5. Collect static files --
-echo "[5/6] Collecting static files..."
+echo "[4/7] Collecting static files..."
 python manage.py collectstatic --noinput
-sudo chown -R deploy:www-data "$PROJECT_DIR/staticfiles" 2>/dev/null || true
-sudo chmod -R 755 "$PROJECT_DIR/staticfiles" 2>/dev/null || true
 echo "  OK"
 
-# -- 6. Restart services --
-echo "[6/6] Restarting services..."
-if systemctl is-active --quiet gunicorn; then
-    sudo systemctl restart gunicorn
-    echo "  OK Gunicorn restarted"
-else
-    echo "  WARNING gunicorn service not found"
-fi
+echo "[5/7] Restarting new Django..."
+sudo systemctl restart khs-new.service
+sleep 2
 
-if command -v nginx &>/dev/null; then
-    sudo nginx -t && sudo systemctl reload nginx
-    echo "  OK Nginx reloaded"
-fi
+echo "[6/7] Building Next..."
+cd "$PROJECT_DIR/frontend"
+export PATH="$HOME/.bun/bin:$PATH"
+bun install --frozen-lockfile
+DJANGO_URL=http://127.0.0.1:8001 bun run build
+echo "  OK"
 
-# -- Done --
+echo "[7/7] Restarting Next and nginx..."
+sudo systemctl restart khs-next.service
+sudo nginx -t
+sudo systemctl reload nginx
+
 echo ""
-echo "========================================"
-echo "  Deploy Complete!"
-echo "  https://kapadiahighschool.com"
-echo "========================================"
+echo "Deploy complete: https://kapadiahighschool.com"
