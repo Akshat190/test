@@ -15,6 +15,7 @@ from pathlib import Path
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
+from khschool.campuses import CAMPUS_DEFAULTS
 from khschool.forms import title_from_filename
 from khschool.models import Campus, CampusDocument
 
@@ -63,10 +64,16 @@ class Command(BaseCommand):
             return
 
         slug = options['campus']
-        try:
-            campus = Campus.objects.get(slug__iexact=slug)
-        except Campus.DoesNotExist:
-            raise CommandError(f'No campus with slug "{slug}"')
+        # The URL slug ("chattral") and the stored campus slug ("Chhatral")
+        # differ, so resolve through the shared campus defaults by name.
+        campus = Campus.objects.filter(slug__iexact=slug).first()
+        if campus is None:
+            name = CAMPUS_DEFAULTS.get(slug, {}).get('name')
+            if name:
+                campus = Campus.objects.filter(name__iexact=name).first()
+        if campus is None:
+            known = ', '.join(Campus.objects.values_list('name', flat=True))
+            raise CommandError(f'No campus for "{slug}". Campuses in the database: {known}')
 
         created = 0
         for order, path in enumerate(files):

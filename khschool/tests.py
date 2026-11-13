@@ -309,3 +309,46 @@ class ApiTests(TestCase):
 
     def test_contact_get_is_not_allowed(self):
         self.assertEqual(self.client.get('/api/contact/').status_code, 405)
+
+class DisclosureSeedTests(TestCase):
+    """The disclosure PDFs on disk are registered against the CBSE campus."""
+
+    def setUp(self):
+        import tempfile
+        from pathlib import Path
+        from django.test import override_settings
+
+        media = tempfile.mkdtemp()
+        self.override = override_settings(MEDIA_ROOT=media)
+        self.override.enable()
+        self.addCleanup(self.override.disable)
+
+        folder = Path(media) / 'campus' / 'documents'
+        folder.mkdir(parents=True)
+        (folder / '3._NOC_CERTIFICATE-CBSE.pdf').write_bytes(b'%PDF-1.4 test')
+        (folder / '1._Affiliation_Letter_2026_to_2031.pdf').write_bytes(b'%PDF-1.4 test')
+
+        # Stored slug is the display name, the route slug is "chattral".
+        self.campus = Campus.objects.create(slug='Chhatral', name='Chhatral', board='CBSE')
+
+    def test_registers_documents_against_the_cbse_campus(self):
+        from io import StringIO
+        from django.core.management import call_command
+        from .models import CampusDocument
+
+        call_command('seed_campus_documents', campus='chattral', stdout=StringIO())
+        self.assertEqual(CampusDocument.objects.count(), 2)
+        titles = list(CampusDocument.objects.values_list('title', flat=True))
+        self.assertTrue(any('NOC Certificate CBSE' in title for title in titles))
+        for document in CampusDocument.objects.all():
+            self.assertEqual(document.campus, self.campus)
+            self.assertTrue(document.file.name.startswith('campus/documents/'))
+
+    def test_running_twice_creates_nothing_extra(self):
+        from io import StringIO
+        from django.core.management import call_command
+        from .models import CampusDocument
+
+        call_command('seed_campus_documents', campus='chattral', stdout=StringIO())
+        call_command('seed_campus_documents', campus='chattral', stdout=StringIO())
+        self.assertEqual(CampusDocument.objects.count(), 2)
