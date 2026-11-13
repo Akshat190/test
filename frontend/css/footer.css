@@ -114,6 +114,10 @@
   font-size: 0.9rem;
   text-decoration: none;
   border-bottom: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  min-width: 24px;
+  min-height: 24px;
 }
 .social-links a:hover {
   color: #D4AF37;
