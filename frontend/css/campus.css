@@ -3,17 +3,15 @@
 /* Hero */
 .campus-hero {
   position: relative;
-  min-height: 380px;
-  max-height: 480px;
-  aspect-ratio: 21 / 8;
+  /* height, not aspect-ratio: a clamped aspect-ratio also shrinks the width. */
+  height: clamp(380px, 26vw, 480px);
   overflow: hidden;
   background: #002244;
   display: flex;
   align-items: flex-end;
 }
 .campus-hero-no-image {
-  min-height: 240px;
-  aspect-ratio: auto;
+  height: 240px;
 }
 
 .campus-hero-img {
@@ -217,8 +215,6 @@
 
 @media (max-width: 768px) {
   .campus-hero {
-    aspect-ratio: auto;
-    min-height: 0;
     height: 320px;
   }
   .campus-hero-no-image { height: 220px; }
