@@ -1,6 +1,5 @@
-import json
-from django.core import mail
-from django.test import TestCase, Client, override_settings
+﻿import json
+from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -185,28 +184,6 @@ class ApiTests(TestCase):
         self.assertTrue(response.json()['ok'])
         self.assertEqual(ContactSubmission.objects.count(), 0)
 
-    @override_settings(
-        EMAIL_HOST='smtp.example.com',
-        CONTACT_NOTIFY_EMAIL='office@example.com',
-        EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
-    )
-    def test_contact_post_emails_the_office(self):
-        response = self.client.post(
-            '/api/contact/',
-            data=json.dumps({
-                'name': 'Test Parent',
-                'email': 'parent@example.com',
-                'subject': 'Admission',
-                'message': 'Please share the fee structure.',
-            }),
-            content_type='application/json',
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(mail.outbox), 1)
-        sent = mail.outbox[0]
-        self.assertEqual(sent.to, ['office@example.com'])
-        self.assertEqual(sent.reply_to, ['parent@example.com'])
-        self.assertIn('Admission', sent.subject)
 
     def test_campus_detail_merges_admin_fields_and_defaults(self):
         response = self.client.get('/api/campus/chattral/')

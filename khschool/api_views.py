@@ -12,7 +12,6 @@ from django.views.decorators.http import require_GET, require_POST
 
 from .campuses import CAMPUS_DEFAULTS, campus_info
 from .forms import ContactForm
-from .notifications import notify_new_enquiry
 from .models import (
     Campus,
     CarouselImage,
@@ -207,5 +206,4 @@ def contact(request):
         form.instance.email[:1] if form.instance.email else '?',
         form.instance.subject,
     )
-    notify_new_enquiry(form.instance)
     return JsonResponse({'ok': True})
