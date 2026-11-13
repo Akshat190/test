@@ -15,7 +15,7 @@ from pathlib import Path
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
-from khschool.campuses import CAMPUS_DEFAULTS
+from khschool.campuses import find_campus
 from khschool.forms import title_from_filename
 from khschool.models import Campus, CampusDocument
 
@@ -66,11 +66,7 @@ class Command(BaseCommand):
         slug = options['campus']
         # The URL slug ("chattral") and the stored campus slug ("Chhatral")
         # differ, so resolve through the shared campus defaults by name.
-        campus = Campus.objects.filter(slug__iexact=slug).first()
-        if campus is None:
-            name = CAMPUS_DEFAULTS.get(slug, {}).get('name')
-            if name:
-                campus = Campus.objects.filter(name__iexact=name).first()
+        campus = find_campus(slug)
         if campus is None:
             known = ', '.join(Campus.objects.values_list('name', flat=True))
             raise CommandError(f'No campus for "{slug}". Campuses in the database: {known}')

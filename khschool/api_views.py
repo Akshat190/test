@@ -10,7 +10,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
-from .campuses import CAMPUS_DEFAULTS, campus_info
+from .campuses import CAMPUS_DEFAULTS, campus_info, find_campus
 from .forms import ContactForm
 from .models import (
     Campus,
@@ -143,9 +143,9 @@ def campuses(request):
 def campus_detail(request, slug):
     if slug not in CAMPUS_DEFAULTS:
         raise Http404
-    campus = Campus.objects.prefetch_related('documents').filter(
-        slug=slug, is_active=True
-    ).first()
+    campus = find_campus(slug)
+    if campus is not None:
+        campus = Campus.objects.prefetch_related('documents').get(pk=campus.pk)
     return JsonResponse({
         'slug': slug,
         **campus_info(slug, campus),

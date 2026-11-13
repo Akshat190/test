@@ -35,6 +35,23 @@ CAMPUS_DEFAULTS = {
 }
 
 
+def find_campus(slug):
+    """Resolve a route slug (``chattral``) to its Campus row.
+
+    Rows store the display name as the slug (``Chhatral``), and IFFCO is
+    stored as ``IFFCO-Township``, so a plain slug lookup misses them.
+    """
+    from .models import Campus
+
+    campus = Campus.objects.filter(slug__iexact=slug, is_active=True).first()
+    if campus is not None:
+        return campus
+    name = CAMPUS_DEFAULTS.get(slug, {}).get('name')
+    if not name:
+        return None
+    return Campus.objects.filter(name__iexact=name, is_active=True).first()
+
+
 def campus_info(slug, campus):
     defaults = CAMPUS_DEFAULTS[slug]
 

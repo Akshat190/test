@@ -352,3 +352,24 @@ class DisclosureSeedTests(TestCase):
         call_command('seed_campus_documents', campus='chattral', stdout=StringIO())
         call_command('seed_campus_documents', campus='chattral', stdout=StringIO())
         self.assertEqual(CampusDocument.objects.count(), 2)
+
+class CampusSlugResolutionTests(TestCase):
+    """Rows store display-name slugs, so route slugs must still find them."""
+
+    def test_detail_api_resolves_route_slug_to_display_slug_row(self):
+        from .models import CampusDocument
+        from django.core.files.base import ContentFile
+
+        campus = Campus.objects.create(
+            slug='Chhatral', name='Chhatral', board='CBSE',
+            address='Station Road, Chhatral', is_active=True,
+        )
+        CampusDocument.objects.create(
+            campus=campus, title='NOC Certificate', order=1,
+            file=ContentFile(b'%PDF-1.4', name='noc.pdf'),
+        )
+
+        data = self.client.get('/api/campus/chattral/').json()
+        self.assertEqual(data['address'], 'Station Road, Chhatral')
+        self.assertEqual(len(data['documents']), 1)
+        self.assertEqual(data['documents'][0]['title'], 'NOC Certificate')

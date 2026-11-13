@@ -44,6 +44,9 @@ echo "[6/7] Building Next..."
 cd "$PROJECT_DIR/frontend"
 export PATH="$HOME/.bun/bin:$PATH"
 bun install --frozen-lockfile
+# Content fetched at build time is cached in .next/cache; drop it so admin
+# changes (campus documents, photos) appear on the first rebuild.
+rm -rf .next/cache
 DJANGO_URL=http://127.0.0.1:8001 bun run build
 echo "  OK"
 
