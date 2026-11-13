@@ -6,9 +6,9 @@ import { pageMetadata } from '@/lib/metadata';
 import '@/css/institutional_goals.css';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Institutional Goals - Kapadia High School',
+  title: 'Institutional Goals | Kapadia High School',
   description:
-    'The institutional goals that guide teaching and learning at Kapadia High School, founded in 1956.',
+    'The institutional goals that guide teaching and learning at Kapadia High School, a CBSE and GSEB school founded in 1956 in Kalol, Gujarat.',
   path: '/institutional-goals/',
 });
 

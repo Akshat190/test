@@ -7,9 +7,9 @@ import { pageMetadata } from '@/lib/metadata';
 import '@/css/aboutSchool.css';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'About Our School - Kapadia High School',
+  title: 'About Our School | Kapadia High School, Kalol',
   description:
-    'About Kapadia High School, founded in 1956 in Kalol, Gujarat: our history, educational philosophy and approach to co-educational English medium schooling.',
+    'Founded in 1956 in Kalol, Gujarat, Kapadia High School is a co-educational English medium school teaching K-12. Our history, philosophy and approach.',
   path: '/aboutSchool/',
 });
 

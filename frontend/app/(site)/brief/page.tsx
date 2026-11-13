@@ -6,9 +6,9 @@ import { pageMetadata } from '@/lib/metadata';
 import '@/css/brief.css';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Executive Brief - Kapadia High School',
+  title: 'Executive Brief | Kapadia High School, Kalol',
   description:
-    'An executive summary of Kapadia High School: our founding in 1956, academic approach, five campuses and the boards we are affiliated to.',
+    'An executive summary of Kapadia High School: founded in 1956, five campuses in Gujarat, affiliated to CBSE and GSEB, teaching classes K-12.',
   path: '/brief/',
 });
 

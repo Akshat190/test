@@ -61,6 +61,41 @@
 
 .campus-body { padding-top: 48px; padding-bottom: 24px; }
 
+.campus-about { margin-bottom: 40px; max-width: 74ch; }
+.campus-about p { color: #3c4a5a; }
+.campus-about a { color: #003264; font-weight: 600; }
+
+.campus-faq { margin: 8px 0 40px; }
+.faq-list { margin-top: 22px; display: grid; gap: 10px; }
+.faq-item {
+  background: #fff;
+  border: 1px solid rgba(0, 50, 100, 0.12);
+  border-radius: 10px;
+  padding: 0 20px;
+}
+.faq-item summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 16px 0;
+  font-weight: 600;
+  color: #003264;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: '+';
+  font-size: 1.3rem;
+  line-height: 1;
+  color: #D4AF37;
+  flex-shrink: 0;
+}
+.faq-item[open] summary::after { content: '–'; }
+.faq-item summary:focus-visible { outline: 2px solid #D4AF37; outline-offset: 3px; }
+.faq-item p { margin: 0; padding: 0 0 16px; color: #4a5568; font-size: 0.95rem; max-width: 72ch; }
+
 /* Section headings are left-aligned here, like the rest of the site. */
 .campus-facilities .section-title,
 .campus-docs .section-title {

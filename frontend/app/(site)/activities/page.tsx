@@ -5,9 +5,9 @@ import { pageMetadata } from '@/lib/metadata';
 import '@/css/activities.css';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Activities - Kapadia High School',
+  title: 'Activities | Kapadia High School, Kalol',
   description:
-    'Activities at Kapadia High School: sports, cultural programmes and academic clubs that run alongside classroom learning.',
+    'Sports, cultural programmes and academic clubs at Kapadia High School — activities that run alongside classroom learning across five campuses.',
   path: '/activities/',
 });
 

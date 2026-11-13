@@ -244,6 +244,26 @@ class GalleryImage(CompressedImageMixin, models.Model):
     def get_image_url(self):
         return self.image.url if self.image else None
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self._ensure_gallery_thumbnail()
+
+    def _ensure_gallery_thumbnail(self):
+        """Give the gallery a small grid thumbnail the first time it gets a photo."""
+        gallery = self.gallery
+        if not self.image or not gallery or gallery.thumbnail:
+            return
+        from .image_utils import make_thumbnail
+
+        try:
+            self.image.open('rb')
+        except Exception:
+            return
+        thumb = make_thumbnail(self.image)
+        if thumb is None:
+            return
+        gallery.thumbnail.save(f'{self.pk or "thumb"}.jpg', thumb, save=True)
+
 
 class Campus(CompressedImageMixin, models.Model):
     COMPRESS_FIELDS = ['photo']

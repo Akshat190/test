@@ -17,9 +17,6 @@ export const metadata: Metadata = pageMetadata({
   description:
     'Kapadia High School, founded 1956, is a co-educational English medium school with five campuses across Gujarat offering CBSE and GSEB education from K-12.',
   path: '/',
-  ogTitle: 'Kapadia High School | CBSE & GSEB School in Kalol, Gujarat',
-  ogDescription:
-    'Founded 1956. Five campuses across Gujarat offering CBSE and GSEB education from K-12.',
 });
 
 const WEBSITE_SCHEMA = {

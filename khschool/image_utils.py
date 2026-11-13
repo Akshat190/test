@@ -112,6 +112,41 @@ def compress_field_file(field_file, max_dimension=MAX_DIMENSION):
         return None
 
 
+def make_thumbnail(field_file, max_size=640, quality=78):
+    """Return a small JPEG ``ContentFile`` for grid tiles, or ``None``.
+
+    Used where a photo is displayed at a few hundred pixels wide, so the
+    page does not download the full-size original.
+    """
+    from PIL import Image as PILImage
+
+    try:
+        field_file.seek(0)
+        img = PILImage.open(field_file)
+        img.load()
+    except Exception as exc:
+        logger.warning('Could not read image for thumbnail %s: %s',
+                       getattr(field_file, 'name', '?'), exc)
+        return None
+
+    try:
+        img.thumbnail((max_size, max_size), PILImage.LANCZOS)
+        if img.mode in ('RGBA', 'LA', 'P'):
+            background = PILImage.new('RGB', img.size, (255, 255, 255))
+            background.paste(img, mask=img.split()[-1] if img.mode in ('RGBA', 'LA') else None)
+            img = background
+        elif img.mode != 'RGB':
+            img = img.convert('RGB')
+
+        buf = io.BytesIO()
+        img.save(buf, format='JPEG', quality=quality, optimize=True)
+        return ContentFile(buf.getvalue())
+    except Exception as exc:
+        logger.warning('Thumbnail generation failed for %s: %s',
+                       getattr(field_file, 'name', '?'), exc)
+        return None
+
+
 class CompressedImageMixin:
     """Model mixin: compress image fields on save.
 

@@ -16,8 +16,8 @@ export function pageMetadata({
   title,
   description,
   path,
-  ogTitle = 'Kapadia High School',
-  ogDescription = 'Excellence in Education Since 1956',
+  ogTitle = title,
+  ogDescription = description,
 }: PageMeta): Metadata {
   const url = `${SITE}${path}`;
   return {

@@ -5,9 +5,9 @@ import { pageMetadata } from '@/lib/metadata';
 import '@/css/achievements.css';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Achievements - Kapadia High School',
+  title: 'Achievements | Kapadia High School, Kalol',
   description:
-    'Academic, sporting and cultural achievements of Kapadia High School students across our CBSE and GSEB campuses.',
+    'Academic, sporting and cultural results from Kapadia High School students across our CBSE and GSEB campuses in Kalol and Gujarat.',
   path: '/achievements/',
 });
 

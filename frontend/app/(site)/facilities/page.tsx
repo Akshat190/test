@@ -5,9 +5,9 @@ import { pageMetadata } from '@/lib/metadata';
 import '@/css/facilities.css';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Facilities - Kapadia High School',
+  title: 'Facilities | Kapadia High School, Kalol',
   description:
-    'Facilities across Kapadia High School campuses: classrooms, science laboratories, library, sports grounds and transport.',
+    'Classrooms, science laboratories, library, sports grounds and school transport across the five Kapadia High School campuses in Gujarat.',
   path: '/facilities/',
 });
 

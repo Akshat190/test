@@ -9,9 +9,9 @@ import { pageMetadata } from '@/lib/metadata';
 import type { Celebration, Gallery, Option } from '@/lib/types';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'School Gallery - Kapadia High School',
+  title: 'School Gallery | Kapadia High School, Kalol',
   description:
-    'Photo galleries and celebration albums from Kapadia High School: festivals, sports days, cultural events and campus life across our five campuses.',
+    'Photo galleries from Kapadia High School: festivals, sports days and cultural events across our five campuses in Kalol and Gujarat.',
   path: '/gallery/',
 });
 

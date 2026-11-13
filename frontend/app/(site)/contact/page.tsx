@@ -10,9 +10,9 @@ import { pageMetadata } from '@/lib/metadata';
 import '@/css/contact.css';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Contact Us - Kapadia High School',
+  title: 'Contact Kapadia High School | Kalol, Gujarat',
   description:
-    'Contact Kapadia High School. Reach the admissions office, find campus addresses and send us a message about admissions or any school enquiry.',
+    'Contact Kapadia High School: phone, email and campus addresses for Chandkheda, Chhatral, IFFCO Township, Kadi and Shela. Send an admissions enquiry.',
   path: '/contact/',
 });
 

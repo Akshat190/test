@@ -8,8 +8,8 @@ import { pageMetadata } from '@/lib/metadata';
 import '@/css/team.css';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Our Faculty - Kapadia High School',
-  description: "Meet the faculty of Kapadia High School: subject teachers across our Chhatral, Kadi and IFFCO Township campuses, with their qualifications and experience.",
+  title: 'Our Faculty | Kapadia High School, Kalol',
+  description: "Meet the faculty of Kapadia High School: subject teachers across the Chhatral, Kadi and IFFCO Township campuses, with their qualifications and experience.",
   path: '/team/',
 });
 

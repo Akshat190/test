@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   description:
     'Kapadia High School - Excellence in Education Since 1956. A co-educational English medium school in Gujarat, India.',
   manifest: '/static/images/favicon/site.webmanifest',
+  // Set GOOGLE_SITE_VERIFICATION in .env to emit the Search Console meta tag.
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+    : {}),
   icons: {
     icon: [
       { url: '/static/images/favicon/khes.png', type: 'image/png' },

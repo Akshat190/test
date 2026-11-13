@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin/', '/health/'],
+      disallow: ['/admin/', '/health/', '/metrics/', '/api/'],
     },
     sitemap: 'https://kapadiahighschool.com/sitemap.xml',
   };

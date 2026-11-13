@@ -6,9 +6,9 @@ import { pageMetadata } from '@/lib/metadata';
 import '@/css/testimonials.css';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Testimonials - Kapadia High School',
+  title: 'Testimonials | Kapadia High School, Kalol',
   description:
-    'What students, parents, alumni and teachers say about their experience at Kapadia High School.',
+    'What students, parents, alumni and teachers say about their experience at Kapadia High School across the five campuses in Gujarat.',
   path: '/testimonials/',
 });
 

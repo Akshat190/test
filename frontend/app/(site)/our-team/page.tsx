@@ -7,9 +7,9 @@ import { pageMetadata } from '@/lib/metadata';
 import '@/css/our_team.css';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Leadership Team - Kapadia High School',
+  title: 'Leadership Team | Kapadia High School',
   description:
-    "The leadership team guiding Kapadia High School, including the Principal's office and academic department heads.",
+    "The leadership team guiding Kapadia High School: the Principal's office and academic department heads across our five Gujarat campuses.",
   path: '/our-team/',
 });
 

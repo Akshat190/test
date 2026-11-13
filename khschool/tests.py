@@ -124,6 +124,26 @@ class FormValidationTests(TestCase):
 
 
 class ModelTests(TestCase):
+    def test_gallery_image_creates_a_grid_thumbnail(self):
+        from io import BytesIO
+        from PIL import Image
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from .models import GalleryImage
+
+        gallery = Gallery.objects.create(name='Sports Day', category='sports')
+        buf = BytesIO()
+        Image.new('RGB', (2000, 1400), (20, 60, 90)).save(buf, format='JPEG')
+        photo = GalleryImage.objects.create(
+            gallery=gallery,
+            image=SimpleUploadedFile('wide.jpg', buf.getvalue(), content_type='image/jpeg'),
+        )
+
+        gallery.refresh_from_db()
+        self.assertTrue(gallery.thumbnail)
+        with Image.open(gallery.thumbnail.path) as thumb:
+            self.assertLessEqual(max(thumb.size), 640)
+        self.assertTrue(photo.image)
+
     def test_contact_submission_str(self):
         submission = ContactSubmission.objects.create(
             name='Test',

@@ -7,9 +7,9 @@ import { pageMetadata } from '@/lib/metadata';
 import '@/css/success_stories.css';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Success Stories - Kapadia High School',
+  title: 'Success Stories | Kapadia High School, Kalol',
   description:
-    'Success stories and notable achievements of Kapadia High School alumni and students.',
+    'Success stories from Kapadia High School alumni and students — board results, higher education destinations and achievements after school.',
   path: '/success-stories/',
 });
 

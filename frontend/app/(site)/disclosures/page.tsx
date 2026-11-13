@@ -9,9 +9,9 @@ import { pageMetadata } from '@/lib/metadata';
 import '@/css/disclosures.css';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Mandatory Disclosure - Kapadia High School',
+  title: 'Mandatory Disclosure | Kapadia High School',
   description:
-    'Mandatory disclosure documents for every Kapadia High School campus — affiliation, recognition and compliance certificates in one place.',
+    'Mandatory disclosure documents for each Kapadia High School campus: affiliation, recognition and compliance certificates, kept in one place.',
   path: '/disclosures/',
 });
 
