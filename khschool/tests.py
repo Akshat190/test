@@ -1,4 +1,4 @@
-﻿import json
+import json
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -60,6 +60,67 @@ class BasicViewTests(TestCase):
         for slug in ['chandkheda', 'chattral', 'iffco', 'kadi', 'shela']:
             response = self.client.get(reverse(slug))
             self.assertEqual(response.status_code, 200)
+
+
+class FormValidationTests(TestCase):
+    """Uploads that would look broken on the site are rejected with a message."""
+
+    @staticmethod
+    def image(width, height, name='photo.jpg'):
+        from io import BytesIO
+        from PIL import Image
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        buf = BytesIO()
+        Image.new('RGB', (width, height), (10, 40, 80)).save(buf, format='JPEG')
+        return SimpleUploadedFile(name, buf.getvalue(), content_type='image/jpeg')
+
+    def test_campus_photo_too_small_is_rejected(self):
+        from .forms import CampusForm
+
+        form = CampusForm(
+            data={'slug': 'test-campus', 'name': 'Test Campus', 'is_active': 'on'},
+            files={'photo': self.image(400, 300)},
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn('too small', str(form.errors['photo']))
+
+    def test_campus_photo_large_enough_passes(self):
+        from .forms import CampusForm
+
+        form = CampusForm(
+            data={'slug': 'test-campus', 'name': 'Test Campus', 'is_active': 'on'},
+            files={'photo': self.image(1600, 900)},
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_gallery_bulk_photo_too_small_names_the_file(self):
+        from .forms import GalleryForm
+
+        form = GalleryForm(
+            data={'name': 'Sports Day', 'category': 'sports', 'date_created': '2026-01-01 10:00:00'},
+            files={'bulk_images': [self.image(500, 400, 'tiny-shot.jpg')]},
+        )
+        self.assertFalse(form.is_valid())
+        message = str(form.errors['bulk_images'])
+        self.assertIn('tiny-shot.jpg', message)
+        self.assertIn('too small', message)
+
+    def test_gallery_bulk_photo_large_enough_passes(self):
+        from .forms import GalleryForm
+
+        form = GalleryForm(
+            data={'name': 'Sports Day', 'category': 'sports', 'date_created': '2026-01-01 10:00:00'},
+            files={'bulk_images': [self.image(1000, 700, 'fine.jpg')]},
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_carousel_hero_too_small_is_rejected(self):
+        from .forms import CarouselImageForm
+
+        form = CarouselImageForm(files={'image': self.image(800, 400)})
+        self.assertFalse(form.is_valid())
+        self.assertIn('too small', str(form.errors['image']))
 
 
 class ModelTests(TestCase):

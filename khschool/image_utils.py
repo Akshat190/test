@@ -24,8 +24,31 @@ logger = logging.getLogger('khschool')
 
 MAX_DIMENSION = 1920
 JPEG_QUALITY = 80
-REENCODE_ABOVE_BYTES = 3 * 1024 * 1024
+# Ordinary phone photos land around 800 KB–2 MB; re-encode anything past
+# this so stored images stay near 200–400 KB.
+REENCODE_ABOVE_BYTES = 400 * 1024
 SKIP_FORMATS = {'GIF'}
+
+
+def image_size(field_file):
+    """Return ``(width, height)`` for an uploaded image, or ``None``.
+
+    The file position is restored so the upload can still be saved.
+    """
+    from PIL import Image as PILImage
+
+    try:
+        field_file.seek(0)
+        with PILImage.open(field_file) as img:
+            size = img.size
+        field_file.seek(0)
+        return size
+    except Exception:
+        try:
+            field_file.seek(0)
+        except Exception:
+            pass
+        return None
 
 
 def compress_field_file(field_file, max_dimension=MAX_DIMENSION):

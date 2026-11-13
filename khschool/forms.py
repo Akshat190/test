@@ -1,5 +1,6 @@
 from django import forms
 
+from .image_utils import image_size
 from .models import Celebration, CelebrationPhoto, CarouselImage, Campus, Gallery, GalleryImage, ContactSubmission
 
 
@@ -13,8 +14,44 @@ class MultipleFileInput(forms.FileInput):
 MAX_BULK_FILE_MB = 30
 
 
+class MinImageSizeMixin:
+    """Reject newly uploaded images that are too small for where they appear.
+
+    Set ``MIN_IMAGE_SIZES = {'field': (min_width, min_height)}`` and
+    ``IMAGE_PURPOSE`` in the form. Only fresh uploads are checked, so
+    editing a record never fails because of an old photo.
+    """
+
+    MIN_IMAGE_SIZES = {}
+    IMAGE_PURPOSE = 'the web page'
+
+    def clean(self):
+        cleaned = super().clean()
+        for field, (min_w, min_h) in self.MIN_IMAGE_SIZES.items():
+            uploaded = self.files.get(field)
+            if not uploaded:
+                continue
+            size = image_size(uploaded)
+            if size is None:
+                self.add_error(
+                    field,
+                    'Could not read this image. Please upload a valid JPG, PNG or WebP file.',
+                )
+                continue
+            width, height = size
+            if width < min_w or height < min_h:
+                self.add_error(
+                    field,
+                    f'This image is {width}×{height}px — too small for {self.IMAGE_PURPOSE}. '
+                    f'Please upload at least {min_w}×{min_h}px so it stays sharp.',
+                )
+        return cleaned
+
+
 class MultipleFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, min_size=None, purpose='the gallery', **kwargs):
+        self.min_size = min_size
+        self.purpose = purpose
         kwargs.setdefault('widget', MultipleFileInput(attrs={'multiple': True}))
         super().__init__(*args, **kwargs)
 
@@ -30,18 +67,33 @@ class MultipleFileField(forms.FileField):
 
         for each in value:
             super().validate(each)
+            name = getattr(each, 'name', 'file')
             content_type = getattr(each, 'content_type', '') or ''
             if not content_type.startswith('image/'):
                 raise ValidationError(
-                    f"'{getattr(each, 'name', 'file')}' is not an image. "
+                    f"'{name}' is not an image. "
                     'Please select JPG, PNG or WebP photos only.'
                 )
             size_mb = (each.size or 0) / (1024 * 1024)
             if size_mb > MAX_BULK_FILE_MB:
                 raise ValidationError(
-                    f"'{each.name}' is {size_mb:.1f} MB — over the {MAX_BULK_FILE_MB} MB per-photo limit. "
+                    f"'{name}' is {size_mb:.1f} MB — over the {MAX_BULK_FILE_MB} MB per-photo limit. "
                     'Please resize it (1920px wide is plenty) and try again.'
                 )
+            if self.min_size:
+                min_w, min_h = self.min_size
+                size = image_size(each)
+                if size is None:
+                    raise ValidationError(
+                        f"'{name}' could not be read as an image. "
+                        'Please upload a valid JPG, PNG or WebP file.'
+                    )
+                width, height = size
+                if width < min_w or height < min_h:
+                    raise ValidationError(
+                        f"'{name}' is {width}×{height}px — too small for {self.purpose}. "
+                        f'Please upload at least {min_w}×{min_h}px, or remove that photo and try again.'
+                    )
 
 
 class MultipleDocumentField(forms.FileField):
@@ -93,9 +145,14 @@ def title_from_filename(filename):
     return base[:200] or 'Document'
 
 
-class CelebrationForm(forms.ModelForm):
+class CelebrationForm(MinImageSizeMixin, forms.ModelForm):
+    MIN_IMAGE_SIZES = {'image': (800, 600)}
+    IMAGE_PURPOSE = 'the celebrations section'
+
     bulk_photos = MultipleFileField(
         required=False,
+        min_size=(800, 600),
+        purpose='the celebrations section',
         label='Upload Multiple Photos (Ctrl+click to select multiple)'
     )
 
@@ -104,13 +161,19 @@ class CelebrationForm(forms.ModelForm):
         fields = ['festivalname', 'description', 'celebration_type', 'image', 'date', 'is_featured']
 
 
-class CelebrationPhotoForm(forms.ModelForm):
+class CelebrationPhotoForm(MinImageSizeMixin, forms.ModelForm):
+    MIN_IMAGE_SIZES = {'photo': (800, 600)}
+    IMAGE_PURPOSE = 'the celebrations section'
+
     class Meta:
         model = CelebrationPhoto
         fields = ['celebration', 'photo', 'caption', 'order']
 
 
-class CarouselImageForm(forms.ModelForm):
+class CarouselImageForm(MinImageSizeMixin, forms.ModelForm):
+    MIN_IMAGE_SIZES = {'image': (1200, 500)}
+    IMAGE_PURPOSE = 'the homepage hero'
+
     class Meta:
         model = CarouselImage
         fields = ['title', 'subtitle', 'image', 'button_text', 'button_link', 'order', 'is_active']
@@ -118,30 +181,11 @@ class CarouselImageForm(forms.ModelForm):
             'image': 'Landscape banner, ideally 1920x800px or larger (minimum 1200x500px). Small images will look blurry on the homepage hero.',
         }
 
-    def clean_image(self):
-        from PIL import Image as PILImage
-        from django.core.exceptions import ValidationError
 
-        image = self.cleaned_data.get('image')
-        # On edit forms without a new upload, image is the existing FieldFile.
-        if not image or not hasattr(image, 'read'):
-            return image
-        try:
-            image.seek(0)
-            with PILImage.open(image) as img:
-                width, height = img.size
-            image.seek(0)
-        except Exception:
-            raise ValidationError('Could not read this image. Please upload a valid JPG, PNG or WebP file.')
-        if width < 1200 or height < 500:
-            raise ValidationError(
-                f'This image is only {width}x{height}px — too small for the homepage hero and it will look '
-                'blurry/invisible. Please upload a landscape banner at least 1200x500px (ideally 1920x800px).'
-            )
-        return image
+class CampusForm(MinImageSizeMixin, forms.ModelForm):
+    MIN_IMAGE_SIZES = {'photo': (1200, 600)}
+    IMAGE_PURPOSE = 'the campus page hero'
 
-
-class CampusForm(forms.ModelForm):
     bulk_documents = MultipleDocumentField(
         required=False,
         label='Bulk import documents (PDF only — Ctrl+click to select multiple)',
@@ -151,11 +195,19 @@ class CampusForm(forms.ModelForm):
     class Meta:
         model = Campus
         fields = ['slug', 'name', 'board', 'affiliation_number', 'timings', 'address', 'photo', 'is_active']
+        help_texts = {
+            'photo': 'Landscape photo, ideally 1920x800px (minimum 1200x600px). It fills the top of the campus page.',
+        }
 
 
-class GalleryForm(forms.ModelForm):
+class GalleryForm(MinImageSizeMixin, forms.ModelForm):
+    MIN_IMAGE_SIZES = {'thumbnail': (800, 600)}
+    IMAGE_PURPOSE = 'the gallery cards'
+
     bulk_images = MultipleFileField(
         required=False,
+        min_size=(800, 600),
+        purpose='the gallery',
         label='Upload Multiple Images (Ctrl+click to select multiple)'
     )
 
@@ -164,7 +216,10 @@ class GalleryForm(forms.ModelForm):
         fields = ['name', 'description', 'category', 'thumbnail', 'date_created', 'is_featured']
 
 
-class GalleryImageForm(forms.ModelForm):
+class GalleryImageForm(MinImageSizeMixin, forms.ModelForm):
+    MIN_IMAGE_SIZES = {'image': (800, 600)}
+    IMAGE_PURPOSE = 'the gallery'
+
     class Meta:
         model = GalleryImage
         fields = ['gallery', 'title', 'image', 'caption', 'description', 'date_added', 'order']
